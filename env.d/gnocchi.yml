@@ -1,0 +1,28 @@
+---
+component_skel:
+  gnocchi_api:
+    belongs_to:
+    - gnocchi_all
+  gnocchi_metricd:
+   belongs_to:
+    - gnocchi_all
+
+container_skel:
+  gnocchi_container:
+    belongs_to:
+      - metrics_containers
+    contains:
+      - gnocchi_api
+      - gnocchi_metricd
+    properties:
+      service_name: gnocchi
+      container_release: trusty
+
+physical_skel:
+  metrics_containers:
+    belongs_to:
+    - all_containers
+  metrics_hosts:
+    belongs_to:
+    - hosts
+
