@@ -13,6 +13,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+#: Defines that the role will be deployed on a host machine
+is_metal: true
+
+debug: false
+verbose: true
+
+#: Gnocchi program source location
+gnocchi_git_url: "https://git.openstack.org/openstack/gnocchi"
+gnocchi_git_install_branch: 85bef730942dee660e4e87614aee3a212d7adf31# head of "master" as of 20.11.2015
+gnocchi_git_dest: "/opt/gnocchi_{{ gnocchi_git_install_branch | replace('/', '_') }}"
+
+#: Necessary packages
+gnocchi_apt_packages:
+  - git
+  - build-essential
+  - python-dev
+  - libpg_dev
+
+
+
 #: Gnocchi API program name
 gnocchi_api_program_name: gnocchi-api
 #: Gnocchi metricd program name
