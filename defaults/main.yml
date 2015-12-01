@@ -19,10 +19,33 @@ is_metal: true
 debug: false
 verbose: true
 
+# Name of the virtual env to deploy into
+gnocchi_venv_tag: untagged
+gnocchi_venv_bin: "/openstack/venvs/gnocchi-{{ gnocchi_venv_tag }}/bin"
+
+# Set this to enable or disable installing in a venv
+gnocchi_venv_enabled: true
+
+# The bin path defaults to the venv path however if installation in a
+#  venv is disabled the bin path will be dynamically set based on the
+#  system path used when the installing.
+gnocchi_bin: "{{ gnocchi_venv_bin }}"
+
+# Set the etc dir path where gnocchi is installed.
+#  This is used for role access to the db migrations.
+#  Example:
+#  gnocchi_etc_dir: "/usr/local/etc/gnocchi"
+gnocchi_venv_etc_dir: "{{ gnocchi_bin | dirname }}/etc/gnocchi"
+gnocchi_non_venv_etc_dir: "/usr/local/etc/gnocchi"
+gnocchi_etc_dir: "{{ (gnocchi_venv_enabled | bool) | ternary(gnocchi_venv_etc_dir, gnocchi_non_venv_etc_dir) }}"
+
+gnocchi_venv_download_url: http://127.0.0.1/venvs/untagged/ubuntu/gnocchi.tgz
+
 #: Gnocchi program source location
 gnocchi_git_url: "https://git.openstack.org/openstack/gnocchi"
 gnocchi_git_install_branch: 85bef730942dee660e4e87614aee3a212d7adf31# head of "master" as of 20.11.2015
 gnocchi_git_dest: "/opt/gnocchi_{{ gnocchi_git_install_branch | replace('/', '_') }}"
+
 
 #: Necessary packages
 gnocchi_apt_packages:
@@ -32,6 +55,13 @@ gnocchi_apt_packages:
   - libpg_dev
 
 
+## System info
+gnocchi_system_user_name: gnocchi
+gnocchi_system_group_name: gnocchi
+gnocchi_system_user_home: "/var/lib/{{ gnocchi_system_user_name }}"
+
+## Service Type and Data
+gnocchi_service_name: gnocchi
 
 #: Gnocchi API program name
 gnocchi_api_program_name: gnocchi-api
