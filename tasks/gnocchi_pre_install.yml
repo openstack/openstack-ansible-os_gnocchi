@@ -15,60 +15,54 @@
 
 - name: create the system group
   group:
-    name: "{{ glance_system_group_name }}"
+    name: "{{ gnocchi_system_group_name }}"
     state: "present"
     system: "yes"
   tags:
-    - glance-group
+    - gnocchi-group
 
-- name: Create the glance system user
+- name: Create the gnocchi system user
   user:
-    name: "{{ glance_system_user_name }}"
-    group: "{{ glance_system_group_name }}"
-    comment: "{{ glance_system_comment }}"
-    shell: "{{ glance_system_shell }}"
+    name: "{{ gnocchi_system_user_name }}"
+    group: "{{ gnocchi_system_group_name }}"
+    comment: "{{ gnocchi_system_comment }}"
+    shell: "{{ gnocchi_system_shell }}"
     system: "yes"
     createhome: "yes"
-    home: "{{ glance_system_user_home }}"
+    home: "{{ gnocchi_system_user_home }}"
   tags:
-    - glance-user
+    - gnocchi-user
 
-- name: Create glance dir
+- name: Create gnocchi dir
   file:
     path: "{{ item.path }}"
     state: directory
-    owner: "{{ item.owner|default(glance_system_user_name) }}"
-    group: "{{ item.group|default(glance_system_group_name) }}"
+    owner: "{{ item.owner|default(gnocchi_system_user_name) }}"
+    group: "{{ item.group|default(gnocchi_system_group_name) }}"
     mode: "{{ item.mode|default('0755') }}"
   with_items:
-    - { path: "/openstack", mode: "0755", owner: "root", group: "root" }
-    - { path: "/etc/glance" }
-    - { path: "/etc/sudoers.d", mode: "0755", owner: "root", group: "root" }
-    - { path: "/var/cache/glance" }
-    - { path: "{{ glance_system_user_home }}" }
-    - { path: "{{ glance_system_user_home }}/cache/api", mode: "0700" }
-    - { path: "{{ glance_system_user_home }}/cache/registry" }
-    - { path: "{{ glance_system_user_home }}/images/" }
-    - { path: "{{ glance_system_user_home }}/scrubber" }
+    - { path: "/openstack", owner: "root", group: "root" }
+    - { path: "/etc/gnocchi" }
+    - { path: "{{ gnocchi_system_user_home }}" }
   tags:
-    - glance-dirs
+    - gnocchi-dirs
 
-- name: Create glance venv dir
+- name: Create gnocchi venv dir
   file:
     path: "{{ item.path }}"
     state: directory
   with_items:
     - { path: "/openstack/venvs" }
-    - { path: "{{ glance_venv_bin }}" }
-  when: glance_venv_enabled | bool
+    - { path: "{{ gnocchi_venv_bin }}" }
+  when: gnocchi_venv_enabled | bool
   tags:
-    - glance-dirs
+    - gnocchi-dirs
 
 - name: Test for log directory or link
   shell: |
-    if [ -h "/var/log/glance"  ]; then
-      chown -h {{ glance_system_user_name }}:{{ glance_system_group_name }} "/var/log/glance"
-      chown -R {{ glance_system_user_name }}:{{ glance_system_group_name }} "$(readlink /var/log/glance)"
+    if [ -h "/var/log/gnocchi"  ]; then
+      chown -h {{ gnocchi_system_user_name }}:{{ gnocchi_system_group_name }} "/var/log/gnocchi"
+      chown -R {{ gnocchi_system_user_name }}:{{ gnocchi_system_group_name }} "$(readlink /var/log/gnocchi)"
     else
       exit 1
     fi
@@ -76,23 +70,23 @@
   failed_when: false
   changed_when: log_dir.rc != 0
   tags:
-    - glance-dirs
-    - glance-logs
+    - gnocchi-dirs
+    - gnocchi-logs
 
-- name: Create glance log dir
+- name: Create gnocchi log dir
   file:
     path: "{{ item.path }}"
     state: directory
-    owner: "{{ item.owner|default(glance_system_user_name) }}"
-    group: "{{ item.group|default(glance_system_group_name) }}"
+    owner: "{{ item.owner|default(gnocchi_system_user_name) }}"
+    group: "{{ item.group|default(gnocchi_system_group_name) }}"
     mode: "{{ item.mode|default('0755') }}"
   with_items:
-    - { path: "/var/log/glance" }
+    - { path: "/var/log/gnocchi" }
   when: log_dir.rc != 0
   tags:
-    - glance-dirs
-    - glance-logs
+    - gnocchi-dirs
+    - gnocchi-logs
 
-- include: glance_messaging_setup.yml
+- include: gnocchi_messaging_setup.yml
   when: >
-    inventory_hostname == groups['glance_all'][0]
+    inventory_hostname == groups['gnocchi_all'][0]
