@@ -19,19 +19,19 @@ is_metal: true
 debug: false
 verbose: true
 
-# Name of the virtual env to deploy into
+#: Set this to enable or disable installing in a venv
+gnocchi_venv_enabled: true
+
+#: Name of the virtual env to deploy into
 gnocchi_venv_tag: untagged
 gnocchi_venv_bin: "/openstack/venvs/gnocchi-{{ gnocchi_venv_tag }}/bin"
 
-# Set this to enable or disable installing in a venv
-gnocchi_venv_enabled: true
-
-# The bin path defaults to the venv path however if installation in a
+#: The bin path defaults to the venv path however if installation in a
 #  venv is disabled the bin path will be dynamically set based on the
 #  system path used when the installing.
 gnocchi_bin: "{{ gnocchi_venv_bin }}"
 
-# Set the etc dir path where gnocchi is installed.
+#: Set the etc dir path where gnocchi is installed.
 #  This is used for role access to the db migrations.
 #  Example:
 #  gnocchi_etc_dir: "/usr/local/etc/gnocchi"
@@ -39,6 +39,7 @@ gnocchi_venv_etc_dir: "{{ gnocchi_bin | dirname }}/etc/gnocchi"
 gnocchi_non_venv_etc_dir: "/usr/local/etc/gnocchi"
 gnocchi_etc_dir: "{{ (gnocchi_venv_enabled | bool) | ternary(gnocchi_venv_etc_dir, gnocchi_non_venv_etc_dir) }}"
 
+#: Location to retrieve the pre-built virtuelenv for gnocchi (optional)
 gnocchi_venv_download_url: http://127.0.0.1/venvs/untagged/ubuntu/gnocchi.tgz
 
 #: Gnocchi program source location
@@ -46,6 +47,20 @@ gnocchi_git_url: "https://git.openstack.org/openstack/gnocchi"
 gnocchi_git_install_branch: 85bef730942dee660e4e87614aee3a212d7adf31# head of "master" as of 20.11.2015
 gnocchi_git_dest: "/opt/gnocchi_{{ gnocchi_git_install_branch | replace('/', '_') }}"
 
+#: System info
+gnocchi_system_user_name: gnocchi
+gnocchi_system_group_name: gnocchi
+gnocchi_system_shell: /bin/false
+gnocchi_system_comment: gnocchi system user
+gnocchi_system_user_home: "/var/lib/{{ gnocchi_system_user_name }}"
+
+#: Service Type and Data
+gnocchi_service_name: gnocchi
+
+#: Gnocchi API program name
+gnocchi_api_program_name: gnocchi-api
+#: Gnocchi metricd program name
+gnocchi_metricd_program_name: gnocchi-metricd
 
 #: Necessary packages
 gnocchi_apt_packages:
@@ -54,21 +69,20 @@ gnocchi_apt_packages:
   - python-dev
   - libpg_dev
 
+#: Gnocchi packages that must be installed before anything else
+gnocchi_requires_pip_packages:
+  - virtualenv
+  - virtualenv-tools
+  - python-keystoneclient # Keystoneclient needed for OSA keystone lib
 
-## System info
-gnocchi_system_user_name: gnocchi
-gnocchi_system_group_name: gnocchi
-gnocchi_system_shell: /bin/false
-gnocchi_system_comment: gnocchi system user
-gnocchi_system_user_home: "/var/lib/{{ gnocchi_system_user_name }}"
-
-## Service Type and Data
-gnocchi_service_name: gnocchi
-
-#: Gnocchi API program name
-gnocchi_api_program_name: gnocchi-api
-#: Gnocchi metricd program name
-gnocchi_metricd_program_name: gnocchi-metricd
+#: Common pip packages
+glance_pip_packages:
+  - gnocchi
+  - keystonemiddleware
+  - PyMySQL
+  - python-memcached
+  - pycrypto
+  - python-gnocchiclient
 
 #: List of programs/services owned by gnocchi
 gnocchi_service_names:

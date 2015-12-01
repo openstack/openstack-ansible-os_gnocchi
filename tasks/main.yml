@@ -15,4 +15,6 @@
 
 - include: gnocchi_pre_install.yml
 
+- include: gnocchi_install.yml
+
 - include: gnocchi_upstart_init.yml
