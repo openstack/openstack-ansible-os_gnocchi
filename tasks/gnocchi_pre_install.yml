@@ -86,7 +86,3 @@
   tags:
     - gnocchi-dirs
     - gnocchi-logs
-
-- include: gnocchi_messaging_setup.yml
-  when: >
-    inventory_hostname == groups['gnocchi_all'][0]
