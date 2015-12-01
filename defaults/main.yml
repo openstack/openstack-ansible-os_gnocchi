@@ -58,6 +58,8 @@ gnocchi_apt_packages:
 ## System info
 gnocchi_system_user_name: gnocchi
 gnocchi_system_group_name: gnocchi
+gnocchi_system_shell: /bin/false
+gnocchi_system_comment: gnocchi system user
 gnocchi_system_user_home: "/var/lib/{{ gnocchi_system_user_name }}"
 
 ## Service Type and Data
