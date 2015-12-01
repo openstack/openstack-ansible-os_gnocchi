@@ -13,4 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+- include: gnocchi_pre_install.yml
 
+- include: gnocchi_upstart_init.yml
