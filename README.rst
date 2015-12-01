@@ -7,7 +7,17 @@ to the OpenStack Ansible project.
 Requirements
 ------------
 
-None.
+Storage
+^^^^^^^
+You will need to have an appropriate set of data stores.
+This needs to be detailed separately in documentation to be written.
+
+Secrets
+^^^^^^^
+The secrets file (which should be copied to ``/etc/openstack_deploy`` in your
+deploy but originating from ``ext/openstack_deploy/user_gnocchi_secrets.yml``)
+needs to have values specified. This can be done by invoking the generator
+found in the openstack-ansible project: ``scripts/pw-token-gen.py``
 
 Role Variables
 --------------
