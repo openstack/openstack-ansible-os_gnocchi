@@ -85,7 +85,7 @@ gnocchi_requires_pip_packages:
   - python-keystoneclient # Keystoneclient needed for OSA keystone lib
 
 #: Common pip packages
-glance_pip_packages:
+gnocchi_pip_packages:
   - gnocchi
   - keystonemiddleware
   - PyMySQL
