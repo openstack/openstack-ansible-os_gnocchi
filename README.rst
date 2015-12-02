@@ -22,7 +22,21 @@ found in the openstack-ansible project: ``scripts/pw-token-gen.py``
 Role Variables
 --------------
 
-See ``defaults/main.yml`` for variables and their descriptions.
+Other variables expected for this role include:
+
+- keystone_service_publicuri
+- keystone_service_adminruri
+- galera_address
+
+Each of the keystone service uri variables is expected to include protocol,
+host, and port for the keystone service. Do not specify a path, to include
+keystone protocol version. See also the OpenStack Ansible project and the
+os_keystone role for more details on these variables.
+
+The galera address is expected to direct to the internal_lb_vip_address. See
+also the OpenStack Ansible project for more details.
+
+See ``defaults/main.yml`` for additional variables and their descriptions.
 
 Dependencies
 ------------
@@ -34,9 +48,12 @@ Example Playbook
 
 .. code-block:: yaml
 
-    - hosts: servers
+    - hosts: gnocchi_all
       roles:
-         - { role: stevelle.openstack-ansible-gnocchi }
+        role: stevelle.openstack-ansible-gnocchi
+        galera_address: "{{ internal_lb_vip_address }}"
+        tags:
+          - "os-gnocchi"
 
 License
 -------
