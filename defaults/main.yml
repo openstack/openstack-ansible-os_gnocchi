@@ -88,10 +88,12 @@ gnocchi_requires_pip_packages:
 gnocchi_pip_packages:
   - gnocchi
   - keystonemiddleware
+  - python-gnocchiclient
+  - pycrypto
   - PyMySQL
   - python-memcached
-  - pycrypto
-  - python-gnocchiclient
+  - python-swiftclient
+  - python-cephlibs
 
 #: List of programs/services owned by gnocchi
 gnocchi_service_names:
