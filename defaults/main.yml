@@ -44,11 +44,6 @@ gnocchi_etc_dir: "{{ (gnocchi_venv_enabled | bool) | ternary(gnocchi_venv_etc_di
 #: Location to retrieve the pre-built virtuelenv for gnocchi (optional)
 gnocchi_venv_download_url: http://127.0.0.1/venvs/untagged/ubuntu/gnocchi.tgz
 
-#: Gnocchi program source location
-gnocchi_git_url: "https://git.openstack.org/openstack/gnocchi"
-gnocchi_git_install_branch: 85bef730942dee660e4e87614aee3a212d7adf31# head of "master" as of 20.11.2015
-gnocchi_git_dest: "/opt/gnocchi_{{ gnocchi_git_install_branch | replace('/', '_') }}"
-
 #: Index DB info
 gnocchi_indexer_db_database: gnocchi
 gnocchi_indexer_db_user: gnocchi
