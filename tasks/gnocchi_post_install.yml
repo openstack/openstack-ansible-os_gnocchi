@@ -27,7 +27,7 @@
       dest: "/etc/gnocchi/gnocchi-api-paste.ini"
       config_overrides: "{{ gnocchi_api_paste_ini_overrides }}"
       config_type: "ini"
-    - src: "gnocchi-api.conf.j2"
+    - src: "gnocchi.conf.j2"
       dest: "/etc/gnocchi/gnocchi.conf"
       config_overrides: "{{ gnocchi_conf_overrides }}"
       config_type: "ini"
