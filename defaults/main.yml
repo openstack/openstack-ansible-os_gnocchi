@@ -76,7 +76,7 @@ gnocchi_apt_packages:
   - git
   - build-essential
   - python-dev
-  - libpg_dev
+  - libpq-dev
 
 #: Gnocchi packages that must be installed before anything else
 gnocchi_requires_pip_packages:
