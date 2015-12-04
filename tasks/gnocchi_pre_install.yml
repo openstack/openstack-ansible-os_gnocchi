@@ -33,7 +33,7 @@
   tags:
     - gnocchi-user
 
-- name: Create gnocchi dir
+- name: Create gnocchi dirs
   file:
     path: "{{ item.path }}"
     state: directory
@@ -44,9 +44,9 @@
     - { path: "/openstack", owner: "root", group: "root" }
     - { path: "/etc/gnocchi" }
     - { path: "{{ gnocchi_system_user_home }}" }
-    - { path: "{{ gnocchi_system_user_home }}/tmp" }
-    - { path: "{{ gnocchi_system_user_home }}/locks" }
-    - { path: "{{ gnocchi_system_user_home }}/cache/gnocchi" }
+    - { path: "var/lib/gnocchi/tmp" }
+    - { path: "var/lib/gnocchi/locks" }
+    - { path: "var/cache/gnocchi" }
   tags:
     - gnocchi-dirs
 
