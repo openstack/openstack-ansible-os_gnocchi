@@ -11,7 +11,7 @@ host = {{ gnocchi_service_address }}
 port = {{ gnocchi_service_port }}
 
 [indexer]
-url = mysql+pymysql://{{ gnocchi_indexer_db_user }}:{{ gnocchi_indexer_db_password }}@{{ gnocchi_indexer_db_address }}/{{ gnocchi_indexer_db_database }}?charset=utf8
+url = mysql+pymysql://{{ gnocchi_galera_user }}:{{ gnocchi_galera_password }}@{{ gnocchi_galera_address }}/{{ gnocchi_galera_database }}?charset=utf8
 
 [keystone_authtoken]
 insecure = {{ keystone_service_internaluri_insecure | bool }}

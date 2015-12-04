@@ -45,9 +45,9 @@ gnocchi_etc_dir: "{{ (gnocchi_venv_enabled | bool) | ternary(gnocchi_venv_etc_di
 gnocchi_venv_download_url: http://127.0.0.1/venvs/untagged/ubuntu/gnocchi.tgz
 
 #: Index DB info
-gnocchi_indexer_db_database: gnocchi
-gnocchi_indexer_db_user: gnocchi
-gnocchi_indexer_db_address: "{{ galera_address }}"
+gnocchi_galera_database: gnocchi
+gnocchi_galera_user: gnocchi
+gnocchi_galera_address: "{{ galera_address }}"
 
 #: System info
 gnocchi_system_user_name: gnocchi
