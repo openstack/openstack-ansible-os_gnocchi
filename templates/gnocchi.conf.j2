@@ -1,9 +1,6 @@
 # {{ ansible_managed }}
 [DEFAULT]
 debug = {{ debug }}
-verbose = {{ verbose }}
-log_file = /var/log/gnocchi/gnocchi.log
-watch_log_file = True
 fatal_deprecations = {{ gnocchi_fatal_deprecations }}
 
 [api]
@@ -15,7 +12,6 @@ url = mysql+pymysql://{{ gnocchi_galera_user }}:{{ gnocchi_galera_password }}@{{
 
 [keystone_authtoken]
 insecure = {{ keystone_service_internaluri_insecure | bool }}
-auth_plugin = {{ gnocchi_keystone_auth_plugin }}
 signing_dir = /var/cache/gnocchi
 auth_url = {{ keystone_service_adminuri }}
 auth_uri = {{ keystone_service_internaluri }}

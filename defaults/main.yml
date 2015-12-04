@@ -17,7 +17,6 @@
 is_metal: true
 
 debug: false
-verbose: true
 
 gnocchi_fatal_deprecations: False
 
@@ -65,7 +64,6 @@ gnocchi_service_project_domain_id: default
 gnocchi_service_user_domain_id: default
 gnocchi_service_address: 0.0.0.0
 gnocchi_service_port: 8041
-gnocchi_keystone_auth_plugin: password
 
 #: Gnocchi API program name
 gnocchi_api_program_name: gnocchi-api
