@@ -17,5 +17,9 @@
 - include: gnocchi_install.yml
 - include: gnocchi_post_install.yml
 - include: gnocchi_upstart_init.yml
+
 - include: gnocchi_db_setup.yml
+  run_once: true
+
+- include: gnocchi_service_setup.yml
   run_once: true
