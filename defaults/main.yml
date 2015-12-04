@@ -63,7 +63,7 @@ gnocchi_service_user_name: gnocchi
 gnocchi_service_project_name: service
 gnocchi_service_project_domain_id: default
 gnocchi_service_user_domain_id: default
-gnocchi_api_bind_address: 0.0.0.0
+gnocchi_service_address: 0.0.0.0
 gnocchi_service_port: 8041
 gnocchi_keystone_auth_plugin: password
 

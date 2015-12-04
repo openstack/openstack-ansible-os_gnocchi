@@ -1,5 +1,4 @@
 # {{ ansible_managed }}
-
 [DEFAULT]
 debug = {{ debug }}
 verbose = {{ verbose }}
@@ -7,15 +6,12 @@ log_file = /var/log/gnocchi/gnocchi.log
 watch_log_file = True
 fatal_deprecations = {{ gnocchi_fatal_deprecations }}
 
-
 [api]
-host = {{ gnocchi_api_bind_address }}
+host = {{ gnocchi_service_address }}
 port = {{ gnocchi_service_port }}
-
 
 [indexer]
 url = mysql+pymysql://{{ gnocchi_indexer_db_user }}:{{ gnocchi_indexer_db_password }}@{{ gnocchi_indexer_db_address }}/{{ gnocchi_indexer_db_database }}?charset=utf8
-
 
 [keystone_authtoken]
 insecure = {{ keystone_service_internaluri_insecure | bool }}
@@ -41,13 +37,15 @@ memcache_secret_key = {{ memcached_encryption_key }}
 # if your keystone deployment uses PKI, and you value security over performance:
 check_revocations_for_cached = False
 
+[storage]
+driver = file
+coordination_url = file:///var/lib/gnocchi/locks
 
 [metricd]
 # Number of workers for Gnocchi metric daemons. By default the available number
 # of CPU is used. (integer value)
 # Minimum value: 1
 #workers = <None>
-
 
 [statsd]
 # The listen IP for statsd (string value)
@@ -72,11 +70,6 @@ check_revocations_for_cached = False
 
 # Delay between flushes (floating point value)
 #flush_delay = <None>
-
-
-[storage]
-driver = file
-coordination_url = file:///var/lib/gnocchi/locks
 
 ############
 ## File Storage
