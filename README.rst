@@ -19,6 +19,10 @@ deploy but originating from ``ext/openstack_deploy/user_gnocchi_secrets.yml``)
 needs to have values specified. This can be done by invoking the generator
 found in the openstack-ansible project: ``scripts/pw-token-gen.py``
 
+TODO
+^^^^
+Work out the ceilometer config to send metrics to gnocchi for storage.
+
 Role Variables
 --------------
 
