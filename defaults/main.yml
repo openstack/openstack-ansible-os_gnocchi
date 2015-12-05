@@ -17,7 +17,6 @@
 is_metal: true
 
 debug: false
-
 gnocchi_fatal_deprecations: False
 
 #: Set this to enable or disable installing in a venv
@@ -48,6 +47,11 @@ gnocchi_galera_database: gnocchi
 gnocchi_galera_user: gnocchi
 gnocchi_galera_address: "{{ galera_address }}"
 
+# TODO(stevelle) need to allow make it easier to use real storage options, default to Swift
+#: Storage info
+gnocchi_storage_driver: file
+gnocchi_coordination_url: "file://var/lib/gnocchi/locks"
+
 #: System info
 gnocchi_system_user_name: gnocchi
 gnocchi_system_group_name: gnocchi
@@ -61,15 +65,24 @@ gnocchi_service_type: metric
 gnocchi_service_description: "OpenStack Metric Service"
 gnocchi_service_region: RegionOne
 gnocchi_service_user_name: gnocchi
+gnocchi_role_name: admin
 gnocchi_service_project_name: service
 gnocchi_service_project_domain_id: default
 gnocchi_service_user_domain_id: default
 gnocchi_service_address: 0.0.0.0
 gnocchi_service_port: 8041
+gnocchi_service_proto: http
+gnocchi_service_registry_proto: "{{ gnocchi_service_proto }}"
+gnocchi_service_publicuri_proto: "{{ openstack_service_publicuri_proto | default(gnocchi_service_proto) }}"
+gnocchi_service_adminuri_proto: "{{ openstack_service_adminuri_proto | default(gnocchi_service_proto) }}"
+gnocchi_service_internaluri_proto: "{{ openstack_service_internaluri_proto | default(gnocchi_service_proto) }}"
+gnocchi_service_publicurl: "{{ gnocchi_service_publicuri_proto }}://{{ external_lb_vip_address }}:{{ gnocchi_service_port }}"
+gnocchi_service_internalurl: "{{ gnocchi_service_internaluri_proto }}://{{ internal_lb_vip_address }}:{{ gnocchi_service_port }}"
+gnocchi_service_adminurl: "{{ gnocchi_service_adminuri_proto }}://{{ internal_lb_vip_address }}:{{ gnocchi_service_port }}"
 
 #: Gnocchi API program name
 gnocchi_api_program_name: gnocchi-api
-#: Gnocchi metricd program name
+#: Gnocchi Metricd program name
 gnocchi_metricd_program_name: gnocchi-metricd
 
 #: Necessary packages
@@ -85,6 +98,7 @@ gnocchi_requires_pip_packages:
   - virtualenv-tools
   - python-keystoneclient # Keystoneclient needed for OSA keystone lib
 
+# TODO(stevelle) would like to push out the cephlibs to a ceph-client role
 #: Common pip packages
 gnocchi_pip_packages:
   - gnocchi
@@ -99,7 +113,8 @@ gnocchi_pip_packages:
 #: List of programs/services owned by gnocchi
 gnocchi_service_names:
   - "{{ gnocchi_api_program_name }}"
-  - "{{ gnocchi_metricd_program_name }}"
+# TODO(stevelle) needs configuration help
+#  - "{{ gnocchi_metricd_program_name }}"
 
 #: Tunable overrides
 gnocchi_conf_overrides: {}

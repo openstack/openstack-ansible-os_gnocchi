@@ -34,8 +34,8 @@ memcache_secret_key = {{ memcached_encryption_key }}
 check_revocations_for_cached = False
 
 [storage]
-driver = file
-coordination_url = file:///var/lib/gnocchi/locks
+driver = {{ gnocchi_storage_driver }}
+coordination_url = {{ gnocchi_coordination_url }}
 
 [metricd]
 # Number of workers for Gnocchi metric daemons. By default the available number
@@ -67,15 +67,13 @@ coordination_url = file:///var/lib/gnocchi/locks
 # Delay between flushes (floating point value)
 #flush_delay = <None>
 
+{% if gnocchi_storage_driver == 'file' %}
 ############
 ## File Storage
 ############
-# Path used to store gnocchi data files. (string value)
 file_basepath = /var/lib/gnocchi
-
-# Path used to store Gnocchi temporary files. (string value)
 file_basepath_tmp = ${file_basepath}/tmp
-
+{% else %}
 ############
 ## Ceph Storage
 ############
@@ -144,3 +142,4 @@ file_basepath_tmp = ${file_basepath}/tmp
 # InfluxDB ingests data in asynchroneous ways. Set to True to wait data are
 # ingested. (boolean value)
 #influxdb_block_until_data_ingested = false
+{% endif %}
