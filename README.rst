@@ -43,7 +43,7 @@ TODO
 ^^^^
 - Work out the ceilometer config to send metrics to gnocchi for storage.
 - Switch to memcached as default coordinator ala
-"memcached://localhost:11211?timeout=5"
+"memcached://localhost:11211?timeout=5" or MySQL as default coordinator
 - Switch to Swift as default storage
 
 Role Variables
