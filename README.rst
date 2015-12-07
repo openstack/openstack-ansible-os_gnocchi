@@ -7,10 +7,30 @@ to the OpenStack Ansible project.
 Requirements
 ------------
 
+Index
+^^^^^
+You will need to have an appropriate SQLAlchemy-supported database for the
+index. OpenStack Ansible provides roles to deploy a Galera cluster, and
+this role is presumed by the default indexer url but you can override that
+using the config template library if you wish to use PostgreSQL.
+
 Storage
 ^^^^^^^
-You will need to have an appropriate set of data stores.
-This needs to be detailed separately in documentation to be written.
+You will need to have an appropriate set of data stores. Filesystem storage
+is the default and is NOT an H.A. solution and will not work properly if there
+are multiple Gnocchi instances in your OpenStack cluster. First-class support
+is planned for Swift and Ceph.
+
+Coordination
+^^^^^^^^^^^^
+The default is to use file-based coordination so the default is NOT an H.A.
+solution and will not work properly if there are multiple Gnocchi instances in
+a your OpenStack cluster.
+
+If you wish to use Redis or Zookeeper for coordination, setting up that
+service is a prerequisite. You might have luck using other roles for
+management of that. (e.g. https://github.com/AnsibleShipyard/ansible-java and
+https://github.com/AnsibleShipyard/ansible-zookeeper)
 
 Secrets
 ^^^^^^^
@@ -21,7 +41,10 @@ found in the openstack-ansible project: ``scripts/pw-token-gen.py``
 
 TODO
 ^^^^
-Work out the ceilometer config to send metrics to gnocchi for storage.
+- Work out the ceilometer config to send metrics to gnocchi for storage.
+- Switch to memcached as default coordinator ala
+"memcached://localhost:11211?timeout=5"
+- Switch to Swift as default storage
 
 Role Variables
 --------------
