@@ -1,7 +1,7 @@
 OpenStack Ansible Gnocchi
 =========================
 
-A simple role to deploy OpenStack Gnocchi from source in a manner similar
+A simple role to deploy `OpenStack Gnocchi`_ from source in a manner similar
 to the OpenStack Ansible project.
 
 Requirements
@@ -118,3 +118,4 @@ OpenStack Ansible and is vendored in ``library``.
 The role layout and documentation was cribbed from the Openstack Searchlight
 role by Ian Cordasco.
 
+.. _OpenStack Gnocchi http://gnocchi.xyz/install.html:
