@@ -59,6 +59,8 @@ Other variables expected for this role include:
 - galera_address
 - galera_root_user
 - galera_root_password
+- memcached_servers
+- memcached_encryption_key
 - internal_lb_vip_address
 - external_lb_vip_address
 
@@ -78,6 +80,10 @@ The ``galera_address`` is expected to direct to the your MySQL server or a load
 balancer host which sits in front of your Galera cluster. This may be See also
 the OpenStack Ansible project for more details. The ``galera_root_*`` variables
 should contain the credentials used to create the Gnocchi index database.
+
+The ``memcached_*`` variables are expected for caching Keystone auth. See also
+the OpenStack Ansible project and the os_keystone role for more details on
+these variables.
 
 Each of the ``*_lb_vip_address`` variables is expected to contain the host
 address for your Gnocchi service, either internal address for use within the
