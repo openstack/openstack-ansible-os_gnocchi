@@ -17,7 +17,9 @@
   gnocchi:
     command: ensure-archive-policy
     name: {{ item.name }}
-    granularities: {{ item.granularities }}
+    definition: {{ item.definition }}
+    back_window: {{ item.back_window | default(0) }}
+    aggregation_methods: {{ item.aggregation_methods | default('') }}
     openrc_path: /root/openrc
   with_items:
     - "{{ gnocchi_archive_policies }}"
@@ -33,8 +35,8 @@
   gnocchi:
     command: ensure-archive-policy-rule
     name: {{ item.name }}
-    policy: {{ item.policy }}
-    pattern: {{ item.pattern }}
+    archive_policy_name: {{ item.policy }}
+    metric_pattern: {{ item.pattern }}
     openrc_path: /root/openrc
   with_items:
     - "{{ gnocchi_archive_policy_rules }}"

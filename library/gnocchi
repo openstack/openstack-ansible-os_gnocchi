@@ -55,10 +55,11 @@ options:
         description:
             - Back window of the archive policy
         required: False
-        default: None
+        default: 0
     aggregation_methods:
         description:
-            - Aggregation method of the archive policy
+            - Aggregation method of the archive policy. Defaults to Gnocchi
+              default aggregation methods from configuration when omitted.
         required: False
         default: None
     archive_policy_name:
@@ -190,6 +191,11 @@ class ManageGnocchi(object):
                 msg = 'Missing archive policy %s'
                 self.module.fail_json(msg=msg % 'definition')
 
+            # remove a blank value, as default
+            if ('aggregation_methods' in vars and
+                    vars['aggregation_methods'] == ''):
+                vars.pop('aggregation_methods')
+
             self.state_change = True
             ap = policy_mgr.create(archive_policy=vars)
 
@@ -226,7 +232,7 @@ def main():
             region_name=dict(required=False),
             name=dict(required=True),
             definition=dict(required=False),
-            back_window=dict(required=False),
+            back_window=dict(required=False, default='0'),
             aggregation_methods=dict(required=False),
             archive_policy_name=dict(required=False),
             metric_pattern=dict(required=False)
