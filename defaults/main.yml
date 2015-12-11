@@ -52,6 +52,27 @@ gnocchi_galera_address: "{{ galera_address }}"
 gnocchi_storage_driver: file
 gnocchi_coordination_url: "file://var/lib/gnocchi/locks"
 
+#: Default Archive Policies
+gnocchi_archive_policies:
+  - name: "low"
+    definition:
+      - { granularity: "5m", points: 12 }
+      - { granularity: "1h", points: 24 }
+      - { granularity: "1d", points: 30 }
+  - name: "medium",
+    definition:
+      - { granularity: "60s", points: 60 }
+      - { granularity: "1h", points: 168 }
+      - { granularity: "1d", points: 365 }
+  - name: "high",
+    definition:
+      - { granularity: "1s", points: 86400 }
+      - { granularity: "1m", points: 43200 }
+      - { granularity: "1h", points: 8760" }
+
+gnocchi_archive_policy_rules:
+  - { name: "default", policy: "low", pattern: "*" }
+
 #: System info
 gnocchi_system_user_name: gnocchi
 gnocchi_system_group_name: gnocchi

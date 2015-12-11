@@ -1,0 +1,241 @@
+#!/usr/bin/env python
+# Copyright 2014, Rackspace US, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+import re
+
+DOCUMENTATION = """
+---
+module: gnocchi
+short_description:
+    - Module for working with OpenStack Gnocchi
+description:
+    - Module for working with OpenStack Gnocchi
+options:
+    command:
+        description:
+            - Operation to perform. Options include
+        choices:
+            - ensure-archive-policy
+            - ensure-archive-policy-rule
+        required: True
+    openrc_path:
+        decription:
+            - Path to openrc file containing credentials which will be used to
+              authorize with Keystone and work with Gnocchi.
+        required: True
+    region_name:
+        decription:
+            - OpenStack Region Name for the Gnocchi service to work with. This
+              value is only used when OS_REGION_NAME is not specified in the
+              provided openrc file
+        required: False
+        default: None
+    name:
+        description:
+            - Name assigned to the policy or policy-rule
+        required: True
+    definition:
+        description:
+            - Array of dictionaries containing parameters for each entry.
+              Required when specifying an archive-policy.
+        required: False
+        default: None
+    back_window:
+        description:
+            - Back window of the archive policy
+        required: False
+        default: None
+    aggregation_methods:
+        description:
+            - Aggregation method of the archive policy
+        required: False
+        default: None
+    archive_policy_name:
+        description:
+            - Name of the archive-policy to use. Required when specifying an
+              archive-policy-rule.
+        required: False
+        default: None
+    metric_pattern:
+        description:
+            - Wildcard string of metric name(s) to match. Required when
+              specifying an archive-policy-rule.
+        required: False
+        default: None
+
+requirements: [ gnocchiclient ]
+author: Steve Lewis -- https://github.com/stevelle
+"""
+
+EXAMPLES = """
+# Ensure a given policy exists
+  gnocchi:
+    command: 'ensure-archive-policy'
+    openrc_path: '/root/openrc'
+    name: 'simple-policy'
+    definition:
+      - { granularity: '1m', points: 60 }
+      - { granularity: '1h', points: 24 }
+
+# Ensure the default policy is set
+  gnocchi:
+    command: 'ensure-archive-policy-rule'
+    openrc_path: '/root/openrc'
+    name: 'default'
+    archive_policy_name: 'low'
+    metric_pattern: '*'
+"""
+
+COMMAND_MAP = {
+    'archive-policy': {
+        'variables': ['openrc', 'region_name', 'name', 'definition',
+                      'back_window', 'aggregation_methods']
+    },
+    'archive-policy-rule': {
+        'variables': ['openrc', 'region_name', 'name', 'archive_policy_name',
+                      'metric_pattern']
+    }
+}
+
+# Options accepted by keystoneauth1.identity.generic.password.Password
+AUTH_OPTS = ['auth_url', 'tenant_id', 'tenant_name', 'project_id',
+             'project_name', 'project_domain_id', 'project_domain_name',
+             'domain_id', 'domain_name', 'trust_id', 'username', 'user_id',
+             'password', 'user_domain_id', 'user_domain_name']
+
+
+class ManageGnocchi(object):
+    def __init__(self, module):
+        self.state_change = False
+        self.gnocchi = None
+        self.module = module
+        try:
+            self._init_gnocchi()
+        except Exception as e:
+            self.module.fail_json(
+                err='Initialisation Error: %s' % e,
+                rc=2, msg=str(e))
+
+    def _parse_openrc(self):
+        """Get credentials from an openrc file."""
+        openrc_path = self.module.params['openrc_path']
+        line_re = re.compile('^export (?P<key>OS_\w*)=(?P<value>[^\n]*)')
+        with open(openrc_path) as openrc:
+            matches = [line_re.match(line) for line in openrc]
+            return dict(
+                (g.groupdict()['key'].lower()[3:], g.groupdict()['value'])
+                for g in matches if g
+            )
+
+    def _auth_session(self):
+        """Create a keystone auth session."""
+        from keystoneauth1.identity.generic import password
+        from keystoneauth1 import session
+
+        opts = {k: v for k, v in self._parse_openrc().iteritems()
+                if k in AUTH_OPTS}
+
+        auth = password.Password(**opts)
+        return session.Session(auth=auth)
+
+    def _init_gnocchi(self):
+        """Create gnocchi client object using token and url from keystone."""
+        opts = self._parse_openrc()
+        params = self.module.params
+        interface = opts.get('endpoint_type', 'internal')
+        region = opts.get('region_name', params.get('region_name', None))
+        if not region:
+            self.module.fail_json(msg='Missing region')
+
+        try:
+            import gnocchiclient.v1.client as gclient
+        except ImportError:
+            self.module.fail_json('Missing gnocchiclient')
+        else:
+            self.gnocchi = gclient.Client(session=self._auth_session(),
+                                          interface=interface,
+                                          region_name=region)
+
+    def route(self):
+        """Run the command specified by the command parameter."""
+        getattr(self, COMMAND_MAP[self.module.params['command']])()
+
+    def ensure_archive_policy(self, vars):
+        """Create a new archive policy within Gnocchi if it does not exist.
+
+        Returns the policy name on a successful run.
+
+        :param vars: ``list``  List of all variables that are available
+                                    to use within the archive policy create
+                                    command.
+        """
+        import gnocchiclient.exceptions
+
+        policy_mgr = self.gnocchi.archive_policy
+        try:
+            ap = policy_mgr.get(name=vars.get('name', None))
+        except gnocchiclient.exceptions.ArchivePolicyNotFound:
+            if 'definition' not in vars:
+                msg = 'Missing archive policy %s'
+                self.module.fail_json(msg=msg % 'definition')
+
+            self.state_change = True
+            ap = policy_mgr.create(archive_policy=vars)
+
+        return self._facts(facts={'name': ap['name']})
+
+    def ensure_archive_policy_rule(self, vars):
+        """Create a new archive policy rule within Gnocchi if it does not
+        exist.
+
+        Returns the policy rule name on a successful run.
+
+        :param vars: ``list`` List of all variables that are available to
+                                   use within the archive policy rule create
+                                   command.
+        """
+        named = vars.pop('name', None)
+        rule_mgr = self.gnocchi.archive_policy_rule
+        apr = rule_mgr.get(name=named)
+        if apr is None:
+            self.state_change = True
+            vars.push('name', named)
+            apr = rule_mgr.create(archive_policy_rule=vars)
+        else:
+            self.module.fail_json(msg='Missing archive policy rule name.')
+
+        return self._facts(facts={'name': ap['name']})
+
+
+def main():
+    module = AnsibleModule(
+        argument_spec=dict(
+            command=dict(required=True, choices=COMMAND_MAP.keys()),
+            openrc_path=dict(required=True),
+            region_name=dict(required=False),
+            name=dict(required=True),
+            definition=dict(required=False),
+            back_window=dict(required=False),
+            aggregation_methods=dict(required=False),
+            archive_policy_name=dict(required=False),
+            metric_pattern=dict(required=False)
+        ),
+        supports_check_mode=False
+    )
+    mg = ManageGnocchi(module)
+    mg.route()
+
+from ansible.module_utils.basic import *
+if __name__ == '__main__':
+    main()

@@ -1,0 +1,47 @@
+---
+# Copyright 2015, Rackspace US, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- name: Ensure Archive Policies
+  gnocchi:
+    command: ensure-archive-policy
+    name: {{ item.name }}
+    granularities: {{ item.granularities }}
+    openrc_path: /root/openrc
+  with_items:
+    - "{{ gnocchi_archive_policies }}"
+  register: add_policies
+  until: add_service|success
+  retries: 5
+  delay: 10
+  tags:
+    - gnocchi-setup
+    - gnocchi-policy-setup
+
+- name: Ensure Archive Policy Rules
+  gnocchi:
+    command: ensure-archive-policy-rule
+    name: {{ item.name }}
+    policy: {{ item.policy }}
+    pattern: {{ item.pattern }}
+    openrc_path: /root/openrc
+  with_items:
+    - "{{ gnocchi_archive_policy_rules }}"
+  register: add_policy_rules
+  until: add_policy_rules|success
+  retries: 5
+  delay: 10
+  tags:
+    - gnocchi-setup
+    - gnocchi-policy-setup

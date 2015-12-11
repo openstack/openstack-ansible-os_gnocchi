@@ -24,3 +24,6 @@
 
 - include: gnocchi_service_setup.yml
   run_once: true
+
+- include: gnocchi_policy_setup.yml
+  run_once: true
