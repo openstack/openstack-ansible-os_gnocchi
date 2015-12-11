@@ -68,7 +68,7 @@ gnocchi_archive_policies:
     definition:
       - { granularity: "1s", points: 86400 }
       - { granularity: "1m", points: 43200 }
-      - { granularity: "1h", points: 8760" }
+      - { granularity: "1h", points: 8760 }
 
 gnocchi_archive_policy_rules:
   - { name: "default", policy: "low", pattern: "*" }
