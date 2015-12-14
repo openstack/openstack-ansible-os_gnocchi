@@ -197,7 +197,12 @@ class ManageGnocchi(object):
                 vars.pop('aggregation_methods')
 
             self.state_change = True
-            ap = policy_mgr.create(archive_policy=vars)
+            try:
+                ap = policy_mgr.create(archive_policy=vars)
+            except gnocchiclient.exceptions.ClientException as e:
+                self.module.fail_json(
+                    err='Policy Create Error: %s' % e,
+                    rc=3, msg=str(e))
 
         return self._facts(facts={'name': ap['name']})
 
@@ -211,17 +216,25 @@ class ManageGnocchi(object):
                                    use within the archive policy rule create
                                    command.
         """
+        import gnocchiclient.exceptions
+
         named = vars.pop('name', None)
         rule_mgr = self.gnocchi.archive_policy_rule
-        apr = rule_mgr.get(name=named)
-        if apr is None:
+        try:
+            apr = rule_mgr.get(name=named)
+        except gnocchiclient.exceptions.ArchivePolicyRuleException:
             self.state_change = True
             vars.push('name', named)
-            apr = rule_mgr.create(archive_policy_rule=vars)
+            try:
+                apr = rule_mgr.create(archive_policy_rule=vars)
+            except gnocchiclient.exceptions.ClientException as e:
+                self.module.fail_json(
+                    err='Policy Rule Create Error: %s' % e,
+                    rc=3, msg=str(e))
         else:
             self.module.fail_json(msg='Missing archive policy rule name.')
 
-        return self._facts(facts={'name': ap['name']})
+        return self._facts(facts={'name': apr['name']})
 
 
 def main():
