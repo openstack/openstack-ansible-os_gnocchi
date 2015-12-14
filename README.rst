@@ -45,6 +45,7 @@ TODO
 - Switch to memcached as default coordinator ala
 "memcached://localhost:11211?timeout=5" or MySQL as default coordinator
 - Switch to Swift as default storage
+- Future support in Ceilometer conf: https://review.openstack.org/#/c/253635
 
 Role Variables
 --------------
