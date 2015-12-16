@@ -12,8 +12,7 @@ galaxy_info:
   categories:
   - cloud
 dependencies:
- - pip_install
-# TODO the following won't resolve yet: not split out from OSA
-#  - galera_client
+  - galera_client
+  - pip_lock_down
+
 #  - openstack_openrc
-#  - pip_lock_down
