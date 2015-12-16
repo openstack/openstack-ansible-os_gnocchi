@@ -16,10 +16,10 @@
 - name: Ensure Archive Policies
   gnocchi:
     command: ensure-archive-policy
-    name: {{ item.name }}
-    definition: {{ item.definition }}
-    back_window: {{ item.back_window | default(0) }}
-    aggregation_methods: {{ item.aggregation_methods | default('') }}
+    name: "{{ item.name }}"
+    definition: "{{ item.definition }}"
+    back_window: "{{ item.back_window | default(0) }}"
+    aggregation_methods: "{{ item.aggregation_methods | default('') }}"
     openrc_path: /root/openrc
   with_items:
     - "{{ gnocchi_archive_policies }}"
@@ -34,9 +34,9 @@
 - name: Ensure Archive Policy Rules
   gnocchi:
     command: ensure-archive-policy-rule
-    name: {{ item.name }}
-    archive_policy_name: {{ item.policy }}
-    metric_pattern: {{ item.pattern }}
+    name: "{{ item.name }}"
+    archive_policy_name: "{{ item.policy }}"
+    metric_pattern: "{{ item.pattern }}"
     openrc_path: /root/openrc
   with_items:
     - "{{ gnocchi_archive_policy_rules }}"

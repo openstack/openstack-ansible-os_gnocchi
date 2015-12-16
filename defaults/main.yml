@@ -59,12 +59,12 @@ gnocchi_archive_policies:
       - { granularity: "5m", points: 12 }
       - { granularity: "1h", points: 24 }
       - { granularity: "1d", points: 30 }
-  - name: "medium",
+  - name: "medium"
     definition:
       - { granularity: "60s", points: 60 }
       - { granularity: "1h", points: 168 }
       - { granularity: "1d", points: 365 }
-  - name: "high",
+  - name: "high"
     definition:
       - { granularity: "1s", points: 86400 }
       - { granularity: "1m", points: 43200 }
