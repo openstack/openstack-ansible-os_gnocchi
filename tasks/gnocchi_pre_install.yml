@@ -46,7 +46,7 @@
     - { path: "{{ gnocchi_system_user_home }}" }
     - { path: "/var/lib/gnocchi/tmp" }
     - { path: "/var/lib/gnocchi/locks" }
-    - { path: "/var/cache/gnocchi" }
+    - { path: "/var/cache/gnocchi", mode: "0700" }
   tags:
     - gnocchi-dirs
 
