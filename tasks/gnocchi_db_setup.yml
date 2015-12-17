@@ -41,8 +41,6 @@
 
 - name: Perform a Gnocchi DB sync
   command: "{{ gnocchi_bin }}/gnocchi-upgrade"
-  sudo: yes
-  sudo_user: "{{ gnocchi_system_user_name }}"
   tags:
     - gnocchi-db-sync
     - gnocchi-setup
