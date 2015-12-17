@@ -10,10 +10,10 @@ paste.app_factory = gnocchi.rest.app:app_factory
 [filter:keystone_authtoken]
 paste.filter_factory = keystonemiddleware.auth_token:filter_factory
 oslo_config_project = gnocchi
-delay_auth_decision = true
 
 [filter:healthcheck]
 paste.filter_factory = oslo_middleware:Healthcheck.factory
+path = /status
 backends = disable_by_file
 disable_by_file_path = {{ gnocchi_healthcheck_disable_path }}
 
