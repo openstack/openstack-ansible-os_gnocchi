@@ -84,6 +84,7 @@ gnocchi_system_user_home: "/var/lib/{{ gnocchi_system_user_name }}"
 gnocchi_service_name: gnocchi
 gnocchi_service_type: metric
 gnocchi_service_description: "OpenStack Metric Service"
+gnocchi_keystone_auth_plugin: password
 gnocchi_service_region: RegionOne
 gnocchi_service_user_name: gnocchi
 gnocchi_role_name: admin
