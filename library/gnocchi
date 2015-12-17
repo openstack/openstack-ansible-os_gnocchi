@@ -99,11 +99,11 @@ EXAMPLES = """
 """
 
 COMMAND_MAP = {
-    'archive-policy': {
+    'ensure-archive-policy': {
         'variables': ['openrc', 'region_name', 'name', 'definition',
                       'back_window', 'aggregation_methods']
     },
-    'archive-policy-rule': {
+    'ensure-archive-policy-rule': {
         'variables': ['openrc', 'region_name', 'name', 'archive_policy_name',
                       'metric_pattern']
     }
