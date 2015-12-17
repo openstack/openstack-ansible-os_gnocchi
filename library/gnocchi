@@ -284,8 +284,6 @@ class ManageGnocchi(object):
                 self.module.fail_json(
                     err='Policy Rule Create Error: %s' % e,
                     rc=3, msg=str(e))
-        else:
-            self.module.fail_json(msg='Missing archive policy rule name.')
 
         return {'gnocchi_facts': {'name': apr['name']}}
 
