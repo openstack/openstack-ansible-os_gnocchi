@@ -13,9 +13,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+- name: Ensure gnocchi API service is started
+  service:
+    name: "{{ item }}"
+    state: "started"
+    pattern: "{{ item }}"
+  with_items:
+    - "{{ gnocchi_api_program_name }}"
+
 - name: Ensure Archive Policies
   gnocchi:
-    command: ensure-archive-policy
+    command: ensure_archive_policy
     name: "{{ item.name }}"
     definition: "{{ item.definition }}"
     back_window: "{{ item.back_window | default(0) }}"
@@ -34,7 +42,7 @@
 
 - name: Ensure Archive Policy Rules
   gnocchi:
-    command: ensure-archive-policy-rule
+    command: ensure_archive_policy_rule
     name: "{{ item.name }}"
     archive_policy_name: "{{ item.policy }}"
     metric_pattern: "{{ item.pattern }}"

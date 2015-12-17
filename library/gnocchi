@@ -26,8 +26,8 @@ options:
         description:
             - Operation to perform. Options include
         choices:
-            - ensure-archive-policy
-            - ensure-archive-policy-rule
+            - ensure_archive_policy
+            - ensure_archive_policy_rule
         required: True
     openrc_path:
         decription:
@@ -82,7 +82,7 @@ author: Steve Lewis -- https://github.com/stevelle
 EXAMPLES = """
 # Ensure a given policy exists
   gnocchi:
-    command: 'ensure-archive-policy'
+    command: 'ensure_archive_policy'
     openrc_path: '/root/openrc'
     name: 'simple-policy'
     definition:
@@ -91,7 +91,7 @@ EXAMPLES = """
 
 # Ensure the default policy is set
   gnocchi:
-    command: 'ensure-archive-policy-rule'
+    command: 'ensure_archive_policy_rule'
     openrc_path: '/root/openrc'
     name: 'default'
     archive_policy_name: 'low'
@@ -99,13 +99,11 @@ EXAMPLES = """
 """
 
 COMMAND_MAP = {
-    'ensure-archive-policy': {
-        'variables': ['openrc', 'region_name', 'name', 'definition',
-                      'back_window', 'aggregation_methods']
+    'ensure_archive_policy': {
+        'vars': ['name', 'definition', 'back_window', 'aggregation_methods']
     },
-    'ensure-archive-policy-rule': {
-        'variables': ['openrc', 'region_name', 'name', 'archive_policy_name',
-                      'metric_pattern']
+    'ensure_archive_policy_rule': {
+        'vars': ['name', 'archive_policy_name', 'metric_pattern']
     }
 }
 
@@ -157,7 +155,8 @@ class ManageGnocchi(object):
         interface = opts.get('endpoint_type', 'internal')
         region = opts.get('region_name', params.get('region_name', None))
         if not region:
-            self.module.fail_json(msg='Missing region_name in openrc or as option to module')
+            self.module.fail_json(msg='Missing region_name in openrc or as '
+                                      'option to module')
 
         try:
             import gnocchiclient.v1.client as gclient
@@ -168,9 +167,59 @@ class ManageGnocchi(object):
                                           interface=interface,
                                           region_name=region)
 
+    def _get_vars(self, variables, required=None):
+        """Return a dict of all variables as found within the module.
+
+        :param variables: ``list``  List of all variables that are available to
+                                    use within the Keystone Command.
+        :param required: ``list``  Name of variables that are required.
+        """
+        return_dict = {}
+        for variable in variables:
+            return_dict[variable] = self.module.params.get(variable)
+        else:
+            if isinstance(required, list):
+                for var_name in required:
+                    check = return_dict.get(var_name)
+                    if check is None:
+                        self.failure(
+                            error='Missing [ %s ] from Task or found a None'
+                                  ' value' % var_name,
+                            rc=000,
+                            msg='variables %s - available params [ %s ]'
+                                % (variables, self.module.params)
+                        )
+            return return_dict
+
     def route(self):
-        """Run the command specified by the command parameter."""
-        getattr(self, COMMAND_MAP[self.module.params['command']])()
+        """Run the command as its provided to the module."""
+        command_name = self.module.params['command']
+        if command_name not in COMMAND_MAP:
+            self.module.fail_json(
+                error='No Command Found',
+                rc=2,
+                msg='Command [ %s ] was not found.' % command_name
+            )
+
+        action_command = COMMAND_MAP[command_name]
+        if hasattr(self, '%s' % command_name):
+            action = getattr(self, '%s' % command_name)
+            facts = action(vars=action_command['vars'
+                                               ''
+                                               ''])
+            if facts is None:
+                self.module.exit_json(changed=self.state_change)
+            else:
+                self.module.exit_json(
+                    changed=self.state_change,
+                    ansible_facts=facts
+                )
+        else:
+            self.module.fail_json(
+                error='Command not in ManageKeystone class',
+                rc=2,
+                msg='Method [ %s ] was not found.' % command_name
+            )
 
     def ensure_archive_policy(self, vars):
         """Create a new archive policy within Gnocchi if it does not exist.
@@ -183,28 +232,29 @@ class ManageGnocchi(object):
         """
         import gnocchiclient.exceptions
 
+        variables = self._get_vars(vars)
         policy_mgr = self.gnocchi.archive_policy
         try:
-            ap = policy_mgr.get(name=vars.get('name', None))
+            ap = policy_mgr.get(name=variables.get('name', None))
         except gnocchiclient.exceptions.ArchivePolicyNotFound:
             if 'definition' not in vars:
                 msg = 'Missing archive policy %s'
                 self.module.fail_json(msg=msg % 'definition')
 
             # remove a blank value, as default
-            if ('aggregation_methods' in vars and
-                    vars['aggregation_methods'] == ''):
-                vars.pop('aggregation_methods')
+            if ('aggregation_methods' in variables and
+                    variables['aggregation_methods'] == ''):
+                variables.pop('aggregation_methods')
 
             self.state_change = True
             try:
-                ap = policy_mgr.create(archive_policy=vars)
+                ap = policy_mgr.create(archive_policy=variables)
             except gnocchiclient.exceptions.ClientException as e:
                 self.module.fail_json(
                     err='Policy Create Error: %s' % e,
                     rc=3, msg=str(e))
 
-        return self._facts(facts={'name': ap['name']})
+        return {'gnocchi_facts': {'name': ap['name']}}
 
     def ensure_archive_policy_rule(self, vars):
         """Create a new archive policy rule within Gnocchi if it does not
@@ -234,8 +284,7 @@ class ManageGnocchi(object):
         else:
             self.module.fail_json(msg='Missing archive policy rule name.')
 
-        return self._facts(facts={'name': apr['name']})
-
+        return {'gnocchi_facts': {'name': apr['name']}}
 
 def main():
     module = AnsibleModule(

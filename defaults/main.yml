@@ -118,6 +118,7 @@ gnocchi_requires_pip_packages:
   - virtualenv
   - virtualenv-tools
   - python-keystoneclient # Keystoneclient needed for OSA keystone lib
+  - gnocchiclient # gnocchiclient needed for gnocchi lib
 
 # TODO(stevelle) would like to push out the cephlibs to a ceph-client role
 #: Common pip packages
