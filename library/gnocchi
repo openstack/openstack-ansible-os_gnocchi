@@ -157,7 +157,7 @@ class ManageGnocchi(object):
         interface = opts.get('endpoint_type', 'internal')
         region = opts.get('region_name', params.get('region_name', None))
         if not region:
-            self.module.fail_json(msg='Missing region')
+            self.module.fail_json(msg='Missing region_name in openrc or as option to module')
 
         try:
             import gnocchiclient.v1.client as gclient
