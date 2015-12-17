@@ -2,7 +2,7 @@
 
 # Remove keystone_authtoken from the pipeline if you don't want to use keystone authentication
 [pipeline:main]
-pipeline = keystone_authtoken gnocchi
+pipeline = healthcheck keystone_authtoken gnocchi
 
 [app:gnocchi]
 paste.app_factory = gnocchi.rest.app:app_factory
@@ -10,6 +10,12 @@ paste.app_factory = gnocchi.rest.app:app_factory
 [filter:keystone_authtoken]
 paste.filter_factory = keystonemiddleware.auth_token:filter_factory
 oslo_config_project = gnocchi
+
+[filter:healthcheck]
+paste.filter_factory = oslo_middleware:Healthcheck.factory
+path = /versions
+backends = disable_by_file
+disable_by_file_path = {{ gnocchi_healthcheck_disable_path }}
 
 [filter:cors]
 paste.filter_factory = oslo_middleware.cors:filter_factory
