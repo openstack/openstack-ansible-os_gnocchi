@@ -71,7 +71,7 @@ gnocchi_archive_policies:
       - { granularity: "1h", points: 8760 }
 
 gnocchi_archive_policy_rules:
-  - { name: "default", policy: "low", pattern: "*" }
+  - { name: "default", archive_policy_name: "low", metric_pattern: "*" }
 
 #: System info
 gnocchi_system_user_name: gnocchi

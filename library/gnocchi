@@ -268,15 +268,15 @@ class ManageGnocchi(object):
         """
         import gnocchiclient.exceptions
 
-        named = vars.pop('name', None)
+        variables = self._get_vars(vars)
+        named = variables.get('name', None)
         rule_mgr = self.gnocchi.archive_policy_rule
         try:
             apr = rule_mgr.get(name=named)
-        except gnocchiclient.exceptions.ArchivePolicyRuleException:
+        except gnocchiclient.exceptions.ArchivePolicyRuleNotFound:
             self.state_change = True
-            vars.push('name', named)
             try:
-                apr = rule_mgr.create(archive_policy_rule=vars)
+                apr = rule_mgr.create(archive_policy_rule=variables)
             except gnocchiclient.exceptions.ClientException as e:
                 self.module.fail_json(
                     err='Policy Rule Create Error: %s' % e,
