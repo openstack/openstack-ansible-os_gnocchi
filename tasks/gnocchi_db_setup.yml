@@ -41,6 +41,7 @@
 
 - name: Perform a Gnocchi DB sync
   command: "{{ gnocchi_bin }}/gnocchi-upgrade"
+  # TODO(stevelle) work out a changed_when condition
   tags:
     - gnocchi-db-sync
     - gnocchi-setup
