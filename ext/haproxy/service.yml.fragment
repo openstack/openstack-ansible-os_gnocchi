@@ -3,7 +3,8 @@
       haproxy_backend_nodes: "{{ groups['gnocchi_all'] | default([]) }}"
       haproxy_port: 8041
       haproxy_balance_type: http
+      haproxy_balance_alg: leastconn
       haproxy_backend_options:
         - "forwardfor"
-        - "httpchk /versions"
+        - "httpchk /status"
         - "httplog"

@@ -13,7 +13,6 @@ oslo_config_project = gnocchi
 
 [filter:healthcheck]
 paste.filter_factory = oslo_middleware:Healthcheck.factory
-path = /versions
 backends = disable_by_file
 disable_by_file_path = {{ gnocchi_healthcheck_disable_path }}
 
