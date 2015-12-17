@@ -44,8 +44,8 @@
   gnocchi:
     command: ensure_archive_policy_rule
     name: "{{ item.name }}"
-    archive_policy_name: "{{ item.policy }}"
-    metric_pattern: "{{ item.pattern }}"
+    archive_policy_name: "{{ item.archive_policy_name }}"
+    metric_pattern: "{{ item.metric_pattern }}"
     openrc_path: /root/openrc
     region_name: "{{ gnocchi_service_region }}"
   with_items:

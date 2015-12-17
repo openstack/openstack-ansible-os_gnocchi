@@ -266,18 +266,21 @@ class ManageGnocchi(object):
                                    use within the archive policy rule create
                                    command.
         """
-        import gnocchiclient.exceptions
+        import gnocchiclient.exceptions as exceptions
 
         variables = self._get_vars(vars)
         named = variables.get('name', None)
         rule_mgr = self.gnocchi.archive_policy_rule
         try:
             apr = rule_mgr.get(name=named)
-        except gnocchiclient.exceptions.ArchivePolicyRuleNotFound:
+        # NOTE(stevelle) client lib raises wrong exception type.
+        # see https://bugs.launchpad.net/python-gnocchiclient/+bug/1527402
+        except (exceptions.ArchivePolicyRuleNotFound,
+                exceptions.ArchivePolicyNotFound):
             self.state_change = True
             try:
                 apr = rule_mgr.create(archive_policy_rule=variables)
-            except gnocchiclient.exceptions.ClientException as e:
+            except exceptions.ClientException as e:
                 self.module.fail_json(
                     err='Policy Rule Create Error: %s' % e,
                     rc=3, msg=str(e))
