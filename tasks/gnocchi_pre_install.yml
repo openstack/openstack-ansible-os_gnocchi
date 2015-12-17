@@ -44,9 +44,9 @@
     - { path: "/openstack", owner: "root", group: "root" }
     - { path: "/etc/gnocchi" }
     - { path: "{{ gnocchi_system_user_home }}" }
-    - { path: "var/lib/gnocchi/tmp" }
-    - { path: "var/lib/gnocchi/locks" }
-    - { path: "var/cache/gnocchi" }
+    - { path: "/var/lib/gnocchi/tmp" }
+    - { path: "/var/lib/gnocchi/locks" }
+    - { path: "/var/cache/gnocchi" }
   tags:
     - gnocchi-dirs
 
