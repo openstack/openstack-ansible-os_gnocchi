@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Drop gnocchi Config(s)
+- name: Drop Gnocchi Config(s)
   config_template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
@@ -36,22 +36,36 @@
       config_overrides: "{{ gnocchi_policy_overrides }}"
       config_type: "json"
   notify:
-    - Restart gnocchi services
+    - Restart Apache
   tags:
     - gnocchi-config
 
-- name: Get gnocchi command path
+- name: Get Gnocchi command path
   command: which gnocchi
   register: gnocchi_command_path
   when:
     - not gnocchi_venv_enabled | bool
   tags:
     - gnocchi-command-bin
+    - gnocchi-config
 
-- name: Set gnocchi command path
+- name: Set Gnocchi command path
   set_fact:
     gnocchi_bin: "{{ gnocchi_command_path.stdout | dirname }}"
   when:
     - not gnocchi_venv_enabled | bool
   tags:
     - gnocchi-command-bin
+    - gnocchi-config
+
+- name: Drop Gnocchi WSGI Configs
+  template:
+    src: gnocchi-wsgi.py.j2
+    dest: /var/www/cgi-bin/gnocchi/gnocchi-api
+    owner: "{{ gnocchi_system_user_name }}"
+    group: "{{ gnocchi_system_group_name }}"
+    mode: "0755"
+  notify:
+    - Restart Apache
+  tags:
+    - gnocchi-config

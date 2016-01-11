@@ -25,5 +25,15 @@
 - include: gnocchi_service_setup.yml
   run_once: true
 
+- include: gnocchi_apache.yml
+
 - include: gnocchi_policy_setup.yml
   run_once: true
+
+#- include: gnocchi_ssl_self_signed.yml
+#  when: >
+#    gnocchi_user_ssl_cert is not defined or
+#    gnocchi_user_ssl_key is not defined
+#
+#- include: gnocchi_ssl_user_provided.yml
+

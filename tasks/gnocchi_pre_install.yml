@@ -47,6 +47,8 @@
     - { path: "/var/lib/gnocchi/tmp" }
     - { path: "/var/lib/gnocchi/locks" }
     - { path: "/var/cache/gnocchi", mode: "0700" }
+    - { path: "/var/www/cgi-bin", owner: root, group: root }
+    - { path: "/var/www/cgi-bin/gnocchi" }
   tags:
     - gnocchi-dirs
 

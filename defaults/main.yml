@@ -17,7 +17,10 @@
 is_metal: true
 
 debug: false
-gnocchi_fatal_deprecations: False
+gnocchi_fatal_deprecations: false
+
+#: Set this to false to disable API service through Apache + mod_wsgi
+gnocchi_use_mod_wsgi: true
 
 #: Set this to enable or disable installing in a venv
 gnocchi_venv_enabled: true
@@ -25,6 +28,7 @@ gnocchi_venv_enabled: true
 #: Name of the virtual env to deploy into
 gnocchi_venv_tag: untagged
 gnocchi_venv_bin: "/openstack/venvs/gnocchi-{{ gnocchi_venv_tag }}/bin"
+gnocchi_venv_pkgs: "/openstack/venvs/gnocchi-{{ gnocchi_venv_tag }}/lib/python2.7/site-packages"
 
 #: The bin path defaults to the venv path however if installation in a
 #  venv is disabled the bin path will be dynamically set based on the
@@ -76,6 +80,7 @@ gnocchi_archive_policy_rules:
 #: System info
 gnocchi_system_user_name: gnocchi
 gnocchi_system_group_name: gnocchi
+gnocchi_system_service_name: apache2
 gnocchi_system_shell: /bin/false
 gnocchi_system_comment: gnocchi system user
 gnocchi_system_user_home: "/var/lib/{{ gnocchi_system_user_name }}"
@@ -103,6 +108,30 @@ gnocchi_service_internalurl: "{{ gnocchi_service_internaluri_proto }}://{{ inter
 gnocchi_service_adminurl: "{{ gnocchi_service_adminuri_proto }}://{{ internal_lb_vip_address }}:{{ gnocchi_service_port }}"
 gnocchi_healthcheck_disable_path: /etc/gnocchi/healthcheck_disable
 
+## Apache setup
+gnocchi_apache_log_level: info
+gnocchi_apache_servertokens: "Prod"
+gnocchi_apache_serversignature: "Off"
+gnocchi_wsgi_threads: 1
+gnocchi_wsgi_processes: "{{ ansible_processor_vcpus | default (1) * 2 }}"
+
+# set gnocchi_ssl to true to enable SSL configuration on the gnocchi containers
+gnocchi_ssl: false
+gnocchi_ssl_cert: /etc/ssl/certs/gnocchi.pem
+gnocchi_ssl_key: /etc/ssl/private/gnocchi.key
+gnocchi_ssl_ca_cert: /etc/ssl/certs/gnocchi-ca.pem
+gnocchi_ssl_protocol: "{{ ssl_protocol }}"
+gnocchi_ssl_cipher_suite: "{{ ssl_cipher_suite }}"
+
+# if using a self-signed certificate, set this to true to regenerate it
+gnocchi_ssl_self_signed_regen: false
+gnocchi_ssl_self_signed_subject: "/C=US/ST=Texas/L=San Antonio/O=IT/CN={{ internal_lb_vip_address }}/subjectAltName=IP.1={{ external_lb_vip_address }}"
+
+# Set these in user_variables to deploy custom certificates
+#gnocchi_user_ssl_cert: <path to cert on ansible deployment host>
+#gnocchi_user_ssl_key: <path to cert on ansible deployment host>
+#gnocchi_user_ssl_ca_cert: <path to cert on ansible deployment host>
+
 #: Gnocchi API program name
 gnocchi_api_program_name: gnocchi-api
 #: Gnocchi Metricd program name
@@ -110,6 +139,9 @@ gnocchi_metricd_program_name: gnocchi-metricd
 
 #: Necessary packages
 gnocchi_apt_packages:
+  - apache2
+  - apache2-utils
+  - libapache2-mod-wsgi
   - git
   - build-essential
   - python-dev
@@ -131,9 +163,9 @@ gnocchi_pip_packages:
   - python-memcached
 
 #: List of programs/services owned by gnocchi
-gnocchi_service_names:
-  - "{{ gnocchi_api_program_name }}"
+gnocchi_service_names: []
 # TODO(stevelle) needs configuration help
+#  - "{{ gnocchi_api_program_name }}"
 #  - "{{ gnocchi_metricd_program_name }}"
 
 #: Tunable overrides

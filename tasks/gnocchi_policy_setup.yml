@@ -13,13 +13,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Ensure gnocchi API service is started
-  service:
-    name: "{{ item }}"
-    state: "started"
-    pattern: "{{ item }}"
-  with_items:
-    - "{{ gnocchi_api_program_name }}"
+- name: Ensure Gnocchi API service is (re)started
+  meta: flush_handlers
+
+#- name: Ensure Gnocchi API service is started
+#  service:
+#    name: "{{ item }}"
+#    state: "started"
+#    pattern: "{{ item }}"
+#  when: not gnocchi_use_mod_wsgi | bool
+#  with_items:
+#    - "{{ gnocchi_api_program_name }}"
+#
+#- name: Ensure Gnocchi API is available through Apache
+#  service:
+#    name: "{{ item }}"
+#    state: "restarted"
+#    pattern: "{{ item }}"
+#  when: gnocchi_use_mod_wsgi | bool
+#  retries: 5
+#  delay: 3
+#  with_items:
+#    - apache2
 
 - name: Ensure Archive Policies
   gnocchi:
