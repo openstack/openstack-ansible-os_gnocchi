@@ -122,17 +122,13 @@ gnocchi_requires_pip_packages:
   - python-keystoneclient # Keystoneclient needed for OSA keystone lib
   - gnocchiclient # gnocchiclient needed for gnocchi lib
 
-# TODO(stevelle) would like to push out the cephlibs to a ceph-client role
+# TODO(stevelle) would like to make the gnocchi extras include as-needed
 #: Common pip packages
 gnocchi_pip_packages:
-  - gnocchi
+  - "gnocchi[mysql,file,swift,ceph]"
   - keystonemiddleware
   - gnocchiclient
-  - pycrypto
-  - PyMySQL
   - python-memcached
-  - python-swiftclient
-  - python-cephlibs
 
 #: List of programs/services owned by gnocchi
 gnocchi_service_names:
