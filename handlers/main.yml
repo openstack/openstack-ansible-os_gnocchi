@@ -14,12 +14,20 @@
 # limitations under the License.
 
 # gnocchi_service_names should exclude the API if {{ gnocchi_use_mod_wsgi }}
-- name: Restart gnocchi services
+- name: Restart Gnocchi API services
   service:
     name: "{{ item }}"
     state: "restarted"
     pattern: "{{ item }}"
-  with_items: gnocchi_service_names
+  when: not gnocchi_use_mod_wsgi | bool
+  with_items: gnocchi_api_program_name
+
+- name: Restart Gnocchi extra services
+  service:
+    name: "{{ item }}"
+    state: "restarted"
+    pattern: "{{ item }}"
+  with_items: gnocchi_extra_service_names
 
 - name: Restart Apache
   service:

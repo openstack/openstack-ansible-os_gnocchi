@@ -163,9 +163,7 @@ gnocchi_pip_packages:
   - python-memcached
 
 #: List of programs/services owned by gnocchi
-gnocchi_service_names: []
-# TODO(stevelle) needs configuration help
-#  - "{{ gnocchi_api_program_name }}"
+gnocchi_extra_service_names: []
 #  - "{{ gnocchi_metricd_program_name }}"
 
 #: Tunable overrides

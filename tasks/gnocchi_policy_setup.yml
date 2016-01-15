@@ -15,26 +15,15 @@
 
 - name: Ensure Gnocchi API service is (re)started
   meta: flush_handlers
+  tags:
+    - gnocchi-setup
+    - gnocchi-policy-setup
 
-#- name: Ensure Gnocchi API service is started
-#  service:
-#    name: "{{ item }}"
-#    state: "started"
-#    pattern: "{{ item }}"
-#  when: not gnocchi_use_mod_wsgi | bool
-#  with_items:
-#    - "{{ gnocchi_api_program_name }}"
-#
-#- name: Ensure Gnocchi API is available through Apache
-#  service:
-#    name: "{{ item }}"
-#    state: "restarted"
-#    pattern: "{{ item }}"
-#  when: gnocchi_use_mod_wsgi | bool
-#  retries: 5
-#  delay: 3
-#  with_items:
-#    - apache2
+- name: Wait for Gnocchi API service to be available
+  pause: seconds=10
+  tags:
+    - gnocchi-setup
+    - gnocchi-policy-setup
 
 - name: Ensure Archive Policies
   gnocchi:
@@ -48,7 +37,7 @@
   with_items:
     - "{{ gnocchi_archive_policies }}"
   register: add_policies
-  until: add_service|success
+  until: add_policies|success
   retries: 5
   delay: 10
   tags:

@@ -21,7 +21,8 @@
     owner: "root"
     group: "root"
   notify:
-    - Restart gnocchi services
+    - Restart Gnocchi API services
+    - Restart Gnocchi extra services
   tags:
     - upstart-init
     - gnocchi-init
@@ -30,7 +31,8 @@
   shell: |
     initctl reload-configuration
   notify:
-    - Restart gnocchi services
+    - Restart Gnocchi API services
+    - Restart Gnocchi extra services
   tags:
     - upstart-init
     - gnocchi-init
@@ -40,7 +42,8 @@
    name: "{{ program_name }}"
    enabled: "yes"
   notify:
-    - Restart gnocchi services
+    - Restart Gnocchi API services
+    - Restart Gnocchi extra services
   tags:
     - upstart-init
     - gnocchi-init

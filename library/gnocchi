@@ -12,6 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import json
 import re
 
 DOCUMENTATION = """
@@ -124,7 +125,7 @@ class ManageGnocchi(object):
         except Exception as e:
             self.module.fail_json(
                 err='Initialisation Error: %s' % e,
-                rc=2, msg=str(e))
+                rc=1, msg=str(e))
 
     def _parse_openrc(self):
         """Get credentials from an openrc file."""
@@ -185,7 +186,7 @@ class ManageGnocchi(object):
                         self.failure(
                             error='Missing [ %s ] from Task or found a None'
                                   ' value' % var_name,
-                            rc=000,
+                            rc=3,
                             msg='variables %s - available params [ %s ]'
                                 % (variables, self.module.params)
                         )
@@ -204,15 +205,15 @@ class ManageGnocchi(object):
         action_command = COMMAND_MAP[command_name]
         if hasattr(self, '%s' % command_name):
             action = getattr(self, '%s' % command_name)
-            facts = action(vars=action_command['vars'
-                                               ''
-                                               ''])
-            if facts is None:
+            resource = action(vars=action_command['vars'
+                                                  ''
+                                                  ''])
+            if resource is None:
                 self.module.exit_json(changed=self.state_change)
             else:
                 self.module.exit_json(
                     changed=self.state_change,
-                    ansible_facts=facts
+                    resource=json.dumps(resource)
                 )
         else:
             self.module.fail_json(
@@ -250,11 +251,10 @@ class ManageGnocchi(object):
             try:
                 ap = policy_mgr.create(archive_policy=variables)
             except gnocchiclient.exceptions.ClientException as e:
-                self.module.fail_json(
-                    err='Policy Create Error: %s' % e,
-                    rc=3, msg=str(e))
+                self.module.fail_json(msg='Policy Create Error',
+                                      rc=e.code, details=e.message)
 
-        return {'gnocchi_facts': {'name': ap['name']}}
+        return ap
 
     def ensure_archive_policy_rule(self, vars):
         """Create a new archive policy rule within Gnocchi if it does not
@@ -281,11 +281,10 @@ class ManageGnocchi(object):
             try:
                 apr = rule_mgr.create(archive_policy_rule=variables)
             except exceptions.ClientException as e:
-                self.module.fail_json(
-                    err='Policy Rule Create Error: %s' % e,
-                    rc=3, msg=str(e))
+                self.module.fail_json(msg='Policy Rule Create Error',
+                                      rc=e.code, details=e.message)
 
-        return {'gnocchi_facts': {'name': apr['name']}}
+        return apr
 
 def main():
     module = AnsibleModule(

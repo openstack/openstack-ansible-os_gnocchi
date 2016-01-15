@@ -37,6 +37,8 @@
       config_type: "json"
   notify:
     - Restart Apache
+    - Restart Gnocchi API services
+    - Restart Gnocchi extra services
   tags:
     - gnocchi-config
 
