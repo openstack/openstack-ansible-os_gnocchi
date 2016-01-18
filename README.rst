@@ -27,7 +27,7 @@ The default is to use file-based coordination so the default is NOT an H.A.
 solution and will not work properly if there are multiple Gnocchi instances in
 a your OpenStack cluster.
 
-If you wish to use Redis or Zookeeper for coordination, setting up that
+If you wish to use Etcd, Redis, or Zookeeper for coordination, setting up that
 service is a prerequisite. You might have luck using other roles for
 management of that. (e.g. https://github.com/AnsibleShipyard/ansible-java and
 https://github.com/AnsibleShipyard/ansible-zookeeper)
@@ -41,10 +41,10 @@ found in the openstack-ansible project: ``scripts/pw-token-gen.py``
 
 TODO
 ^^^^
-- Work out the ceilometer config to send metrics to gnocchi for storage.
-- Switch to memcached as default coordinator ala
-"memcached://localhost:11211?timeout=5" or MySQL as default coordinator
+- Switch to Mysql as default coordinator ala
 - Switch to Swift as default storage
+- Work out the ceilometer config to send metrics to gnocchi for storage.
+"memcached://localhost:11211?timeout=5" or MySQL as default coordinator
 - Future support in Ceilometer conf: https://review.openstack.org/#/c/253635
 
 Role Variables
