@@ -51,9 +51,8 @@ gnocchi_galera_database: gnocchi
 gnocchi_galera_user: gnocchi
 gnocchi_galera_address: "{{ galera_address }}"
 
-# TODO(stevelle) need to allow make it easier to use real storage options, default to Swift
 #: Storage info
-gnocchi_storage_driver: file
+gnocchi_storage_driver: swift
 gnocchi_coordination_url: "file://var/lib/gnocchi/locks"
 
 #: Default Archive Policies

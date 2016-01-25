@@ -1,4 +1,5 @@
 # {{ ansible_managed }}
+
 [DEFAULT]
 debug = {{ debug }}
 fatal_deprecations = {{ gnocchi_fatal_deprecations }}
@@ -37,6 +38,15 @@ check_revocations_for_cached = False
 [storage]
 driver = {{ gnocchi_storage_driver }}
 coordination_url = {{ gnocchi_coordination_url }}
+{% if gnocchi_storage_driver == 'swift' %}
+swift_auth_version = 3
+swift_authurl = "{{ keystone_service_internaluri }}"
+swift_user: = "service:{{ gnocchi_service_user_name }}"
+swift_key: = "{{ gnocchi_service_password }}"
+swift_user_domain = {{ gnocchi_service_user_domain_id }}
+swift_project_domain = {{ gnocchi_service_project_domain_id }}
+swift_tenant_name: = {{ gnocchi_service_project_name }}
+{% endif %}
 
 [metricd]
 # Number of workers for Gnocchi metric daemons. By default the available number

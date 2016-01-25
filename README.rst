@@ -1,8 +1,14 @@
-OpenStack Ansible Gnocchi
+OpenStack-Ansible Gnocchi
 =========================
 
 A simple role to deploy `OpenStack Gnocchi <http://gnocchi.xyz/>`_
-from source in a manner similar to the OpenStack Ansible project.
+from source in a manner similar to the OpenStack-Ansible project.
+
+Project Status
+--------------
+Currently the role is expected to deploy and run a gnocchi service
+appropriately. Integration with Ceilometer is in development and should be
+considered experimental at this time.
 
 Requirements
 ------------
@@ -10,16 +16,17 @@ Requirements
 Index
 ^^^^^
 You will need to have an appropriate SQLAlchemy-supported database for the
-index. OpenStack Ansible provides roles to deploy a Galera cluster, and
+index. OpenStack-Ansible provides roles to deploy a Galera cluster, and
 this role is presumed by the default indexer url but you can override that
 using the config template library if you wish to use PostgreSQL.
 
 Storage
 ^^^^^^^
 You will need to have an appropriate set of data stores. Filesystem storage
-is the default and is NOT an H.A. solution and will not work properly if there
+is an option but is NOT an H.A. solution and will not work properly if there
 are multiple Gnocchi instances in your OpenStack cluster. First-class support
-is planned for Swift and Ceph.
+is planned for Swift is in testing and is the current default. support for
+Ceph as a storage engine is theoretically possible but has not been tested yet.
 
 Coordination
 ^^^^^^^^^^^^
@@ -41,14 +48,18 @@ found in the openstack-ansible project: ``scripts/pw-token-gen.py``
 
 TODO
 ^^^^
-- Switch to Mysql as default coordinator ala
-- Switch to Swift as default storage
-- Work out the ceilometer config to send metrics to gnocchi for storage.
-"memcached://localhost:11211?timeout=5" or MySQL as default coordinator
-- Future support in Ceilometer conf: https://review.openstack.org/#/c/253635
+- Switch to Mysql as default coordinator (example: gnocchi_tooz_url =
+  "mysql://gnocchi@localhost:${PORT}/gnocchi?timeout=5")
 
 Role Variables
 --------------
+
+The variables which need to be provided will vary based on the storage chosen.
+The default storage is Swift. If you wish to use another storage option you
+will need to provide the appropriate overrides (specified in
+gnocchi_conf_overrides found defaults/main.yml and see also
+ext/openstack_deploy/openstack_gnocchi_overrides.yml.example for how to use
+this).
 
 Other variables expected for this role include:
 
@@ -71,7 +82,7 @@ create service users/roles/endpoints as needed within Keystone.
 
 Each of the ``keystone_service_*uri`` variables is expected to include
 protocol, host, and port for the keystone service. Do not specify a path, to
-include keystone protocol version. See also the OpenStack Ansible project and
+include keystone protocol version. See also the OpenStack-Ansible project and
 the os_keystone role for more details on these variables.
 
 Each ``keystone_*_insecure`` variable is expected to indicate whether or not
@@ -79,11 +90,11 @@ Keystone is using the http protocol or not, and should evaluate to a boolean.
 
 The ``galera_address`` is expected to direct to the your MySQL server or a load
 balancer host which sits in front of your Galera cluster. This may be See also
-the OpenStack Ansible project for more details. The ``galera_root_*`` variables
+the OpenStack-Ansible project for more details. The ``galera_root_*`` variables
 should contain the credentials used to create the Gnocchi index database.
 
 The ``memcached_*`` variables are expected for caching Keystone auth. See also
-the OpenStack Ansible project and the os_keystone role for more details on
+the OpenStack-Ansible project and the os_keystone role for more details on
 these variables.
 
 Each of the ``*_lb_vip_address`` variables is expected to contain the host
@@ -120,7 +131,7 @@ Credits
 -------
 
 The ``config_template`` library module was developed by Kevin Carter for the
-OpenStack Ansible and is vendored in ``library``.
+OpenStack-Ansible and is vendored in ``library``.
 
 The role layout and documentation was cribbed from the Openstack Searchlight
 role by Ian Cordasco.

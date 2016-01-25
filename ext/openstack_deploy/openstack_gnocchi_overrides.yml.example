@@ -1,0 +1,70 @@
+---
+# Copyright 2016, Rackspace US, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+## This can be used as examples for use in hand-building the necessary overrides
+## for now. An improved mechanism for this is pending.
+
+## Demonstrating the expected configurations necessary to use gnocchi as the ceilometer dispatcher
+gnocchi_ceilo_conf_overrides:
+  default:
+    meter_dispatchers: gnocchi
+    event_dispatchers: ""
+  collector:
+    batch_size: 10
+    batch_timeout: 5
+  # NOTE(stevelle) no support for storing events in gnocchi yet
+  notification:
+    store_events: false
+  storage:
+    max_retries: 80
+  dispatcher_gnocchi:
+    url: "{{ gnocchi_service_publicurl }}"
+    archive_policy: low
+
+## Demonstrating the expected ceilometer configurations necessary to use swift for gnocchi storage under ceilometer
+gnocchi_ceilo_swift_conf_overrides:
+  dispatcher_gnocchi:
+    filter_service_activity: true
+    filter_project: gnocchi_swift
+
+## Demonstrating the expected configurations necessary to use swift for storage
+gnocchi_swift_conf_overrides:
+  storage:
+    driver: swift
+    swift_auth_version: 3
+    swift_authurl: "{{ keystone_service_internaluri }}"
+    swift_user: "service:{{ gnocchi_service_user_name }}"
+    swift_key: "{{ gnocchi_service_password }}"
+    swift_region_name: "{{ glance_service_region }}"
+    swift_user_domain: default
+    swift_project_domain: default
+    swift_tenant_name: default
+
+## Demonstrating the expected configurations necessary to use ceph for storage
+gnocchi_ceph_conf_overrides:
+  storage:
+    driver: ceph
+    ceph_username: gnocci
+    ceph_keyring: "/etc/ceph/ceph.client.{{ gnocchi_service_user_name }}.keyring"
+
+## Perform successive dict merges to apply all of these overrides
+## FUTURE The following are all contingent on the combine filter introduced in Ansible 2.0
+## Ceilometer overrides
+#ceilometer_ceilometer_conf_overrides: {{ ceilometer_ceilometer_conf_overrides |combine(gnocchi_ceilo_conf_overrides, recursive=True) }}
+#ceilometer_ceilometer_conf_overrides: {{ ceilometer_ceilometer_conf_overrides |combine(gnocchi_ceilo_swift_conf_overrides, recursive=True) }}
+
+## Gnocchi overrides - Uncomment these only as appropriate
+#gnocchi_conf_overrides: {{ gnocchi_conf_overrides |combine(gnocchi_swift_conf_overrides, recursive=True) }}
+#gnocchi_conf_overrides: {{ gnocchi_conf_overrides |combine(gnocchi_ceph_conf_overrides, recursive=True) }}
