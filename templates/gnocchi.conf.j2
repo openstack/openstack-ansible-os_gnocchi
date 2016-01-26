@@ -38,15 +38,6 @@ check_revocations_for_cached = False
 [storage]
 driver = {{ gnocchi_storage_driver }}
 coordination_url = {{ gnocchi_coordination_url }}
-{% if gnocchi_storage_driver == 'swift' %}
-swift_auth_version = 3
-swift_authurl = "{{ keystone_service_internaluri }}"
-swift_user: = "service:{{ gnocchi_service_user_name }}"
-swift_key: = "{{ gnocchi_service_password }}"
-swift_user_domain = {{ gnocchi_service_user_domain_id }}
-swift_project_domain = {{ gnocchi_service_project_domain_id }}
-swift_tenant_name: = {{ gnocchi_service_project_name }}
-{% endif %}
 
 [metricd]
 # Number of workers for Gnocchi metric daemons. By default the available number
@@ -84,7 +75,8 @@ swift_tenant_name: = {{ gnocchi_service_project_name }}
 ############
 file_basepath = /var/lib/gnocchi
 file_basepath_tmp = ${file_basepath}/tmp
-{% else %}
+{% endif %}
+{% if gnocchi_storage_driver == 'ceph' %}
 ############
 ## Ceph Storage
 ############
@@ -99,36 +91,7 @@ file_basepath_tmp = ${file_basepath}/tmp
 
 # Ceph configuration file. (string value)
 #ceph_conffile = /etc/ceph/ceph.conf
-
-############
-## Swift Storage
-############
-# Swift authentication version to user. (string value)
-#swift_auth_version = 1
-
-# Swift pre-auth URL. (string value)
-#swift_preauthurl = <None>
-
-# Swift auth URL. (string value)
-#swift_authurl = http://localhost:8080/auth/v1.0
-
-# Swift token to user to authenticate. (string value)
-#swift_preauthtoken = <None>
-
-# Swift user. (string value)
-#swift_user = admin:admin
-
-# Swift key/password. (string value)
-#swift_key = admin
-
-# Swift tenant name, only used in v2 auth. (string value)
-#swift_tenant_name = <None>
-
-# Prefix to namespace metric containers. (string value)
-#swift_container_prefix = gnocchi
-
-# Connection timeout in seconds. (integer value)
-#swift_timeout = 300
+{% endif %}
 
 ############
 ## InfluxDB Storage
@@ -153,4 +116,3 @@ file_basepath_tmp = ${file_basepath}/tmp
 # InfluxDB ingests data in asynchroneous ways. Set to True to wait data are
 # ingested. (boolean value)
 #influxdb_block_until_data_ingested = false
-{% endif %}
