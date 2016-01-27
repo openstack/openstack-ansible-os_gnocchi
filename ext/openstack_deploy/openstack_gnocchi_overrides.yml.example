@@ -24,7 +24,7 @@ gnocchi_service_publicurl: "{{ gnocchi_service_publicuri_proto }}://{{ external_
 
 ## Demonstrating the expected configurations necessary to use gnocchi as the ceilometer dispatcher
 gnocchi_ceilo_conf_overrides:
-  default:
+  DEFAULT:
     meter_dispatchers: gnocchi
     event_dispatchers: ""
   collector:
@@ -79,6 +79,8 @@ cinder_ceilometer_enabled: True
 heat_ceilometer_enabled: True
 neutron_ceilometer_enabled: True
 
+## FUTURE(stevelle)
+# disable ceilometer-api: https://review.openstack.org/#/c/270818/
 
 ## Perform successive dict merges to apply all of these overrides
 ## FUTURE The following are all contingent on the combine filter introduced in Ansible 2.0
