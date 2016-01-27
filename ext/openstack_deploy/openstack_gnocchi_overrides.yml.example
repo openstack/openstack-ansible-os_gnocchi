@@ -16,12 +16,13 @@
 ## This can be used as examples for use in hand-building the necessary overrides
 ## for now. An improved mechanism for this is pending.
 
-## Demonstrating the expected configurations necessary to use gnocchi as the ceilometer dispatcher
+## Describe the gnocchi endpoint used by ceilometer
 gnocchi_service_proto: http
 gnocchi_service_port: 8041
 gnocchi_service_publicuri_proto: "{{ openstack_service_publicuri_proto | default(gnocchi_service_proto) }}"
 gnocchi_service_publicurl: "{{ gnocchi_service_publicuri_proto }}://{{ external_lb_vip_address }}:{{ gnocchi_service_port }}"
 
+## Demonstrating the expected configurations necessary to use gnocchi as the ceilometer dispatcher
 gnocchi_ceilo_conf_overrides:
   default:
     meter_dispatchers: gnocchi
@@ -66,6 +67,18 @@ gnocchi_ceph_conf_overrides:
     driver: ceph
     ceph_username: gnocci
     ceph_keyring: "/etc/ceph/ceph.client.{{ gnocchi_service_user_name }}.keyring"
+
+## Enable all of the Ceilometer agents except Swift to avoid flooding the MQ.
+## Alternatives to disabling Swift:
+##   Ensure Gnocchi doesn't use the same proxy server as your common object store when you have
+##   swift_ceilometer_enabled or configure ceilometermiddleware to ignore Gnocchi requests.
+nova_ceilometer_enabled: True
+swift_ceilometer_enabled: False
+glance_ceilometer_enabled: True
+cinder_ceilometer_enabled: True
+heat_ceilometer_enabled: True
+neutron_ceilometer_enabled: True
+
 
 ## Perform successive dict merges to apply all of these overrides
 ## FUTURE The following are all contingent on the combine filter introduced in Ansible 2.0
