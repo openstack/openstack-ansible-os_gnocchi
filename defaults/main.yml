@@ -50,6 +50,7 @@ gnocchi_venv_download_url: http://127.0.0.1/venvs/untagged/ubuntu/gnocchi.tgz
 gnocchi_galera_database: gnocchi
 gnocchi_galera_user: gnocchi
 gnocchi_galera_address: "{{ galera_address }}"
+gnocchi_db_sync_options: "--create-legacy-resource-types"
 
 #: Storage info
 gnocchi_storage_driver: swift
