@@ -21,6 +21,7 @@
 
 - name: Wait for Gnocchi API service to be available
   pause: seconds=10
+  run_once: true
   tags:
     - gnocchi-setup
     - gnocchi-policy-setup
