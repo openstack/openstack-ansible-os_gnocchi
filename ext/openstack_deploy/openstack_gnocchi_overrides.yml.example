@@ -56,8 +56,8 @@ gnocchi_swift_conf_overrides:
     swift_user: "{{ gnocchi_service_user_name }}"
     swift_key: "{{ gnocchi_service_password }}"
     swift_region_name: "{{ gnocchi_service_region }}"
-    swift_user_domain: "{{ gnocchi_service_user_domain_id }}"
-    swift_project_domain: "{{ gnocchi_service_project_domain_id }}"
+    swift_user_domain_id: "{{ gnocchi_service_user_domain_id }}"
+    swift_project_domain_id: "{{ gnocchi_service_project_domain_id }}"
     swift_tenant_name: "{{ gnocchi_service_project_name }}"
     swift_container_prefix: gnocchi
 
