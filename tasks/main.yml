@@ -19,10 +19,11 @@
 - include: gnocchi_post_install.yml
 - include: gnocchi_upstart_init.yml
 
-- include: gnocchi_db_setup.yml
+- include: gnocchi_service_setup.yml
   run_once: true
 
-- include: gnocchi_service_setup.yml
+# N.B. Must occur after service setup, as this may perform calls to Swift
+- include: gnocchi_db_setup.yml
   run_once: true
 
 - include: gnocchi_apache.yml
