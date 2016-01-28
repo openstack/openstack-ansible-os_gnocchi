@@ -14,7 +14,7 @@
     ErrorLog  /var/log/gnocchi/gnocchi-apache-error.log
     CustomLog /var/log/gnocchi/gnocchi-access.log combined
 
-    {% if gnocchi_ssl | bool and gnocchi_service_internaluri_proto == "https" -%}
+{% if gnocchi_ssl | bool and gnocchi_service_internaluri_proto == "https" -%}
     SSLEngine on
     SSLCertificateFile    {{ gnocchi_ssl_cert }}
     SSLCertificateKeyFile {{ gnocchi_ssl_key }}
@@ -26,5 +26,5 @@
     SSLHonorCipherOrder On
     SSLCipherSuite {{ gnocchi_ssl_cipher_suite }}
     SSLOptions +StdEnvVars +ExportCertData
-    {% endif %}
+{% endif %}
 </VirtualHost>
