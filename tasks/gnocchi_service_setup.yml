@@ -34,6 +34,25 @@
     - gnocchi-service-add
     - gnocchi-setup
 
+# Create an admin project, assumed to be in default domain, keystone lib does
+#  not support domain_id which is what we have to work with
+- name: Ensure Gnocchi project
+  keystone:
+    command: ensure_project
+    project_name: "{{ gnocchi_service_project_name }}"
+    token: "{{ keystone_auth_admin_token }}"
+    endpoint: "{{ keystone_service_adminurl }}"
+    description: "{{ gnocchi_service_project_description }}"
+    insecure: "{{ keystone_service_adminuri_insecure }}"
+  register: add_project
+  until: add_project|success
+  retries: 5
+  delay: 10
+  tags:
+    - gnocchi-api-setup
+    - gnocchi-service-add
+    - gnocchi-setup
+
 # Create an admin user
 - name: Ensure Gnocchi user
   keystone:
@@ -44,8 +63,8 @@
     tenant_name: "{{ gnocchi_service_project_name }}"
     password: "{{ gnocchi_service_password }}"
     insecure: "{{ keystone_service_adminuri_insecure }}"
-  register: add_service
-  until: add_service|success
+  register: add_user
+  until: add_user|success
   retries: 5
   delay: 10
   tags:
@@ -63,8 +82,8 @@
     tenant_name: "{{ gnocchi_service_project_name }}"
     role_name: "{{ gnocchi_role_name }}"
     insecure: "{{ keystone_service_adminuri_insecure }}"
-  register: add_service
-  until: add_service|success
+  register: add_admin_role
+  until: add_admin_role|success
   retries: 5
   delay: 10
   tags:
@@ -89,8 +108,8 @@
         interface: "internal"
       - url: "{{ gnocchi_service_adminurl }}"
         interface: "admin"
-  register: add_service
-  until: add_service|success
+  register: add_endpoint
+  until: add_endpoint|success
   retries: 5
   delay: 10
   tags:
