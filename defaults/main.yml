@@ -55,7 +55,7 @@ gnocchi_db_sync_options: ""
 
 #: Storage info
 gnocchi_storage_driver: swift
-gnocchi_coordination_url: "file://var/lib/gnocchi/locks"
+gnocchi_coordination_url: "mysql://{{ gnocchi_galera_user }}:{{ gnocchi_galera_password }}@{{ gnocchi_galera_address }}/{{ gnocchi_galera_database }}?charset=utf8&timeout=5"
 
 #: Default Archive Policies
 gnocchi_archive_policies:

@@ -48,8 +48,9 @@ found in the openstack-ansible project: ``scripts/pw-token-gen.py``
 
 TODO
 ^^^^
-- Switch to Mysql as default coordinator (example: gnocchi_tooz_url =
-  "mysql://gnocchi@localhost:${PORT}/gnocchi?timeout=5")
+- Resynchronize patterns from OpenStack-Ansible.
+- Collect the TODO tasks that are hidden throughout the project.
+- Write proper docs for this role.
 
 Role Variables
 --------------
