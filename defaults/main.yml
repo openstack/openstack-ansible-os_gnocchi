@@ -13,10 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#: Defines that the role will be deployed on a host machine
+#: The role will be deployed on a host machine (vs. in container)
 is_metal: true
 
+#: Enable for debug logging level
 debug: false
+#: Use of deprecated config options will cause a fatal application error
 gnocchi_fatal_deprecations: false
 
 #: Set this to false to disable API service through Apache + mod_wsgi
@@ -51,7 +53,6 @@ gnocchi_galera_database: gnocchi
 gnocchi_galera_user: gnocchi
 gnocchi_galera_address: "{{ galera_address }}"
 gnocchi_db_sync_options: "" 
-# TODO(stevelle) switch to "--create-legacy-resource-types" when applicable
 
 #: Storage info
 gnocchi_storage_driver: swift
@@ -156,15 +157,14 @@ gnocchi_requires_pip_packages:
   - python-keystoneclient # Keystoneclient needed for OSA keystone lib
   - gnocchiclient # gnocchiclient needed for gnocchi lib
 
-# TODO(stevelle) would like to make the gnocchi extras include as-needed
 #: Common pip packages
 gnocchi_pip_packages:
-  - "gnocchi[mysql,file,swift,ceph]"
+  - "gnocchi[mysql,{{ gnocchi_storage_driver }}]"
   - keystonemiddleware
   - gnocchiclient
   - python-memcached
 
-#: List of programs/services owned by gnocchi
+#: List of extra programs/services owned by gnocchi
 gnocchi_extra_service_names: []
 #  - "{{ gnocchi_metricd_program_name }}"
 
