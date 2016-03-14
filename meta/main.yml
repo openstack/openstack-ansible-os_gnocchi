@@ -12,7 +12,9 @@ galaxy_info:
   categories:
   - cloud
 dependencies:
-  - galera_client
+  - apt_package_pinning
   - pip_lock_down
-
-#  - openstack_openrc
+  - galera_client
+  - openstack_openrc
+# Extra dependency not installable this way
+#  git clone https://git.openstack.org/openstack/openstack-ansible-plugins {homedir}/.ansible/plugins
