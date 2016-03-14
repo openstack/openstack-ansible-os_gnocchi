@@ -23,8 +23,32 @@ gnocchi_service_internaluri_proto: "{{ openstack_service_internaluri_proto | def
 gnocchi_service_internalurl: "{{ gnocchi_service_internaluri_proto }}://{{ internal_lb_vip_address }}:{{ gnocchi_service_port }}"
 
 ## Ensure gnocchiclient is installed on the ceilometer collectors
-ceilometer_pip_packages: "{{ ceilometer_pip_packages + [gnocchiclient] }}"
-utility_pip_packages: "{{ utility_pip_packages + [gnocchiclient] }}"
+ceilometer_pip_packages:
+  - ceilometer
+  - python-ceilometerclient
+  - ceilometermiddleware
+  - PyMySQL
+  - python-memcached
+  - pycrypto
+  - warlock
+  - pymongo
+  - tooz
+  - libvirt-python
+  - gnocchiclient
+
+utility_pip_packages:
+  - python-openstackclient
+  - python-ceilometerclient
+  - python-cinderclient
+  - python-glanceclient
+  - python-heatclient
+  - python-keystoneclient
+  - python-neutronclient
+  - python-novaclient
+  - python-swiftclient
+  - python-memcached
+  - pycrypto
+  - gnocchiclient
 
 ## Demonstrating the expected configurations necessary to use gnocchi as the ceilometer dispatcher
 ## These must be disabled because of an issue in config_template and the use of MultiStrOpt in Ceilometer
