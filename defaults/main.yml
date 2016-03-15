@@ -165,7 +165,7 @@ gnocchi_pip_packages:
   - python-memcached
 
 #: List of extra programs/services owned by gnocchi
-gnocchi_extra_service_names: []
+gnocchi_extra_service_names:
   - "{{ gnocchi_metricd_program_name }}"
 
 #: Tunable overrides
