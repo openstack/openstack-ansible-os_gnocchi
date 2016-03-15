@@ -79,27 +79,6 @@ ceilometer_ceilometer_conf_overrides:
     filter_service_activity: true
     filter_project: "{{ gnocchi_service_project_name }}"
 
-## Demonstrating expected configs necessary to use swift for storage
-## When using keystone auth v2 some entries will need to be adjusted
-## We need to use a dedicated project for gnocchi when using a Swift backend
-##   in order to identify the traffic related to storing metrics in Swift and
-##   exclude it from the other Swift traffic reported to Gnocchi. See also
-##   filter_service_activity and filter_service_activity in ceilometer.conf
-gnocchi_service_project_name: gnocchi_swift
-gnocchi_service_project_description: Dedicated project for the Gnocchi Service
-gnocchi_conf_overrides:
-  storage:
-    driver: swift
-    swift_auth_version: 3
-    swift_authurl: "{{ keystone_service_internalurl }}"
-    swift_endpoint_type: internalURL
-    swift_user: "{{ gnocchi_service_user_name }}"
-    swift_key: "{{ gnocchi_service_password }}"
-    swift_region_name: "{{ gnocchi_service_region }}"
-    swift_project_domain_id: "{{ gnocchi_service_project_domain_id }}"
-    swift_user_domain_id: "{{ gnocchi_service_user_domain_id }}"
-    swift_tenant_name: "{{ gnocchi_service_project_name }}"
-    swift_container_prefix: gnocchi
 ## Demonstrating the expected configurations necessary to use ceph for storage
 #    driver: ceph
 #    ceph_username: gnocci
