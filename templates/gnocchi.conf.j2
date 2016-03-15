@@ -38,6 +38,44 @@ check_revocations_for_cached = False
 [storage]
 driver = {{ gnocchi_storage_driver }}
 coordination_url = {{ gnocchi_coordination_url }}
+{% if gnocchi_storage_driver == 'file' %}
+############
+## File Storage
+############
+file_basepath = /var/lib/gnocchi
+file_basepath_tmp = ${file_basepath}/tmp
+{% endif %}
+{% if gnocchi_storage_driver == 'swift' %}
+############
+## Swift Storage
+############
+swift_auth_version: 3
+swift_authurl: "{{ keystone_service_internalurl }}"
+swift_endpoint_type: internalURL
+swift_user: "{{ gnocchi_service_user_name }}"
+swift_key: "{{ gnocchi_service_password }}"
+swift_region_name: "{{ gnocchi_service_region }}"
+swift_project_domain_id: "{{ gnocchi_service_project_domain_id }}"
+swift_user_domain_id: "{{ gnocchi_service_user_domain_id }}"
+swift_tenant_name: "{{ gnocchi_service_project_name }}"
+swift_container_prefix: gnocchi
+{% endif %}
+{% if gnocchi_storage_driver == 'ceph' %}
+############
+## Ceph Storage
+############
+# Ceph pool name to use. (string value)
+#ceph_pool = gnocchi
+
+# Ceph username (ie: client.admin). (string value)
+#ceph_username = <None>
+
+# Ceph keyring path. (string value)
+#ceph_keyring = <None>
+
+# Ceph configuration file. (string value)
+#ceph_conffile = /etc/ceph/ceph.conf
+{% endif %}
 
 [metricd]
 # Number of workers for Gnocchi metric daemons. By default the available number
@@ -68,30 +106,6 @@ coordination_url = {{ gnocchi_coordination_url }}
 
 # Delay between flushes (floating point value)
 #flush_delay = <None>
-
-{% if gnocchi_storage_driver == 'file' %}
-############
-## File Storage
-############
-file_basepath = /var/lib/gnocchi
-file_basepath_tmp = ${file_basepath}/tmp
-{% endif %}
-{% if gnocchi_storage_driver == 'ceph' %}
-############
-## Ceph Storage
-############
-# Ceph pool name to use. (string value)
-#ceph_pool = gnocchi
-
-# Ceph username (ie: client.admin). (string value)
-#ceph_username = <None>
-
-# Ceph keyring path. (string value)
-#ceph_keyring = <None>
-
-# Ceph configuration file. (string value)
-#ceph_conffile = /etc/ceph/ceph.conf
-{% endif %}
 
 ############
 ## InfluxDB Storage

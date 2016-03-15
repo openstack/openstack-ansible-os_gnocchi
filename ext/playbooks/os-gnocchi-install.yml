@@ -53,7 +53,7 @@
           - "lxc.mount.entry=/openstack/{{ container_name }} var/lib/gnocchi none bind 0 0"
       delegate_to: "{{ physical_host }}"
       when: >
-            (not is_metal | bool) and gnocchi_storage_driver is defined and
+            (not is_metal | bool) and gnocchi_storage_driver is not defined or
             (gnocchi_storage_driver == "file")
       register: container_extra_config
       tags:

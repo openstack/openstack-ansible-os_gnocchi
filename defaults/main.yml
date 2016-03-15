@@ -55,7 +55,7 @@ gnocchi_galera_address: "{{ galera_address }}"
 gnocchi_db_sync_options: "" 
 
 #: Storage info
-gnocchi_storage_driver: swift
+gnocchi_storage_driver: file
 gnocchi_coordination_url: "mysql://{{ gnocchi_galera_user }}:{{ gnocchi_galera_password }}@{{ gnocchi_galera_address }}/{{ gnocchi_galera_database }}?charset=utf8&timeout=5"
 
 #: Default Archive Policies
@@ -159,7 +159,8 @@ gnocchi_requires_pip_packages:
 
 #: Common pip packages
 gnocchi_pip_packages:
-  - "gnocchi[mysql,{{ gnocchi_storage_driver }}]"
+# FUTURE optimize after https://bugs.launchpad.net/openstack-ansible/+bug/1557682
+  - "gnocchi[mysql,file,swift,ceph]"
   - keystonemiddleware
   - gnocchiclient
   - python-memcached
