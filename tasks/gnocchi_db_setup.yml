@@ -41,7 +41,7 @@
 
 - name: Perform a Gnocchi DB sync
   command: "{{ gnocchi_bin }}/gnocchi-upgrade {{ gnocchi_db_sync_options }}"
-  # TODO(stevelle) work out a changed_when condition
+  # NOTE(stevelle) a changed_when condition has nothing to work with here
   tags:
     - gnocchi-db-sync
     - gnocchi-setup
