@@ -67,6 +67,7 @@
     owner: "{{ gnocchi_system_user_name }}"
     group: "{{ gnocchi_system_group_name }}"
     mode: "0755"
+  when: gnocchi_use_mod_wsgi | bool
   notify:
     - Restart Apache
   tags:

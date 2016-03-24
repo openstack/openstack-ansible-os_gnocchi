@@ -18,6 +18,18 @@ is_metal: true
 
 #: Enable for debug logging level
 debug: false
+
+# These variables are used in 'developer mode' in order to allow the role
+# to build an environment directly from a git source without the presence
+# of an OpenStack-Ansible repo_server.
+gnocchi_git_repo: https://git.openstack.org/openstack/gnocchi
+gnocchi_git_install_branch: stable/2.0
+gnocchi_requirements_git_repo: https://git.openstack.org/openstack/requirements
+gnocchi_requirements_git_install_branch: stable/2.0
+gnocchi_developer_mode: false
+gnocchi_developer_constraints:
+  - "git+{{ gnocchi_git_repo }}@{{ gnocchi_git_install_branch }}#egg=gnocchi"
+
 #: Use of deprecated config options will cause a fatal application error
 gnocchi_fatal_deprecations: false
 
@@ -151,11 +163,12 @@ gnocchi_apt_packages:
   - libpq-dev
 
 #: Gnocchi packages that must be installed before anything else
-gnocchi_requires_pip_packages:
+gnocchi_required_pip_packages:
   - virtualenv
   - virtualenv-tools
   - python-keystoneclient # Keystoneclient needed for OSA keystone lib
   - gnocchiclient # gnocchiclient needed for gnocchi lib
+  - httplib2 # so we can use the uri module
 
 #: Common pip packages
 gnocchi_pip_packages:

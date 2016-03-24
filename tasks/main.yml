@@ -30,4 +30,3 @@
 
 - include: gnocchi_policy_setup.yml
   run_once: true
-

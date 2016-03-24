@@ -41,7 +41,8 @@
 
 - name: Perform a Gnocchi DB sync
   command: "{{ gnocchi_bin }}/gnocchi-upgrade {{ gnocchi_db_sync_options }}"
-  # NOTE(stevelle) a changed_when condition has nothing to work with here
+  become: yes
+  become_user: "{{ gnocchi_system_user_name }}"
   tags:
     - gnocchi-db-sync
     - gnocchi-setup
