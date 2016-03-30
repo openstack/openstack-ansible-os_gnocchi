@@ -152,16 +152,6 @@ gnocchi_api_program_name: gnocchi-api
 #: Gnocchi Metricd program name
 gnocchi_metricd_program_name: gnocchi-metricd
 
-#: Necessary packages
-gnocchi_apt_packages:
-  - apache2
-  - apache2-utils
-  - libapache2-mod-wsgi
-  - git
-  - build-essential
-  - python-dev
-  - libpq-dev
-
 #: Gnocchi packages that must be installed before anything else
 gnocchi_required_pip_packages:
   - virtualenv
