@@ -1,138 +1,15 @@
-OpenStack-Ansible Gnocchi
-=========================
+os_gnocchi role
+############
+:tags: openstack, cloud, ansible, os_gnocchi
+:category: \*nix
 
-A simple role to deploy `OpenStack Gnocchi <http://gnocchi.xyz/>`_
-from source in a manner similar to the OpenStack-Ansible project.
-
-Project Status
---------------
-Currently the role is expected to deploy and run a gnocchi service
-appropriately. Integration with Ceilometer is in development and should be
-considered experimental at this time.
-
-Requirements
-------------
-
-Index
-^^^^^
-You will need to have an appropriate SQLAlchemy-supported database for the
-index. OpenStack-Ansible provides roles to deploy a Galera cluster, and
-this role is presumed by the default indexer url but you can override that
-using the config template library if you wish to use PostgreSQL.
-
-Storage
-^^^^^^^
-You will need to have an appropriate set of data stores. Filesystem storage
-is an option but is NOT an H.A. solution and will not work properly if there
-are multiple Gnocchi instances in your OpenStack cluster. First-class support
-is planned for Swift is in testing and is the current default. support for
-Ceph as a storage engine is theoretically possible but has not been tested yet.
-
-Coordination
-^^^^^^^^^^^^
-The default is to use file-based coordination so the default is NOT an H.A.
-solution and will not work properly if there are multiple Gnocchi instances in
-a your OpenStack cluster.
-
-If you wish to use Etcd, Redis, or Zookeeper for coordination, setting up that
-service is a prerequisite. You might have luck using other roles for
-management of that. (e.g. https://github.com/AnsibleShipyard/ansible-java and
-https://github.com/AnsibleShipyard/ansible-zookeeper)
-
-Secrets
-^^^^^^^
-The secrets file (which should be copied to ``/etc/openstack_deploy`` in your
-deploy but originating from ``ext/openstack_deploy/user_gnocchi_secrets.yml``)
-needs to have values specified. This can be done by invoking the generator
-found in the openstack-ansible project: ``scripts/pw-token-gen.py``
-
-TODO
-^^^^
-- Resynchronize patterns from OpenStack-Ansible.
-- Collect the TODO tasks that are hidden throughout the project.
-- Write proper docs for this role.
-
-Role Variables
---------------
-
-The variables which need to be provided will vary based on the storage chosen.
-The default storage is Swift. If you wish to use another storage option you
-will need to provide the appropriate overrides (specified in
-gnocchi_conf_overrides found defaults/main.yml and see also
-ext/openstack_deploy/openstack_gnocchi_overrides.yml.example for how to use
-this).
-
-Other variables expected for this role include:
-
-- keystone_auth_admin_token
-- keystone_service_internaluri
-- keystone_service_internaluri_insecure
-- keystone_service_adminruri
-- keystone_service_adminruri_insecure
-- galera_address
-- galera_root_user
-- galera_root_password
-- memcached_servers
-- memcached_encryption_key
-- internal_lb_vip_address
-- external_lb_vip_address
-
-The ``keystone_auth_admin_token`` should contain the Keystone admin auth
-token which can be used to bypass traditional Keystone auth and is used to
-create service users/roles/endpoints as needed within Keystone.
-
-Each of the ``keystone_service_*uri`` variables is expected to include
-protocol, host, and port for the keystone service. Do not specify a path, to
-include keystone protocol version. See also the OpenStack-Ansible project and
-the os_keystone role for more details on these variables.
-
-Each ``keystone_*_insecure`` variable is expected to indicate whether or not
-Keystone is using the http protocol or not, and should evaluate to a boolean.
-
-The ``galera_address`` is expected to direct to the your MySQL server or a load
-balancer host which sits in front of your Galera cluster. This may be See also
-the OpenStack-Ansible project for more details. The ``galera_root_*`` variables
-should contain the credentials used to create the Gnocchi index database.
-
-The ``memcached_*`` variables are expected for caching Keystone auth. See also
-the OpenStack-Ansible project and the os_keystone role for more details on
-these variables.
-
-Each of the ``*_lb_vip_address`` variables is expected to contain the host
-address for your Gnocchi service, either internal address for use within the
-OpenStack cluster's local network or external for constructing the public
-Gnocchi API service endpoint. Either one might point to your load-balancer.
-Note that both of these variables are likely to be renamed.
-
-See ``defaults/main.yml`` for additional variables and their descriptions.
-
-Dependencies
-------------
-
-TBD
-
-Example Playbook
-----------------
+os_gnocchi Role
 
 .. code-block:: yaml
 
-    - hosts: gnocchi_all
+    - name: os_gnocchi role
+      hosts: "hosts"
+      user: root
       roles:
-        role: stevelle.openstack-ansible-gnocchi
-        galera_address: "{{ internal_lb_vip_address }}"
-        tags:
-          - "os-gnocchi"
+        - { role: "os_gnocchi" }
 
-License
--------
-
-Apache
-
-Credits
--------
-
-The ``config_template`` library module was developed by Kevin Carter for the
-OpenStack-Ansible and is vendored in ``library``.
-
-The role layout and documentation was cribbed from the Openstack Searchlight
-role by Ian Cordasco.
