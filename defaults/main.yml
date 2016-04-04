@@ -33,6 +33,10 @@ gnocchi_developer_constraints:
 #: Use of deprecated config options will cause a fatal application error
 gnocchi_fatal_deprecations: false
 
+#: External SSL forwarding proto, assumes TLS termination at load balancer
+gnocchi_ssl_external: true
+gnocchi_secure_proxy_ssl_header: HTTP_X_FORWARDED_PROTO
+
 #: Set this to false to disable API service through Apache + mod_wsgi
 gnocchi_use_mod_wsgi: true
 
