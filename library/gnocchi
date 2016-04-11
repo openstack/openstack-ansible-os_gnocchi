@@ -15,6 +15,8 @@
 import json
 import re
 
+from ansible.module_utils.basic import *
+
 DOCUMENTATION = """
 ---
 module: gnocchi
@@ -286,6 +288,7 @@ class ManageGnocchi(object):
 
         return apr
 
+
 def main():
     module = AnsibleModule(
         argument_spec=dict(
@@ -304,6 +307,5 @@ def main():
     mg = ManageGnocchi(module)
     mg.route()
 
-from ansible.module_utils.basic import *
 if __name__ == '__main__':
     main()
