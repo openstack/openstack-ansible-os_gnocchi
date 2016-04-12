@@ -23,9 +23,9 @@ debug: false
 # to build an environment directly from a git source without the presence
 # of an OpenStack-Ansible repo_server.
 gnocchi_git_repo: https://git.openstack.org/openstack/gnocchi
-gnocchi_git_install_branch: stable/2.0
+gnocchi_git_install_branch: 2e6a1b18df876c95482c266b4725b65941491f8a
 gnocchi_requirements_git_repo: https://git.openstack.org/openstack/requirements
-gnocchi_requirements_git_install_branch: stable/2.0
+gnocchi_requirements_git_install_branch: 6d42646b62e188c26eb031cbb5987db2cc0ccb10
 gnocchi_developer_mode: false
 gnocchi_developer_constraints:
   - "git+{{ gnocchi_git_repo }}@{{ gnocchi_git_install_branch }}#egg=gnocchi"
@@ -139,8 +139,8 @@ gnocchi_ssl: false
 gnocchi_ssl_cert: /etc/ssl/certs/gnocchi.pem
 gnocchi_ssl_key: /etc/ssl/private/gnocchi.key
 gnocchi_ssl_ca_cert: /etc/ssl/certs/gnocchi-ca.pem
-gnocchi_ssl_protocol: "{{ ssl_protocol }}"
-gnocchi_ssl_cipher_suite: "{{ ssl_cipher_suite }}"
+gnocchi_ssl_protocol: "{{ ssl_protocol | default('ALL -SSLv2 -SSLv3') }}"
+gnocchi_ssl_cipher_suite: "{{ ssl_cipher_suite | default('ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:ECDH+3DES:DH+3DES:RSA+AESGCM:RSA+AES:RSA+3DES:!aNULL:!MD5:!DSS') }}"
 
 # if using a self-signed certificate, set this to true to regenerate it
 gnocchi_ssl_self_signed_regen: false
@@ -166,11 +166,11 @@ gnocchi_required_pip_packages:
 
 #: Common pip packages
 gnocchi_pip_packages:
-# FUTURE optimize after https://bugs.launchpad.net/openstack-ansible/+bug/1557682
   - "gnocchi[mysql,file,swift,ceph]"
   - keystonemiddleware
   - gnocchiclient
   - python-memcached
+  - pycrypto
 
 #: List of extra programs/services owned by gnocchi
 gnocchi_extra_service_names:

@@ -13,23 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Prepare the user ssh keys
-- include: test-prepare-keys.yml
-
-# Prepare the host
-- include: test-prepare-host.yml
-
-# Prepare the containers
-- include: test-prepare-containers.yml
-
-# Install MariaDB
-- include: test-install-infra.yml
-
-# Install Keystone
-- include: test-install-keystone.yml
-
-# Install Gnocchi
-- include: test-install-gnocchi.yml
-
-# Test Gnocchi
-- include: test-gnocchi-functional.yml
+- name: Deploy gnocchi
+  hosts: gnocchi_all
+  user: root
+  gather_facts: true
+  roles:
+    - role: "{{ rolename | basename }}"
+  vars_files:
+    - test-vars.yml
