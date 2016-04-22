@@ -19,7 +19,7 @@
     - gnocchi-setup
     - gnocchi-policy-setup
 
-- name: Wait for keystone admin to come up
+- name: Wait for Gnocchi API to come up
   wait_for:
     host: "{{ internal_lb_vip_address }}"
     port: "{{ gnocchi_service_port }}"

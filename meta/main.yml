@@ -11,11 +11,17 @@ galaxy_info:
     - trusty
   categories:
   - cloud
+  - openstack
 dependencies:
   - role: apt_package_pinning
     when:
       - ansible_pkg_mgr == 'apt'
-  - pip_lock_down
+  - role: pip_lock_down
+    when:
+      - not gnocchi_developer_mode | bool
+  - role: pip_install
+    when:
+      - gnocchi_developer_mode | bool
   - galera_client
   - openstack_openrc
 # Extra dependency not installable this way

@@ -8,8 +8,8 @@ fatal_deprecations = {{ gnocchi_fatal_deprecations }}
 host = {{ gnocchi_service_address }}
 port = {{ gnocchi_service_port }}
 
-[oslo_middleware]
 {% if gnocchi_ssl_external | bool %}
+[oslo_middleware]
 secure_proxy_ssl_header = {{ gnocchi_secure_proxy_ssl_header }}
 {% endif %}
 
@@ -21,6 +21,7 @@ insecure = {{ keystone_service_adminuri_insecure | bool }}
 auth_plugin = {{ gnocchi_keystone_auth_plugin }}
 signing_dir = /var/cache/gnocchi
 auth_url = {{ keystone_service_adminuri }}
+auth_uri = {{ keystone_service_internaluri }}
 region_name = {{ gnocchi_service_region }}
 project_domain_id = {{ gnocchi_service_project_domain_id }}
 user_domain_id = {{ gnocchi_service_user_domain_id }}

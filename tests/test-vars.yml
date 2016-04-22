@@ -1,0 +1,37 @@
+is_metal: false
+debug: true
+galera_client_drop_config_file: false
+galera_root_password: "secrete"
+gnocchi_developer_mode: true
+gnocchi_galera_password: "secrete"
+gnocchi_service_password: "secrete"
+gnocchi_galera_address: 10.100.100.2
+gnocchi_use_mod_wsgi: false
+gnocchi_ssl_external: false
+keystone_admin_tenant_name: admin
+keystone_admin_user_name: admin
+keystone_auth_admin_password: "SuperSecretePassword"
+keystone_container_mysql_password: "SuperSecrete"
+keystone_developer_mode: true
+keystone_galera_address: 10.100.100.2
+keystone_galera_database: keystone
+keystone_git_install_branch: master
+keystone_messaging_enabled: false
+keystone_requirements_git_install_branch: master
+keystone_service_adminuri: "http://10.100.100.3:35357"
+keystone_service_adminuri_insecure: false
+keystone_service_adminurl: "{{ keystone_service_adminuri }}/v3"
+keystone_service_internaluri: "http://10.100.100.3:5000"
+keystone_service_internaluri_insecure: false
+keystone_service_internalurl: "{{ keystone_service_internaluri }}/v3"
+keystone_service_password: "secrete"
+keystone_venv_tag: "testing"
+memcached_encryption_key: "secrete"
+memcached_servers: 127.0.0.1
+openrc_os_auth_url: "{{ keystone_service_internalurl }}"
+openrc_os_domain_name: "Default"
+openrc_os_password: "{{ keystone_auth_admin_password }}"
+rabbitmq_port: 5671
+rabbitmq_servers: 10.100.100.2
+rabbitmq_use_ssl: true
+verbose: true
