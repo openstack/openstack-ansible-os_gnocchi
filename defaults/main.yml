@@ -23,9 +23,9 @@ debug: false
 # to build an environment directly from a git source without the presence
 # of an OpenStack-Ansible repo_server.
 gnocchi_git_repo: https://git.openstack.org/openstack/gnocchi
-gnocchi_git_install_branch: 2e6a1b18df876c95482c266b4725b65941491f8a
+gnocchi_git_install_branch: master
 gnocchi_requirements_git_repo: https://git.openstack.org/openstack/requirements
-gnocchi_requirements_git_install_branch: 6d42646b62e188c26eb031cbb5987db2cc0ccb10
+gnocchi_requirements_git_install_branch: master
 gnocchi_developer_mode: false
 gnocchi_developer_constraints:
   - "git+{{ gnocchi_git_repo }}@{{ gnocchi_git_install_branch }}#egg=gnocchi"
@@ -68,7 +68,7 @@ gnocchi_venv_download_url: http://127.0.0.1/venvs/untagged/ubuntu/gnocchi.tgz
 gnocchi_galera_database: gnocchi
 gnocchi_galera_user: gnocchi
 gnocchi_galera_address: "{{ galera_address }}"
-gnocchi_db_sync_options: "" 
+gnocchi_db_sync_options: "--create-legacy-resource-types"
 
 #: Storage info
 gnocchi_storage_driver: file

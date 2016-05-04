@@ -15,6 +15,6 @@
 
 #: Gnocchi program source location
 gnocchi_git_repo: "https://git.openstack.org/openstack/gnocchi"
-gnocchi_git_install_branch: 2e6a1b18df876c95482c266b4725b65941491f8a # head of "master" as of 27.01.2016
+gnocchi_git_install_branch: 45150036bb143fd639082e817581502636504806 # head of "master" as of 29.04.2016
 gnocchi_git_dest: "/opt/gnocchi_{{ gnocchi_git_install_branch | replace('/', '_') }}"
 

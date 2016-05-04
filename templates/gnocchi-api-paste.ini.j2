@@ -1,21 +1,39 @@
 # {{ ansible_managed }}
 
-# Remove keystone_authtoken from the pipeline if you don't want to use keystone authentication
+# Use gnocchi+noauth in the pipeline if you don't want keystone authentication
 [pipeline:main]
-pipeline = healthcheck keystone_authtoken gnocchi
+pipeline = gnocchi+auth
 
-[app:gnocchi]
+[composite:gnocchi+noauth]
+use = egg:Paste#urlmap
+/ = gnocchiversions
+/v1 = gnocchiv1
+
+[composite:gnocchi+auth]
+use = egg:Paste#urlmap
+/ = gnocchiversions
+/v1 = gnocchiv1+auth
+
+[pipeline:gnocchiv1+auth]
+pipeline = healthcheck keystone_authtoken gnocchiv1
+
+[app:gnocchiversions]
 paste.app_factory = gnocchi.rest.app:app_factory
+root = gnocchi.rest.VersionsController
 
-[filter:keystone_authtoken]
-paste.filter_factory = keystonemiddleware.auth_token:filter_factory
-oslo_config_project = gnocchi
+[app:gnocchiv1]
+paste.app_factory = gnocchi.rest.app:app_factory
+root = gnocchi.rest.V1Controller
 
 [filter:healthcheck]
 paste.filter_factory = oslo_middleware:Healthcheck.factory
 path = /status
 backends = disable_by_file
 disable_by_file_path = {{ gnocchi_healthcheck_disable_path }}
+
+[filter:keystone_authtoken]
+paste.filter_factory = keystonemiddleware.auth_token:filter_factory
+oslo_config_project = gnocchi
 
 [filter:cors]
 paste.filter_factory = oslo_middleware.cors:filter_factory
