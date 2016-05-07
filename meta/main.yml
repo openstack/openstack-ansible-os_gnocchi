@@ -14,12 +14,7 @@ galaxy_info:
   - cloud
   - openstack
 dependencies:
-  - role: pip_lock_down
-    when:
-      - not gnocchi_developer_mode | bool
-  - role: pip_install
-    when:
-      - gnocchi_developer_mode | bool
+  - pip_install
   - role: apt_package_pinning
     when:
       - ansible_pkg_mgr == 'apt'

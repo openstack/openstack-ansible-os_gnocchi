@@ -81,13 +81,11 @@
       tags:
         - gnocchi-logs
   roles:
-    - { role: "pip_lock_down", tags: [ "gnocchi-pip-lock-down", "pip-lock-down" ] }
-    - { role: "galera_client", tags: [ "gnocchi-galera-client", "galera-client" ] }
-    - { role: "openstack_openrc", tags: [ "gnocchi-openstack-openrc", "openstack-openrc" ] }
     - role: "os_gnocchi"
       gnocchi_galera_address: "{{ galera_address }}"
       gnocchi_venv_tag: "{{ openstack_release }}"
       gnocchi_venv_download_url: "{{ openstack_repo_url }}/venvs/{{ openstack_release }}/{{ ansible_distribution | lower }}/gnocchi-{{ openstack_release }}.tgz"
+      pip_lock_to_internal_repo: "{{ (pip_links | length) >= 1 }}"
       tags:
         - "os-gnocchi"
     - role: "rsyslog_client"
