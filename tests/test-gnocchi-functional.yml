@@ -14,7 +14,7 @@
 # limitations under the License.
 
 - name: Playbook for functional testing of gnocchi
-  hosts: gnocchi_api
+  hosts: gnocchi_all
   user: root
   gather_facts: false
   tasks:

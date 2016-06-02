@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- include: gnocchi_upstart_common_init.yml
+- include: gnocchi_init_common.yml
   vars:
     program_name: "{{ gnocchi_api_program_name }}"
     service_name: "{{ gnocchi_service_name }}"
@@ -21,7 +21,7 @@
     system_group: "{{ gnocchi_system_group_name }}"
     service_home: "{{ gnocchi_system_user_home }}"
 
-- include: gnocchi_upstart_common_init.yml
+- include: gnocchi_init_common.yml
   vars:
     program_name: "{{ gnocchi_metricd_program_name }}"
     service_name: "{{ gnocchi_service_name }}"

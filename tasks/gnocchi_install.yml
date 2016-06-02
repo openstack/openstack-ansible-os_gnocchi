@@ -18,6 +18,7 @@
     - ansible_pkg_mgr == 'apt'
   tags:
     - gnocchi-install
+    - glance-apt-packages
 
 - name: Create developer mode constraint file
   copy:

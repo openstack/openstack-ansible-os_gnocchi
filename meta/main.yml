@@ -9,19 +9,20 @@ galaxy_info:
   - name: Ubuntu
     versions:
     - trusty
+    - xenial
   categories:
   - cloud
   - openstack
 dependencies:
-  - role: apt_package_pinning
-    when:
-      - ansible_pkg_mgr == 'apt'
   - role: pip_lock_down
     when:
       - not gnocchi_developer_mode | bool
   - role: pip_install
     when:
       - gnocchi_developer_mode | bool
+  - role: apt_package_pinning
+    when:
+      - ansible_pkg_mgr == 'apt'
   - galera_client
   - openstack_openrc
 # Extra dependency not installable this way
