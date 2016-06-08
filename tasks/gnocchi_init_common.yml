@@ -1,5 +1,5 @@
 ---
-# Copyright 2015, Rackspace US, Inc.
+# Copyright 2016, Rackspace US, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,24 +13,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Prepare the user ssh keys
-- include: test-prepare-keys.yml
+- include: gnocchi_init_upstart.yml
+  when: pid1_name == "init"
+  tags:
+    - gnocchi-init
 
-# Prepare the host
-- include: test-prepare-host.yml
+- include: gnocchi_init_systemd.yml
+  when: pid1_name == "systemd"
+  tags:
+    - gnocchi-init
 
-# Prepare the containers
-- include: test-prepare-containers.yml
-
-# Install MariaDB
-- include: test-install-infra.yml
-
-# Install Keystone
-- include: test-install-keystone.yml
-
-# Install Gnocchi
-- include: test-install-gnocchi.yml
-
-# Test Gnocchi
-# coming soon
-#- include: test-gnocchi-functional.yml
+- name: Load service
+  service:
+   name: "{{ program_name }}"
+   enabled: "yes"
+  notify:
+    - Restart Gnocchi API services
+    - Restart Gnocchi extra services
+    - Restart Apache
