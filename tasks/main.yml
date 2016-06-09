@@ -42,14 +42,14 @@
 - include: gnocchi_init.yml
 
 - include: gnocchi_service_setup.yml
-  run_once: true
+  when: inventory_hostname == groups['gnocchi_all'][0]
 
 # N.B. Must occur after service setup, as this may perform calls to Swift
 - include: gnocchi_db_setup.yml
-  run_once: true
+  when: inventory_hostname == groups['gnocchi_all'][0]
 
 - include: gnocchi_apache.yml
   when: gnocchi_use_mod_wsgi | bool
 
 - include: gnocchi_policy_setup.yml
-  run_once: true
+  when: inventory_hostname == groups['gnocchi_all'][0]
