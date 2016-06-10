@@ -25,7 +25,6 @@
     port: "{{ gnocchi_service_port }}"
     timeout: 25
     delay: 10
-  run_once: true
   tags:
     - gnocchi-setup
     - gnocchi-policy-setup
