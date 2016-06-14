@@ -51,7 +51,6 @@ utility_pip_packages:
   - gnocchiclient
 
 ## Demonstrating the expected configurations necessary to use gnocchi as the ceilometer dispatcher
-## These must be disabled because of an issue in config_template and the use of MultiStrOpt in Ceilometer
 ## NOTE(stevelle) no support for storing events in gnocchi, so eliminate dispatchers and refuse to store
 ceilometer_ceilometer_conf_overrides:
   DEFAULT:
@@ -66,29 +65,12 @@ ceilometer_ceilometer_conf_overrides:
     max_retries: 80
   dispatcher_gnocchi:
     archive_policy: low
-## Demonstrating expected ceilometer configs necessary ONLY to use swift for
-##   gnocchi storage under ceilometer
-## NOTE(stevelle): using a filter at dispatcher is inferior to filtering in
-##   ceilometermiddleware on Swift however facts and registered variable scopes
-##   are a bit volatile for use in the ceilometermiddleware configuration e.g.
-##   https://github.com/openstack/ceilometermiddleware/blob/master/ceilometermiddleware/swift.py#L39
-##   and this is just easier than extracting the project_id expected by that
-##   middleware and making all the changes necessary in the middleware needed
-##   to get it to perform the necessary filtering without getting fingers too
-##   deep into the swift role.
-    filter_service_activity: true
-    filter_project: "{{ gnocchi_service_project_name }}"
 
 ## Demonstrating the expected configurations necessary to use ceph for storage
 #    driver: ceph
-#    ceph_username: gnocci
+#    ceph_username: gnocchi
 #    ceph_keyring: "/etc/ceph/ceph.client.{{ gnocchi_service_user_name }}.keyring"
 
-
-## Demonstrating expected configs required to use gnocchi meters for aodh alarming
-aodh_aodh_conf_overrides:
-  DEFAULT:
-    gnocchi_url: "{{ gnocchi_service_internalurl }}"
 
 ## FUTURE(stevelle)
 # disable ceilometer-api: https://review.openstack.org/#/c/270818/
