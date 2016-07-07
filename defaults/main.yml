@@ -40,26 +40,16 @@ gnocchi_secure_proxy_ssl_header: HTTP_X_FORWARDED_PROTO
 #: Set this to false to disable API service through Apache + mod_wsgi
 gnocchi_use_mod_wsgi: true
 
-#: Set this to enable or disable installing in a venv
-gnocchi_venv_enabled: true
-
 #: Name of the virtual env to deploy into
 gnocchi_venv_tag: untagged
-gnocchi_venv_bin: "/openstack/venvs/gnocchi-{{ gnocchi_venv_tag }}/bin"
+gnocchi_bin: "/openstack/venvs/gnocchi-{{ gnocchi_venv_tag }}/bin"
 gnocchi_venv_pkgs: "/openstack/venvs/gnocchi-{{ gnocchi_venv_tag }}/lib/python2.7/site-packages"
-
-#: The bin path defaults to the venv path however if installation in a
-#  venv is disabled the bin path will be dynamically set based on the
-#  system path used when the installing.
-gnocchi_bin: "{{ gnocchi_venv_bin }}"
 
 #: Set the etc dir path where gnocchi is installed.
 #  This is used for role access to the db migrations.
 #  Example:
 #  gnocchi_etc_dir: "/usr/local/etc/gnocchi"
-gnocchi_venv_etc_dir: "{{ gnocchi_bin | dirname }}/etc/gnocchi"
-gnocchi_non_venv_etc_dir: "/usr/local/etc/gnocchi"
-gnocchi_etc_dir: "{{ (gnocchi_venv_enabled | bool) | ternary(gnocchi_venv_etc_dir, gnocchi_non_venv_etc_dir) }}"
+gnocchi_etc_dir: "{{ gnocchi_bin | dirname }}/etc/gnocchi"
 
 #: Location to retrieve the pre-built virtuelenv for gnocchi (optional)
 gnocchi_venv_download_url: http://127.0.0.1/venvs/untagged/ubuntu/gnocchi.tgz

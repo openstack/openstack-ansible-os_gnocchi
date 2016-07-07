@@ -98,7 +98,6 @@
     get_md5: False
   when:
     - not gnocchi_developer_mode | bool
-    - gnocchi_venv_enabled | bool
   register: local_venv_stat
   tags:
     - gnocchi-install
@@ -110,7 +109,6 @@
     return_content: True
   when:
     - not gnocchi_developer_mode | bool
-    - gnocchi_venv_enabled | bool
   register: remote_venv_checksum
   tags:
     - gnocchi-install
@@ -130,7 +128,6 @@
   register: get_venv
   when:
     - not gnocchi_developer_mode | bool
-    - gnocchi_venv_enabled | bool
     - (local_venv_stat.stat.exists == False or
         {{ local_venv_stat.stat.checksum is defined and local_venv_stat.stat.checksum != remote_venv_checksum.content | trim }})
   tags:
@@ -140,17 +137,15 @@
 - name: Set gnocchi get_venv fact
   set_fact:
     gnocchi_get_venv: "{{ get_venv }}"
-  when: gnocchi_venv_enabled | bool
   tags:
     - gnocchi-install
     - gnocchi-pip-packages
 
 - name: Remove existing venv
   file:
-    path: "{{ gnocchi_venv_bin | dirname }}"
+    path: "{{ gnocchi_bin | dirname }}"
     state: absent
   when:
-    - gnocchi_venv_enabled | bool
     - gnocchi_get_venv | changed
   tags:
     - gnocchi-install
@@ -158,12 +153,9 @@
 
 - name: Create gnocchi venv dir
   file:
-    path: "{{ gnocchi_venv_bin | dirname }}"
+    path: "{{ gnocchi_bin | dirname }}"
     state: directory
-  when:
-    - not gnocchi_developer_mode | bool
-    - gnocchi_venv_enabled | bool
-    - gnocchi_get_venv | changed
+  register: gnocchi_venv_dir
   tags:
     - gnocchi-install
     - gnocchi-pip-packages
@@ -171,12 +163,33 @@
 - name: Unarchive pre-built venv
   unarchive:
     src: "/var/cache/{{ gnocchi_venv_download_url | basename }}"
-    dest: "{{ gnocchi_venv_bin | dirname }}"
+    dest: "{{ gnocchi_bin | dirname }}"
     copy: "no"
   when:
     - not gnocchi_developer_mode | bool
-    - gnocchi_venv_enabled | bool
-    - gnocchi_get_venv | changed
+    - gnocchi_get_venv | changed or gnocchi_venv_dir | changed
+  notify:
+    - Restart Gnocchi API services
+    - Restart Gnocchi extra services
+    - Restart Apache
+  tags:
+    - gnocchi-install
+    - gnocchi-pip-packages
+
+- name: Install pip packages
+  pip:
+    name: "{{ item }}"
+    state: latest
+    virtualenv: "{{ gnocchi_bin | dirname }}"
+    virtualenv_site_packages: "no"
+    extra_args: "{{ pip_install_options_fact }}"
+  register: install_packages
+  until: install_packages|success
+  retries: 5
+  delay: 2
+  with_items: gnocchi_pip_packages
+  when:
+    - gnocchi_get_venv | failed or gnocchi_developer_mode | bool
   notify:
     - Restart Gnocchi API services
     - Restart Gnocchi extra services
@@ -187,55 +200,10 @@
 
 - name: Update virtualenv path
   command: >
-    virtualenv-tools --update-path=auto {{ gnocchi_venv_bin | dirname }}
+    virtualenv-tools --update-path=auto {{ gnocchi_bin | dirname }}
   when:
     - not gnocchi_developer_mode | bool
-    - gnocchi_venv_enabled | bool
     - gnocchi_get_venv | success
-  tags:
-    - gnocchi-install
-    - gnocchi-pip-packages
-
-- name: Install pip packages (venv)
-  pip:
-    name: "{{ item }}"
-    state: latest
-    virtualenv: "{{ gnocchi_venv_bin | dirname }}"
-    virtualenv_site_packages: "no"
-    extra_args: "{{ pip_install_options_fact }}"
-  register: install_packages
-  until: install_packages|success
-  retries: 5
-  delay: 2
-  with_items: gnocchi_pip_packages
-  when:
-    - gnocchi_venv_enabled | bool
-    - gnocchi_get_venv | failed or gnocchi_developer_mode | bool
-  notify:
-    - Restart Gnocchi API services
-    - Restart Gnocchi extra services
-    - Restart Apache
-  tags:
-    - gnocchi-install
-    - gnocchi-pip-packages
-
-- name: Install pip packages (no venv)
-  pip:
-    name: "{{ item }}"
-    state: latest
-    extra_args: "{{ pip_install_options_fact }}"
-  register: install_packages
-  until: install_packages|success
-  retries: 5
-  delay: 2
-  with_items: gnocchi_pip_packages
-  when:
-    - not gnocchi_venv_enabled | bool
-    - not gnocchi_developer_mode | bool
-  notify:
-    - Restart Gnocchi API services
-    - Restart Gnocchi extra services
-    - Restart Apache
   tags:
     - gnocchi-install
     - gnocchi-pip-packages

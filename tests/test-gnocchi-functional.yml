@@ -28,11 +28,11 @@
     - name: Create gnocchi volume
       shell: |
         . /root/openrc
-        {{ gnocchi_venv_bin }}/gnocchi create --name {{ gnocchi_volume_name }} 1
+        {{ gnocchi_bin }}/gnocchi create --name {{ gnocchi_volume_name }} 1
     - name: Verify volume goes active
       shell: |
         . /root/openrc
-        {{ gnocchi_venv_bin }}/gnocchi show {{ gnocchi_volume_name }} | grep available
+        {{ gnocchi_bin }}/gnocchi show {{ gnocchi_volume_name }} | grep available
       register: volume_status
       until: volume_status|success
       retries: 5

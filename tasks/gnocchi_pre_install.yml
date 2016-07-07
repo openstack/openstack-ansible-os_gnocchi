@@ -64,17 +64,6 @@
   tags:
     - gnocchi-dirs
 
-- name: Create gnocchi venv dir
-  file:
-    path: "{{ item.path }}"
-    state: directory
-  with_items:
-    - { path: "/openstack/venvs" }
-    - { path: "{{ gnocchi_venv_bin }}" }
-  when: gnocchi_venv_enabled | bool
-  tags:
-    - gnocchi-dirs
-
 - name: Test for log directory or link
   shell: |
     if [ -h "/var/log/gnocchi"  ]; then

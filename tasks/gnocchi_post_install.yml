@@ -42,24 +42,6 @@
   tags:
     - gnocchi-config
 
-- name: Get Gnocchi command path
-  command: which gnocchi
-  register: gnocchi_command_path
-  when:
-    - not gnocchi_venv_enabled | bool
-  tags:
-    - gnocchi-command-bin
-    - gnocchi-config
-
-- name: Set Gnocchi command path
-  set_fact:
-    gnocchi_bin: "{{ gnocchi_command_path.stdout | dirname }}"
-  when:
-    - not gnocchi_venv_enabled | bool
-  tags:
-    - gnocchi-command-bin
-    - gnocchi-config
-
 - name: Drop Gnocchi WSGI Configs
   template:
     src: gnocchi-wsgi.py.j2
