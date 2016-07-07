@@ -19,13 +19,6 @@ activate_this = os.path.expanduser("{{ gnocchi_venv_bin }}/activate_this.py")
 execfile(activate_this, dict(__file__=activate_this))
 {% endif %}
 
-from oslo_config import cfg
-
-from gnocchi import service
 from gnocchi.rest import app
 
-# Initialize the oslo configuration library and logging
-conf = service.prepare_service()
-# The pecan debugger cannot be used in wsgi mode
-conf.set_default('pecan_debug', False, group='api')
-application = app.load_app(conf)
+application = app.build_wsgi_app()
