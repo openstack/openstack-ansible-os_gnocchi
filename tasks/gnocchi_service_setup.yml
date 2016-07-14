@@ -29,10 +29,6 @@
   until: add_service|success
   retries: 5
   delay: 2
-  tags:
-    - gnocchi-api-setup
-    - gnocchi-service-add
-    - gnocchi-setup
 
 # Create the project if needed, assumed to be in default domain.
 # In many cases this will be present but under some circumstances the project
@@ -51,10 +47,6 @@
   until: add_project|success
   retries: 5
   delay: 10
-  tags:
-    - gnocchi-api-setup
-    - gnocchi-service-add
-    - gnocchi-setup
 
 # Create an admin user
 - name: Ensure Gnocchi user
@@ -72,10 +64,6 @@
   until: add_user|success
   retries: 5
   delay: 10
-  tags:
-    - gnocchi-api-setup
-    - gnocchi-service-add
-    - gnocchi-setup
 
 # Add a role to the user
 - name: Ensure Gnocchi user maps to admin role
@@ -93,10 +81,6 @@
   until: add_admin_role|success
   retries: 5
   delay: 10
-  tags:
-    - gnocchi-api-setup
-    - gnocchi-service-add
-    - gnocchi-setup
 
 # Create an endpoint
 - name: Ensure Gnocchi endpoint
@@ -121,7 +105,3 @@
   until: add_endpoint|success
   retries: 5
   delay: 10
-  tags:
-    - gnocchi-api-setup
-    - gnocchi-service-add
-    - gnocchi-setup

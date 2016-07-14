@@ -15,9 +15,6 @@
 
 - name: Ensure Gnocchi API service is (re)started
   meta: flush_handlers
-  tags:
-    - gnocchi-setup
-    - gnocchi-policy-setup
 
 - name: Wait for Gnocchi API to come up
   wait_for:
@@ -25,9 +22,6 @@
     port: "{{ gnocchi_service_port }}"
     timeout: 25
     delay: 10
-  tags:
-    - gnocchi-setup
-    - gnocchi-policy-setup
 
 - name: Ensure Archive Policies
   gnocchi:
@@ -44,9 +38,6 @@
   until: add_policies|success
   retries: 5
   delay: 10
-  tags:
-    - gnocchi-setup
-    - gnocchi-policy-setup
 
 - name: Ensure Archive Policy Rules
   gnocchi:
@@ -62,6 +53,3 @@
   until: add_policy_rules|success
   retries: 5
   delay: 10
-  tags:
-    - gnocchi-setup
-    - gnocchi-policy-setup

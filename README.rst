@@ -57,3 +57,13 @@ Example Playbook
       roles:
         - { role: "os_keystone", tags: [ "os-keystone" ] }
       vars:
+
+Tags
+====
+
+This role supports two tags: ``gnocchi-install`` and ``gnocchi-config``
+
+The ``gnocchi-install`` tag can be used to install and upgrade.
+
+The ``gnocchi-config`` tag can be used to maintain configuration of the
+service.

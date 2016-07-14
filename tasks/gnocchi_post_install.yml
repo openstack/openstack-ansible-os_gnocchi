@@ -39,8 +39,6 @@
     - Restart Apache
     - Restart Gnocchi API services
     - Restart Gnocchi extra services
-  tags:
-    - gnocchi-config
 
 - name: Drop Gnocchi WSGI Configs
   template:
@@ -52,5 +50,3 @@
   when: gnocchi_use_mod_wsgi | bool
   notify:
     - Restart Apache
-  tags:
-    - gnocchi-config
