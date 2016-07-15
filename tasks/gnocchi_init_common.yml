@@ -15,13 +15,9 @@
 
 - include: gnocchi_init_upstart.yml
   when: pid1_name == "init"
-  tags:
-    - gnocchi-init
 
 - include: gnocchi_init_systemd.yml
   when: pid1_name == "systemd"
-  tags:
-    - gnocchi-init
 
 - name: Load service
   service:

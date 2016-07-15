@@ -18,8 +18,6 @@
     name: "{{ gnocchi_system_group_name }}"
     state: "present"
     system: "yes"
-  tags:
-    - gnocchi-group
 
 - name: Create the gnocchi system user
   user:
@@ -30,8 +28,6 @@
     system: "yes"
     createhome: "yes"
     home: "{{ gnocchi_system_user_home }}"
-  tags:
-    - gnocchi-user
 
 - name: Create gnocchi dirs
   file:
@@ -47,8 +43,6 @@
     - { path: "/var/lib/gnocchi/tmp" }
     - { path: "/var/lib/gnocchi/locks" }
     - { path: "/var/cache/gnocchi", mode: "0700" }
-  tags:
-    - gnocchi-dirs
 
 - name: Create Apache mod_wsgi dirs
   file:
@@ -61,8 +55,6 @@
     - { path: "/var/www/cgi-bin", owner: root, group: root }
     - { path: "/var/www/cgi-bin/gnocchi" }
   when: gnocchi_use_mod_wsgi | bool
-  tags:
-    - gnocchi-dirs
 
 - name: Test for log directory or link
   shell: |
@@ -75,9 +67,6 @@
   register: log_dir
   failed_when: false
   changed_when: log_dir.rc != 0
-  tags:
-    - gnocchi-dirs
-    - gnocchi-logs
 
 - name: Create gnocchi log dir
   file:
@@ -89,6 +78,3 @@
   with_items:
     - { path: "/var/log/gnocchi" }
   when: log_dir.rc != 0
-  tags:
-    - gnocchi-dirs
-    - gnocchi-logs

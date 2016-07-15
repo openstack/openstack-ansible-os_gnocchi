@@ -16,9 +16,6 @@
 - include: gnocchi_install_apt.yml
   when:
     - ansible_pkg_mgr == 'apt'
-  tags:
-    - gnocchi-install
-    - glance-apt-packages
 
 - name: Create developer mode constraint file
   copy:
@@ -29,9 +26,6 @@
       {% endfor %}
   when:
     - gnocchi_developer_mode | bool
-  tags:
-    - gnocchi-install
-    - gnocchi-pip-packages
 
 - name: Clone requirements git repository
   git:
@@ -42,27 +36,18 @@
     version: "{{ gnocchi_requirements_git_install_branch }}"
   when:
     - gnocchi_developer_mode | bool
-  tags:
-    - gnocchi-install
-    - gnocchi-pip-packages
 
 - name: Add constraints to pip_install_options fact for developer mode
   set_fact:
     pip_install_options_fact: "{{ pip_install_options|default('') }} --constraint /opt/developer-pip-constraints.txt --constraint /opt/requirements/upper-constraints.txt"
   when:
     - gnocchi_developer_mode | bool
-  tags:
-    - gnocchi-install
-    - gnocchi-pip-packages
 
 - name: Set pip_install_options_fact when not in developer mode
   set_fact:
     pip_install_options_fact: "{{ pip_install_options|default('') }}"
   when:
     - not gnocchi_developer_mode | bool
-  tags:
-    - gnocchi-install
-    - gnocchi-pip-packages
 
 - name: Install apt packages
   apt:
@@ -73,9 +58,6 @@
   retries: 5
   delay: 2
   with_items: gnocchi_apt_packages
-  tags:
-    - gnocchi-install
-    - gnocchi-apt-packages
 
 - name: Install required pip packages
   pip:
@@ -88,9 +70,6 @@
   delay: 2
   with_items:
     - "{{ gnocchi_required_pip_packages }}"
-  tags:
-    - gnocchi-install
-    - gnocchi-pip-packages
 
 - name: Get local venv checksum
   stat:
@@ -99,9 +78,6 @@
   when:
     - not gnocchi_developer_mode | bool
   register: local_venv_stat
-  tags:
-    - gnocchi-install
-    - gnocchi-pip-packages
 
 - name: Get remote venv checksum
   uri:
@@ -110,9 +86,6 @@
   when:
     - not gnocchi_developer_mode | bool
   register: remote_venv_checksum
-  tags:
-    - gnocchi-install
-    - gnocchi-pip-packages
 
 # TODO: When project moves to ansible 2 we can pass this a sha256sum which will:
 #       a) allow us to remove force: yes
@@ -130,16 +103,10 @@
     - not gnocchi_developer_mode | bool
     - (local_venv_stat.stat.exists == False or
         {{ local_venv_stat.stat.checksum is defined and local_venv_stat.stat.checksum != remote_venv_checksum.content | trim }})
-  tags:
-    - gnocchi-install
-    - gnocchi-pip-packages
 
 - name: Set gnocchi get_venv fact
   set_fact:
     gnocchi_get_venv: "{{ get_venv }}"
-  tags:
-    - gnocchi-install
-    - gnocchi-pip-packages
 
 - name: Remove existing venv
   file:
@@ -147,18 +114,12 @@
     state: absent
   when:
     - gnocchi_get_venv | changed
-  tags:
-    - gnocchi-install
-    - gnocchi-pip-packages
 
 - name: Create gnocchi venv dir
   file:
     path: "{{ gnocchi_bin | dirname }}"
     state: directory
   register: gnocchi_venv_dir
-  tags:
-    - gnocchi-install
-    - gnocchi-pip-packages
 
 - name: Unarchive pre-built venv
   unarchive:
@@ -172,9 +133,6 @@
     - Restart Gnocchi API services
     - Restart Gnocchi extra services
     - Restart Apache
-  tags:
-    - gnocchi-install
-    - gnocchi-pip-packages
 
 - name: Install pip packages
   pip:
@@ -194,9 +152,6 @@
     - Restart Gnocchi API services
     - Restart Gnocchi extra services
     - Restart Apache
-  tags:
-    - gnocchi-install
-    - gnocchi-pip-packages
 
 - name: Update virtualenv path
   command: >
@@ -204,6 +159,3 @@
   when:
     - not gnocchi_developer_mode | bool
     - gnocchi_get_venv | success
-  tags:
-    - gnocchi-install
-    - gnocchi-pip-packages
