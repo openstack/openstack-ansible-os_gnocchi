@@ -67,3 +67,4 @@ The ``gnocchi-install`` tag can be used to install and upgrade.
 
 The ``gnocchi-config`` tag can be used to maintain configuration of the
 service.
+
