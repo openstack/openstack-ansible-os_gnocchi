@@ -10,7 +10,7 @@ secure_proxy_ssl_header = {{ gnocchi_secure_proxy_ssl_header }}
 {% endif %}
 
 [indexer]
-url = mysql+pymysql://{{ gnocchi_galera_user }}:{{ gnocchi_galera_password }}@{{ gnocchi_galera_address }}/{{ gnocchi_galera_database }}?charset=utf8
+url = mysql+pymysql://{{ gnocchi_galera_user }}:{{ gnocchi_container_mysql_password }}@{{ gnocchi_galera_address }}/{{ gnocchi_galera_database }}?charset=utf8
 
 [keystone_authtoken]
 insecure = {{ keystone_service_adminuri_insecure | bool }}

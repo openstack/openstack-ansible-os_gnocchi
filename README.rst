@@ -24,7 +24,7 @@ further details.
 
 .. code-block:: yaml
 
-    gnocchi_galera_password: "secrete"
+    gnocchi_container_mysql_password: "secrete"
     galera_address: 10.100.100.2
 
     # Keystone credentials

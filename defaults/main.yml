@@ -62,7 +62,7 @@ gnocchi_db_sync_options: "--create-legacy-resource-types"
 
 #: Storage info
 gnocchi_storage_driver: file
-gnocchi_coordination_url: "mysql://{{ gnocchi_galera_user }}:{{ gnocchi_galera_password }}@{{ gnocchi_galera_address }}/{{ gnocchi_galera_database }}?charset=utf8&timeout=5"
+gnocchi_coordination_url: "mysql://{{ gnocchi_galera_user }}:{{ gnocchi_container_mysql_password }}@{{ gnocchi_galera_address }}/{{ gnocchi_galera_database }}?charset=utf8&timeout=5"
 
 #: Default Archive Policies
 gnocchi_archive_policies:
