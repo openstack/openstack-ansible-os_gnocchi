@@ -1,6 +1,6 @@
 ---
 # Copyright 2015, Rackspace US, Inc.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -13,11 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#: The role will be deployed on a host machine (vs. in container)
-is_metal: true
-
 #: Enable for debug logging level
 debug: false
+
+# Set the package install state for distribution packages
+# Options are 'present' and 'latest'
+gnocchi_package_state: "latest"
 
 # These variables are used in 'developer mode' in order to allow the role
 # to build an environment directly from a git source without the presence

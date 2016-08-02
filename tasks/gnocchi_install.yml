@@ -49,16 +49,6 @@
   when:
     - not gnocchi_developer_mode | bool
 
-- name: Install apt packages
-  apt:
-    pkg: "{{ item }}"
-    state: latest
-  register: install_packages
-  until: install_packages|success
-  retries: 5
-  delay: 2
-  with_items: gnocchi_apt_packages
-
 - name: Install required pip packages
   pip:
     name: "{{ gnocchi_required_pip_packages | join(' ') }}"
