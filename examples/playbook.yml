@@ -1,0 +1,5 @@
+- name: Installation and setup of Keystone
+  hosts: keystone_all
+  user: root
+  roles:
+- { role: "os_keystone", tags: [ "os-keystone" ] }
