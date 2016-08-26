@@ -123,7 +123,7 @@ gnocchi_apache_log_level: info
 gnocchi_apache_servertokens: "Prod"
 gnocchi_apache_serversignature: "Off"
 gnocchi_wsgi_threads: 1
-gnocchi_wsgi_processes: "{{ ansible_processor_vcpus | default (1) * 2 }}"
+gnocchi_wsgi_processes: "{{ (ansible_processor_vcpus | int > 0) | ternary (ansible_processor_vcpus, 1) * 2 }}"
 
 # set gnocchi_ssl to true to enable SSL configuration on the gnocchi containers
 gnocchi_ssl: false
