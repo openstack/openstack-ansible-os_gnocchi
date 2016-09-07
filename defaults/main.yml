@@ -13,6 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+#: Special role execution lifecycles
+# Only create Gnocchi's identity entities in Keystone
+gnocchi_identity_only: False
+
 #: Enable for debug logging level
 debug: false
 
