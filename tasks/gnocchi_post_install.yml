@@ -23,7 +23,7 @@
     config_overrides: "{{ item.config_overrides }}"
     config_type: "{{ item.config_type }}"
   with_items:
-    - src: "gnocchi-api-paste.ini.j2"
+    - src: "api-paste.ini.j2"
       dest: "/etc/gnocchi/api-paste.ini"
       config_overrides: "{{ gnocchi_api_paste_ini_overrides }}"
       config_type: "ini"
