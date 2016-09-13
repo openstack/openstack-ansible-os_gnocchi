@@ -1,6 +1,6 @@
 # Use gnocchi+auth in the pipeline if you want to use keystone authentication
 [pipeline:main]
-pipeline = gnocchi+noauth
+pipeline = {{ (gnocchi_keystone_auth | bool) | ternary('gnocchi+noauth', 'gnocchi+auth') }}
 
 [composite:gnocchi+noauth]
 use = egg:Paste#urlmap

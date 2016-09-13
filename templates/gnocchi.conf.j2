@@ -14,6 +14,7 @@ secure_proxy_ssl_header = {{ gnocchi_secure_proxy_ssl_header }}
 [indexer]
 url = mysql+pymysql://{{ gnocchi_galera_user }}:{{ gnocchi_container_mysql_password }}@{{ gnocchi_galera_address }}/{{ gnocchi_galera_database }}?charset=utf8
 
+{% if gnocchi_keystone_auth | bool %}
 [keystone_authtoken]
 insecure = {{ keystone_service_adminuri_insecure | bool }}
 auth_plugin = {{ gnocchi_keystone_auth_plugin }}
@@ -37,6 +38,7 @@ memcache_secret_key = {{ memcached_encryption_key }}
 
 # if your keystone deployment uses PKI, and you value security over performance:
 check_revocations_for_cached = False
+{% endif %}
 
 [storage]
 driver = {{ gnocchi_storage_driver }}

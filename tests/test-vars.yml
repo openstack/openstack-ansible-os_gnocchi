@@ -3,6 +3,7 @@ galera_client_drop_config_file: false
 galera_root_password: "secrete"
 gnocchi_developer_mode: true
 gnocchi_container_mysql_password: "secrete"
+gnocchi_keystone_auth: yes
 gnocchi_service_password: "secrete"
 gnocchi_galera_address: 10.100.100.2
 gnocchi_use_mod_wsgi: true

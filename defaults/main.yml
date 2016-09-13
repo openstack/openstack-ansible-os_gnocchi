@@ -24,6 +24,9 @@ debug: false
 # Options are 'present' and 'latest'
 gnocchi_package_state: "latest"
 
+# Toggle keystone authentication for gnocchi
+gnocchi_keystone_auth: no
+
 # These variables are used in 'developer mode' in order to allow the role
 # to build an environment directly from a git source without the presence
 # of an OpenStack-Ansible repo_server.
