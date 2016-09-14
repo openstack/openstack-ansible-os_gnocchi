@@ -37,14 +37,10 @@
     - always
 
 - include: gnocchi_pre_install.yml
-  when:
-    - not gnocchi_identity_only | bool
   tags:
     - gnocchi-install
 
 - include: gnocchi_install.yml
-  when:
-    - not gnocchi_identity_only | bool
   tags:
     - gnocchi-install
 
