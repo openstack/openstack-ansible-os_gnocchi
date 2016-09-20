@@ -25,7 +25,7 @@
         login_host: "localhost"
         name: "gnocchi"
         state: "present"
-      delegate_to: "10.100.100.2"
+      delegate_to: "{{ groups['galera_all'][0] }}"
       when: inventory_hostname == groups['gnocchi_all'][0]
     - name: Grant access to the DB for the service
       mysql_user:
@@ -40,9 +40,10 @@
       with_items:
         - "localhost"
         - "%"
-      delegate_to: "10.100.100.2"
+      delegate_to: "{{ groups['galera_all'][0] }}"
       when: inventory_hostname == groups['gnocchi_all'][0]
   roles:
     - role: "{{ rolename | basename }}"
   vars_files:
+    - playbooks/test-vars.yml
     - test-vars.yml
