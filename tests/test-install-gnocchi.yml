@@ -20,8 +20,8 @@
   pre_tasks:
     - name: Create DB for service
       mysql_db:
-        login_user: "root"
-        login_password: "secrete"
+        login_user: "{{ galera_root_user }}"
+        login_password: "{{ galera_root_password }}"
         login_host: "localhost"
         name: "gnocchi"
         state: "present"
@@ -29,8 +29,8 @@
       when: inventory_hostname == groups['gnocchi_all'][0]
     - name: Grant access to the DB for the service
       mysql_user:
-        login_user: "root"
-        login_password: "secrete"
+        login_user: "{{ galera_root_user }}"
+        login_password: "{{ galera_root_password }}"
         login_host: "localhost"
         name: "gnocchi"
         password: "{{ gnocchi_container_mysql_password }}"
