@@ -70,16 +70,10 @@ swift_container_prefix: gnocchi
 ## Ceph Storage
 ############
 # Ceph pool name to use. (string value)
-#ceph_pool = gnocchi
+ceph_pool = {{ gnocchi_ceph_pool }}
 
-# Ceph username (ie: client.admin). (string value)
-#ceph_username = <None>
-
-# Ceph keyring path. (string value)
-#ceph_keyring = <None>
-
-# Ceph configuration file. (string value)
-#ceph_conffile = /etc/ceph/ceph.conf
+# Ceph username (ie: admin without "client." prefix).
+ceph_username = {{ gnocchi_ceph_username }}
 {% endif %}
 
 [metricd]
