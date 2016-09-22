@@ -1,11 +1,18 @@
-=================
-Table of Contents
-=================
+==================================
+Gnocchi role for OpenStack-Ansible
+==================================
 
-.. toctree::
-   :maxdepth: 2
+This Ansible role installs and configures OpenStack gnocchi.
 
-   overview.rst
+The gnocchi API is served using Apache mod_wsgi by default.
+
+This role supports configuration of file, swift and ceph storage backends. By
+default, the file backend is used.
+
+This role also ships with an Ansible library, `gnocchi` that the role uses to
+manage archive policies and archive policy rules. By default, three policies
+are configured: low, medium, and high. A single archive policy rule is
+configured setting the `low` policy as the default for all metrics.
 
 Default variables
 ~~~~~~~~~~~~~~~~~
