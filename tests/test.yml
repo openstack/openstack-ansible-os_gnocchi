@@ -26,5 +26,4 @@
 - include: test-install-gnocchi.yml
 
 # Test Gnocchi
-# coming soon
-#- include: test-gnocchi-functional.yml
+- include: test-gnocchi-functional.yml

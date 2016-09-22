@@ -43,7 +43,7 @@
       delegate_to: "{{ groups['galera_all'][0] }}"
       when: inventory_hostname == groups['gnocchi_all'][0]
   roles:
-    - role: "{{ rolename | basename }}"
+    - role: "os_gnocchi"
   vars_files:
     - playbooks/test-vars.yml
     - test-vars.yml
