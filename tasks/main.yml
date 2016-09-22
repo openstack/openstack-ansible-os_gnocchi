@@ -45,19 +45,20 @@
     - gnocchi-install
 
 - include: gnocchi_post_install.yml
-  when:
-    - not gnocchi_identity_only | bool
+  static: no
+  when: not gnocchi_identity_only | bool
   tags:
     - gnocchi-install
     - gnocchi-config
 
 - include: gnocchi_init.yml
-  when:
-    - not gnocchi_identity_only | bool
+  static: no
+  when: not gnocchi_identity_only | bool
   tags:
     - gnocchi-install
 
 - include: gnocchi_service_setup.yml
+  static: no
   when:
     - inventory_hostname == groups['gnocchi_all'][0]
     - not gnocchi_identity_only | bool
@@ -65,13 +66,14 @@
     - gnocchi-install
 
 - include: gnocchi_identity_setup.yml
-  when:
-    - inventory_hostname == groups['gnocchi_all'][0]
+  static: no
+  when: inventory_hostname == groups['gnocchi_all'][0]
   tags:
     - gnocchi-install
 
 # N.B. Must occur after identity setup, as this may perform calls to Swift
 - include: gnocchi_db_setup.yml
+  static: no
   when:
     - inventory_hostname == groups['gnocchi_all'][0]
     - not gnocchi_identity_only | bool
@@ -79,6 +81,7 @@
     - gnocchi-install
 
 - include: gnocchi_apache.yml
+  static: no
   when:
     - gnocchi_use_mod_wsgi | bool
     - not gnocchi_identity_only | bool
@@ -87,6 +90,7 @@
     - gnocchi-config
 
 - include: gnocchi_policy_setup.yml
+  static: no
   when:
     - inventory_hostname == groups['gnocchi_all'][0]
     - not gnocchi_identity_only | bool
