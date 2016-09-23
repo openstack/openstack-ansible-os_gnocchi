@@ -13,29 +13,100 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Very basic testing using examples from http://gnocchi.xyz/rest.html
+
 - name: Playbook for functional testing of gnocchi
   hosts: gnocchi_all
   user: root
   gather_facts: false
+  vars:
+      gnocchi_api: "http://localhost:{{ gnocchi_service_port }}"
   tasks:
+    - name: Install openstackclient
+      pip:
+        name: "python-openstackclient"
+
     - name: Check the gnocchi-api
       uri:
-        url: "http://localhost:{{ gnocchi_service_port }}"
+        url: "{{ gnocchi_api }}"
         status_code: 200,300
-    - name: Set gnocchi_volume_name fact
+
+    - name: Validate that auth is required
+      uri:
+        url: "{{ gnocchi_api }}/v1/status"
+        status_code: 401
+
+    - name: Get auth token
+      shell: >
+        . /root/openrc && openstack token issue --format yaml | awk '/^id\:/ {print $2}'
+      register: get_keystone_token
+
+    - name: set token
       set_fact:
-        gnocchi_volume_name: "functional-volume-{{ 100|random }}"
-    - name: Create gnocchi volume
-      shell: |
-        . /root/openrc
-        {{ gnocchi_bin }}/gnocchi create --name {{ gnocchi_volume_name }} 1
-    - name: Verify volume goes active
-      shell: |
-        . /root/openrc
-        {{ gnocchi_bin }}/gnocchi show {{ gnocchi_volume_name }} | grep available
-      register: volume_status
-      until: volume_status|success
-      retries: 5
-      delay: 5
+        keystone_token: "{{ get_keystone_token.stdout }}"
+
+    - name: Create a metric
+      uri:
+        url: "{{ gnocchi_api }}/v1/metric"
+        method: POST
+        body: '{ "archive_policy_name": "high" }'
+        headers:
+          Content-Type: "application/json"
+          X-Auth-Token: "{{ keystone_token }}"
+        return_content: True
+        status_code: 201
+      register: metric_create
+
+    - debug:
+        var: metric_create
+
+    - name: Add measures
+      uri:
+        url: "{{ gnocchi_api }}/v1/metric/{{ metric_create.json.id }}/measures"
+        method: POST
+        body: '[ { "timestamp": "2014-10-06T14:33:57", "value": 43.1 }, { "timestamp": "2014-10-06T14:34:12", "value": 12 }, { "timestamp": "2014-10-06T14:34:20", "value": 2 } ]'
+        headers:
+          Content-Type: "application/json"
+          X-Auth-Token: "{{ keystone_token }}"
+        return_content: True
+        status_code: 202
+
+    - name: Retrieve the measures
+      uri:
+        url: "{{ gnocchi_api }}/v1/metric/{{ metric_create.json.id }}/measures?refresh=true"
+        method: GET
+        headers:
+          Content-Type: "application/json"
+          X-Auth-Token: "{{ keystone_token }}"
+        return_content: True
+        status_code: 200
+      register: measures_retrieval
+
+    - debug:
+        var: measures_retrieval
+
+    - name: Ensure we got some measures back
+      assert:
+        that:
+          - "measures_retrieval.json | length >= 1"
+
+    - name: Retrieve the archive policies
+      uri:
+        url: "{{ gnocchi_api }}/v1/archive_policy"
+        method: GET
+        headers:
+          Content-Type: "application/json"
+          X-Auth-Token: "{{ keystone_token }}"
+        return_content: True
+        status_code: 200
+      register: policies_retrieval
+
+    - debug:
+        var: policies_retrieval
+
+    - name: Ensure we have at least 3 archive policies
+      assert:
+        that:
+          - "policies_retrieval.json | length >= 3"
   vars_files:
     - test-vars.yml
