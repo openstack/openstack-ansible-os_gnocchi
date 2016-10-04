@@ -46,4 +46,3 @@
     - role: "os_gnocchi"
   vars_files:
     - common/test-vars.yml
-    - test-vars.yml

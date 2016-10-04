@@ -108,5 +108,3 @@
       assert:
         that:
           - "policies_retrieval.json | length >= 3"
-  vars_files:
-    - test-vars.yml
