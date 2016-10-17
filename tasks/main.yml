@@ -70,7 +70,14 @@
   tags:
     - gnocchi-install
 
-# N.B. Must occur after identity setup, as this may perform calls to Swift
+- include: gnocchi_ceph_python_libs.yml
+  when:
+    - gnocchi_storage_driver == 'ceph'
+  tags:
+    - gnocchi-install
+
+# N.B. Must occur after identity setup, as this may perform calls to Swift.
+#      Similarly, when using Ceph, must occur after Ceph setup.
 - include: gnocchi_db_setup.yml
   when:
     - inventory_hostname == groups['gnocchi_all'][0]
