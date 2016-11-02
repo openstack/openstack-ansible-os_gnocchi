@@ -27,10 +27,10 @@
     - Restart Apache
 
 - name: Reload init scripts
-  shell: |
-    initctl reload-configuration
+  command: initctl reload-configuration
   when: upstart_init | changed
   notify:
     - Restart Gnocchi API services
     - Restart Gnocchi extra services
     - Restart Apache
+  changed_when: false

@@ -17,3 +17,4 @@
   command: "{{ gnocchi_bin }}/gnocchi-upgrade {{ gnocchi_db_sync_options }}"
   become: yes
   become_user: "{{ gnocchi_system_user_name }}"
+  changed_when: false

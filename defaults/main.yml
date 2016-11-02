@@ -20,9 +20,10 @@ gnocchi_identity_only: False
 #: Enable for debug logging level
 debug: false
 
-# Set the package install state for distribution packages
+# Set the package install state for distribution and pip packages
 # Options are 'present' and 'latest'
 gnocchi_package_state: "latest"
+gnocchi_pip_package_state: "latest"
 
 # Toggle keystone authentication for gnocchi
 gnocchi_keystone_auth: no

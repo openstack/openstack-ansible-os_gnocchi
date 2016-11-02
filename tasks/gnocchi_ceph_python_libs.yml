@@ -15,6 +15,7 @@
 
 - name: Register rados module path
   command: python -c 'import rados; print rados.__file__'
+  changed_when: false
   register: rados_module_path
 
 - name: Link rados module into the venv
