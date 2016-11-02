@@ -32,8 +32,6 @@ gnocchi_keystone_auth: no
 # of an OpenStack-Ansible repo_server.
 gnocchi_git_repo: https://git.openstack.org/openstack/gnocchi
 gnocchi_git_install_branch: stable/3.0
-gnocchi_requirements_git_repo: https://git.openstack.org/openstack/requirements
-gnocchi_requirements_git_install_branch: stable/newton
 gnocchi_developer_mode: false
 gnocchi_developer_constraints:
   - "git+{{ gnocchi_git_repo }}@{{ gnocchi_git_install_branch }}#egg=gnocchi"
