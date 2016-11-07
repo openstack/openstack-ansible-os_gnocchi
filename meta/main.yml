@@ -4,7 +4,7 @@ galaxy_info:
   description: An Ansible Galaxy Role for Deploying OpenStack Gnocchi
   company:
   license: Apache
-  min_ansible_version: 1.9
+  min_ansible_version: 2.0
   platforms:
   - name: Ubuntu
     versions:
