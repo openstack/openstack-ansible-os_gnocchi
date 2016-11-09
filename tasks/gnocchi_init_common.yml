@@ -23,9 +23,9 @@
 
 - name: Load service
   service:
-   name: "{{ program_name }}"
-   enabled: "yes"
+   name: "{{ item.value.service_name }}"
+   enabled: "{{ item.value.service_enabled | bool }}"
+  with_dict: "{{ gnocchi_services }}"
+  when: inventory_hostname in groups[item.value.group]
   notify:
-    - Restart Gnocchi API services
-    - Restart Gnocchi extra services
-    - Restart Apache
+    - Restart Gnocchi services

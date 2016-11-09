@@ -16,21 +16,11 @@
 - name: Place the init script
   template:
     src: "gnocchi-upstart-init.j2"
-    dest: "/etc/init/{{ program_name }}.conf"
+    dest: "/etc/init/{{ item.value.service_name }}.conf"
     mode: "0644"
     owner: "root"
     group: "root"
-  register: upstart_init
+  with_dict: "{{ gnocchi_services }}"
+  when: inventory_hostname in groups[item.value.group]
   notify:
-    - Restart Gnocchi API services
-    - Restart Gnocchi extra services
-    - Restart Apache
-
-- name: Reload init scripts
-  command: initctl reload-configuration
-  when: upstart_init | changed
-  notify:
-    - Restart Gnocchi API services
-    - Restart Gnocchi extra services
-    - Restart Apache
-  changed_when: false
+    - Reload upstart init scripts

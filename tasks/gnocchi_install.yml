@@ -107,13 +107,12 @@
     - not gnocchi_developer_mode | bool
     - gnocchi_get_venv | changed or gnocchi_venv_dir | changed
   notify:
-    - Restart Gnocchi API services
-    - Restart Gnocchi extra services
+    - Restart Gnocchi services
     - Restart Apache
 
 - name: Install pip packages
   pip:
-    name: "{{ gnocchi_pip_packages | join(' ') }}"
+    name: "{{ gnocchi_pip_packages }}"
     state: "{{ gnocchi_pip_package_state }}"
     virtualenv: "{{ gnocchi_bin | dirname }}"
     virtualenv_site_packages: "no"
@@ -129,8 +128,7 @@
     - not gnocchi_identity_only | bool
     - gnocchi_get_venv | failed or gnocchi_developer_mode | bool
   notify:
-    - Restart Gnocchi API services
-    - Restart Gnocchi extra services
+    - Restart Gnocchi services
     - Restart Apache
 
 - name: Update virtualenv path

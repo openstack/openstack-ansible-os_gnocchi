@@ -61,8 +61,7 @@ ChangeLog
 releasenotes/build
 
 # Test temp files
-tests/plugins
-tests/playbooks
+tests/common
 tests/*.retry
 
 # Vagrant artifacts

@@ -52,7 +52,7 @@
     - gnocchi-install
     - gnocchi-config
 
-- include: gnocchi_init.yml
+- include: gnocchi_init_common.yml
   static: no
   when: not gnocchi_identity_only | bool
   tags:

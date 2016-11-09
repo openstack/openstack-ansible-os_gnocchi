@@ -26,5 +26,12 @@ memcached_all
 [keystone_all]
 openstack1
 
-[gnocchi_all]
+[gnocchi_all:children]
+gnocchi_metricd
+gnocchi_api
+
+[gnocchi_api]
+openstack2
+
+[gnocchi_metricd]
 openstack2
