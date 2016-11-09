@@ -29,7 +29,7 @@
 
 - name: Install required pip packages
   pip:
-    name: "{{ gnocchi_required_pip_packages | join(' ') }}"
+    name: "{{ gnocchi_required_pip_packages }}"
     state: "{{ gnocchi_pip_package_state }}"
     extra_args: >-
       {{ (pip_install_upper_constraints is defined) | ternary('--constraint ' + pip_install_upper_constraints | default(''),'') }}
@@ -113,7 +113,7 @@
 
 - name: Install pip packages
   pip:
-    name: "{{ gnocchi_pip_packages | join(' ') }}"
+    name: "{{ gnocchi_pip_packages }}"
     state: "{{ gnocchi_pip_package_state }}"
     virtualenv: "{{ gnocchi_bin | dirname }}"
     virtualenv_site_packages: "no"
