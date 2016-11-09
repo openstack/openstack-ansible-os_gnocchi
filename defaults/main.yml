@@ -98,7 +98,6 @@ gnocchi_archive_policy_rules:
 #: System info
 gnocchi_system_user_name: gnocchi
 gnocchi_system_group_name: gnocchi
-gnocchi_system_service_name: apache2
 gnocchi_system_shell: /bin/false
 gnocchi_system_comment: gnocchi system user
 gnocchi_system_user_home: "/var/lib/{{ gnocchi_system_user_name }}"
@@ -150,10 +149,16 @@ gnocchi_ssl_self_signed_subject: "/C=US/ST=Texas/L=San Antonio/O=IT/CN={{ intern
 #gnocchi_user_ssl_key: <path to cert on ansible deployment host>
 #gnocchi_user_ssl_ca_cert: <path to cert on ansible deployment host>
 
-#: Gnocchi API program name
-gnocchi_api_program_name: gnocchi-api
-#: Gnocchi Metricd program name
-gnocchi_metricd_program_name: gnocchi-metricd
+## Service Names
+gnocchi_services:
+  gnocchi-api:
+    group: "gnocchi_api"
+    service_name: "gnocchi-api"
+    service_enabled: "{{ gnocchi_use_mod_wsgi | ternary(false, true) }}"
+  gnocchi-metricd:
+    group: "gnocchi_metricd"
+    service_name: "gnocchi-metricd"
+    service_enabled: true
 
 #: Gnocchi packages that must be installed before anything else
 gnocchi_required_pip_packages:
@@ -170,10 +175,6 @@ gnocchi_pip_packages:
   - gnocchiclient
   - python-memcached
   - pycrypto
-
-#: List of extra programs/services owned by gnocchi
-gnocchi_extra_service_names:
-  - "{{ gnocchi_metricd_program_name }}"
 
 # This variable is used by the repo_build process to determine
 # which host group to check for members of before building the

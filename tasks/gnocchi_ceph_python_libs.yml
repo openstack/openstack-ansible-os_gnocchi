@@ -25,5 +25,4 @@
     force: "yes"
   notify:
     - Restart Apache
-    - Restart Gnocchi API services
-    - Restart Gnocchi extra services
+    - Restart Gnocchi services
