@@ -101,7 +101,7 @@
 
 - name: Update virtualenv path
   command: >
-    virtualenv-tools --update-path=auto {{ gnocchi_bin | dirname }}
+    virtualenv-tools --update-path=auto --reinitialize {{ gnocchi_bin | dirname }}
   when:
     - not gnocchi_identity_only | bool
     - not gnocchi_developer_mode | bool
