@@ -162,7 +162,7 @@ gnocchi_services:
     service_enabled: true
 
 #: Gnocchi packages that must be installed before anything else
-gnocchi_required_pip_packages:
+gnocchi_requires_pip_packages:
   - virtualenv
   - virtualenv-tools
   - python-keystoneclient # Keystoneclient needed for OSA keystone lib
