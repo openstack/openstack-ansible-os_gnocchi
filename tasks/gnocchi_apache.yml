@@ -20,39 +20,39 @@
     dest: "{{ item.dest }}"
     owner: "root"
     group: "root"
-  with_items:
-    - { src: "gnocchi-ports.conf.j2", dest: "/etc/apache2/ports.conf" }
-    - { src: "gnocchi-httpd.conf.j2", dest: "/etc/apache2/sites-available/gnocchi-httpd.conf" }
+  with_items: "{{ gnocchi_apache_config }}"
   notify:
     - Restart Apache
 
 - name: Disable default apache site
   file:
-    path: "/etc/apache2/sites-enabled/000-default.conf"
+    path: "{{ item }}"
     state: "absent"
+  with_items: "{{ gnocchi_apache_default_sites }}"
   notify:
     - Restart Apache
 
 - name: Enabled gnocchi vhost
   file:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-    state: "{{ item.state }}"
-  with_items:
-    - { src: "/etc/apache2/sites-available/gnocchi-httpd.conf", dest: "/etc/apache2/sites-enabled/gnocchi-httpd.conf", state: "link" }
+    src: "{{ gnocchi_apache_site_available }}"
+    dest: "{{ gnocchi_apache_site_enabled }}"
+    state: "link"
+  when:
+    - gnocchi_apache_site_available is defined
+    - gnocchi_apache_site_enabled is defined
   notify:
     - Restart Apache
 
 - name: Ensure Apache ServerName
   lineinfile:
-    dest: "/etc/apache2/apache2.conf"
+    dest: "{{ gnocchi_apache_conf }}"
     line: "ServerName {{ inventory_hostname }}"
   notify:
     - Restart Apache
 
 - name: Ensure Apache ServerTokens
   lineinfile:
-    dest: "/etc/apache2/conf-available/security.conf"
+    dest: "{{ gnocchi_apache_security_conf }}"
     regexp: '^ServerTokens'
     line: "ServerTokens {{ gnocchi_apache_servertokens }}"
   notify:
@@ -60,9 +60,18 @@
 
 - name: Ensure Apache ServerSignature
   lineinfile:
-    dest: "/etc/apache2/conf-available/security.conf"
+    dest: "{{ gnocchi_apache_security_conf }}"
     regexp: '^ServerSignature'
     line: "ServerSignature {{ gnocchi_apache_serversignature }}"
+  notify:
+    - Restart Apache
+
+- name: remove Listen from Apache config
+  lineinfile:
+    dest: "{{ gnocchi_apache_security_conf }}"
+    regexp: '^(Listen.*)'
+    backrefs: yes
+    line: '#\1'
   notify:
     - Restart Apache
 
@@ -70,5 +79,14 @@
   apache2_module:
     name: ssl
     state: "{{ gnocchi_ssl | bool | ternary('present', 'absent') }}"
+  when:
+    - ansible_pkg_mgr == 'apt'
   notify:
     - Restart Apache
+
+- name: Load service
+  service:
+    name: "{{ gnocchi_system_service_name }}"
+    enabled: "yes"
+    state: "started"
+

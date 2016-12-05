@@ -15,26 +15,25 @@
 
 #: Necessary packages
 gnocchi_distro_packages:
-  - apache2
-  - apache2-utils
-  - libapache2-mod-wsgi
+  - '@Development Tools'
+  - httpd
+  - httpd-tools
+  - mod_wsgi
   - git
-  - build-essential
-  - python-dev
-  - libpq-dev
+  - python-devel
+  - libpqxx-devel
 
-gnocchi_system_service_name: apache2
+gnocchi_system_service_name: httpd
 
 gnocchi_apache_config:
-  - { src: "gnocchi-ports.conf.j2", dest: "/etc/apache2/ports.conf" }
-  - { src: "gnocchi-httpd.conf.j2", dest: "/etc/apache2/sites-available/gnocchi-httpd.conf" }
+  - { src: "gnocchi-ports.conf.j2", dest: "/etc/httpd/conf.d/ports.conf" }
+  - { src: "gnocchi-httpd.conf.j2", dest: "/etc/httpd/conf.d/gnocchi-httpd.conf" }
 
 gnocchi_apache_default_sites:
-  - "/etc/apache2/sites-enabled/000-default.conf"
+  - "/etc/httpd/conf.d/userdir.conf"
+  - "/etc/httpd/conf.d/welcome.conf"
+  - "/etc/httpd/conf.d/ssl.conf"
 
-gnocchi_apache_site_available: "/etc/apache2/sites-available/gnocchi-httpd.conf"
-gnocchi_apache_site_enabled: "/etc/apache2/sites-enabled/gnocchi-httpd.conf"
-
-gnocchi_apache_conf: "/etc/apache2/apache2.conf"
-gnocchi_apache_security_conf: "/etc/apache2/conf-available/security.conf"
+gnocchi_apache_conf: "/etc/httpd/conf/httpd.conf"
+gnocchi_apache_security_conf: "{{ gnocchi_apache_conf }}"
 
