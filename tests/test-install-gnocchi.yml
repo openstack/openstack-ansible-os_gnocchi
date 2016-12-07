@@ -18,30 +18,9 @@
   user: root
   gather_facts: true
   pre_tasks:
-    - name: Create DB for service
-      mysql_db:
-        login_user: "{{ galera_root_user }}"
-        login_password: "{{ galera_root_password }}"
-        login_host: "localhost"
-        name: "gnocchi"
-        state: "present"
-      delegate_to: "{{ groups['galera_all'][0] }}"
-      when: inventory_hostname == groups['gnocchi_all'][0]
-    - name: Grant access to the DB for the service
-      mysql_user:
-        login_user: "{{ galera_root_user }}"
-        login_password: "{{ galera_root_password }}"
-        login_host: "localhost"
-        name: "gnocchi"
-        password: "{{ gnocchi_container_mysql_password }}"
-        host: "{{ item }}"
-        state: "present"
-        priv: "gnocchi.*:ALL"
-      with_items:
-        - "localhost"
-        - "%"
-      delegate_to: "{{ groups['galera_all'][0] }}"
-      when: inventory_hostname == groups['gnocchi_all'][0]
+    - include: common/create-grant-db.yml
+      db_password: "{{ gnocchi_container_mysql_password }}"
+      db_name: "gnocchi"
   roles:
     - role: "os_gnocchi"
   vars_files:
