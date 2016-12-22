@@ -14,6 +14,9 @@ manage archive policies and archive policy rules. By default, three policies
 are configured: low, medium, and high. A single archive policy rule is
 configured setting the `low` policy as the default for all metrics.
 
+To clone or view the source code for this repository, visit the role repository
+for `os_gnocchi <https://github.com/openstack/openstack-ansible-os_gnocchi>`_.
+
 Default variables
 ~~~~~~~~~~~~~~~~~
 
