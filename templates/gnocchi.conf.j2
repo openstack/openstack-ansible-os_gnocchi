@@ -18,7 +18,6 @@ url = mysql+pymysql://{{ gnocchi_galera_user }}:{{ gnocchi_container_mysql_passw
 [keystone_authtoken]
 insecure = {{ keystone_service_adminuri_insecure | bool }}
 auth_plugin = {{ gnocchi_keystone_auth_plugin }}
-signing_dir = /var/cache/gnocchi
 auth_url = {{ keystone_service_adminuri }}
 auth_uri = {{ keystone_service_internaluri }}
 region_name = {{ gnocchi_service_region }}
@@ -30,14 +29,11 @@ password = {{ gnocchi_service_password }}
 
 memcached_servers = {{ memcached_servers }}
 token_cache_time = 300
-revocation_cache_time = 60
 
 # if your memcached server is shared, use these settings to avoid cache poisoning
 memcache_security_strategy = ENCRYPT
 memcache_secret_key = {{ memcached_encryption_key }}
 
-# if your keystone deployment uses PKI, and you value security over performance:
-check_revocations_for_cached = False
 {% endif %}
 
 [storage]
