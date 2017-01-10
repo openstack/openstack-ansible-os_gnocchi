@@ -36,14 +36,13 @@
   static: no
   when: not gnocchi_identity_only | bool
   tags:
-    - gnocchi-install
     - gnocchi-config
 
 - include: gnocchi_init_common.yml
   static: no
   when: not gnocchi_identity_only | bool
   tags:
-    - gnocchi-install
+    - gnocchi-config
 
 - include: gnocchi_service_setup.yml
   static: no
@@ -51,12 +50,12 @@
     - inventory_hostname == groups['gnocchi_all'][0]
     - not gnocchi_identity_only | bool
   tags:
-    - gnocchi-install
+    - gnocchi-config
 
 - include: gnocchi_identity_setup.yml
   when: inventory_hostname == groups['gnocchi_all'][0]
   tags:
-    - gnocchi-install
+    - gnocchi-config
 
 - include: gnocchi_ceph_python_libs.yml
   when:
@@ -71,7 +70,7 @@
     - inventory_hostname == groups['gnocchi_all'][0]
     - not gnocchi_identity_only | bool
   tags:
-    - gnocchi-install
+    - gnocchi-config
 
 - include: gnocchi_apache.yml
   static: no
@@ -79,7 +78,6 @@
     - gnocchi_use_mod_wsgi | bool
     - not gnocchi_identity_only | bool
   tags:
-    - gnocchi-install
     - gnocchi-config
 
 - include: gnocchi_policy_setup.yml
@@ -87,5 +85,4 @@
     - inventory_hostname == groups['gnocchi_all'][0]
     - not gnocchi_identity_only | bool
   tags:
-    - gnocchi-install
     - gnocchi-config
