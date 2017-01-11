@@ -62,6 +62,7 @@
   file:
     path: "{{ gnocchi_bin | dirname }}"
     state: directory
+    mode: "0755"
   register: gnocchi_venv_dir
   when: gnocchi_get_venv | changed
 
