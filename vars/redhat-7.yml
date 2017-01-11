@@ -22,6 +22,7 @@ gnocchi_distro_packages:
   - git
   - python-devel
   - libpqxx-devel
+  - which
 
 gnocchi_system_service_name: httpd
 
