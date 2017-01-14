@@ -58,6 +58,9 @@ gnocchi_venv_pkgs: "/openstack/venvs/gnocchi-{{ gnocchi_venv_tag }}/lib/python2.
 #  gnocchi_etc_dir: "/usr/local/etc/gnocchi"
 gnocchi_etc_dir: "{{ gnocchi_bin | dirname }}/etc/gnocchi"
 
+# venv_download, even when true, will use the fallback method of building the
+# venv from scratch if the venv download fails.
+gnocchi_venv_download: "{{ not gnocchi_developer_mode | bool and not gnocchi_identity_only | bool }}"
 #: Location to retrieve the pre-built virtuelenv for gnocchi (optional)
 gnocchi_venv_download_url: http://127.0.0.1/venvs/untagged/ubuntu/gnocchi.tgz
 
