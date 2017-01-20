@@ -34,7 +34,7 @@
     - name: Validate that auth is required
       uri:
         url: "{{ gnocchi_api }}/v1/status"
-        status_code: 403
+        status_code: 401
 
     - name: Get auth token
       shell: >

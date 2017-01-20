@@ -13,25 +13,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Drop Gnocchi Config(s)
+- name: Drop Gnocchi Config
   config_template:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
+    src: "gnocchi.conf.j2"
+    dest: "/etc/gnocchi/gnocchi.conf"
     owner: "{{ gnocchi_system_user_name }}"
     group: "{{ gnocchi_system_group_name }}"
     mode: "0644"
+    config_overrides: "{{ gnocchi_conf_overrides }}"
+    config_type: "ini"
+  notify:
+    - Restart Apache
+    - Restart Gnocchi services
+
+- name: Retrieve and config_template upstream files
+  config_template:
+    content: "{{ lookup('pipe', 'curl ' ~ gnocchi_git_config_lookup_location ~ item.name + '?h=' ~ gnocchi_git_install_branch) | string }}"
+    dest: "{{ item.dest }}"
     config_overrides: "{{ item.config_overrides }}"
     config_type: "{{ item.config_type }}"
   with_items:
-    - src: "api-paste.ini.j2"
+    - name: "api-paste.ini"
       dest: "/etc/gnocchi/api-paste.ini"
       config_overrides: "{{ gnocchi_api_paste_ini_overrides }}"
       config_type: "ini"
-    - src: "gnocchi.conf.j2"
-      dest: "/etc/gnocchi/gnocchi.conf"
-      config_overrides: "{{ gnocchi_conf_overrides }}"
-      config_type: "ini"
-    - src: "policy.json.j2"
+    - name: "policy.json"
       dest: "/etc/gnocchi/policy.json"
       config_overrides: "{{ gnocchi_policy_overrides }}"
       config_type: "json"

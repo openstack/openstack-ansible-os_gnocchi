@@ -26,7 +26,9 @@ gnocchi_package_state: "latest"
 gnocchi_pip_package_state: "latest"
 
 # Toggle keystone authentication for gnocchi
+# TODO: (andymccr) Remove the gnocchi_keystone_auth var in Queen cycle.
 gnocchi_keystone_auth: no
+gnocchi_auth_mode: "{{ (gnocchi_keystone_auth | bool) | ternary('keystone', 'basic') }}"
 
 # These variables are used in 'developer mode' in order to allow the role
 # to build an environment directly from a git source without the presence
@@ -36,6 +38,7 @@ gnocchi_git_install_branch: master
 gnocchi_developer_mode: false
 gnocchi_developer_constraints:
   - "git+{{ gnocchi_git_repo }}@{{ gnocchi_git_install_branch }}#egg=gnocchi"
+gnocchi_git_config_lookup_location: https://git.openstack.org/cgit/openstack/gnocchi/plain/gnocchi/rest/
 
 #: Use of deprecated config options will cause a fatal application error
 gnocchi_fatal_deprecations: false

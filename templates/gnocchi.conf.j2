@@ -6,6 +6,10 @@ use_stderr = False
 debug = {{ debug }}
 fatal_deprecations = {{ gnocchi_fatal_deprecations }}
 
+[api]
+auth_mode = {{ gnocchi_auth_mode }}
+api_paste = /etc/gnocchi/api-paste.ini
+
 {% if gnocchi_ssl_external | bool %}
 [oslo_middleware]
 secure_proxy_ssl_header = {{ gnocchi_secure_proxy_ssl_header }}
@@ -14,7 +18,7 @@ secure_proxy_ssl_header = {{ gnocchi_secure_proxy_ssl_header }}
 [indexer]
 url = mysql+pymysql://{{ gnocchi_galera_user }}:{{ gnocchi_container_mysql_password }}@{{ gnocchi_galera_address }}/{{ gnocchi_galera_database }}?charset=utf8
 
-{% if gnocchi_keystone_auth | bool %}
+{% if gnocchi_auth_mode == "keystone" %}
 [keystone_authtoken]
 insecure = {{ keystone_service_adminuri_insecure | bool }}
 auth_plugin = {{ gnocchi_keystone_auth_plugin }}
