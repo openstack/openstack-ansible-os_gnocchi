@@ -78,27 +78,6 @@ gnocchi_coordination_url: "mysql://{{ gnocchi_galera_user }}:{{ gnocchi_containe
 gnocchi_ceph_pool: "gnocchi"
 gnocchi_ceph_username: "gnocchi"
 
-#: Default Archive Policies
-gnocchi_archive_policies:
-  - name: "low"
-    definition:
-      - { granularity: "5m", points: 12 }
-      - { granularity: "1h", points: 24 }
-      - { granularity: "1d", points: 30 }
-  - name: "medium"
-    definition:
-      - { granularity: "60s", points: 60 }
-      - { granularity: "1h", points: 168 }
-      - { granularity: "1d", points: 365 }
-  - name: "high"
-    definition:
-      - { granularity: "1s", points: 86400 }
-      - { granularity: "1m", points: 43200 }
-      - { granularity: "1h", points: 8760 }
-
-gnocchi_archive_policy_rules:
-  - { name: "default", archive_policy_name: "low", metric_pattern: "*" }
-
 #: System info
 gnocchi_system_user_name: gnocchi
 gnocchi_system_group_name: gnocchi
@@ -169,7 +148,6 @@ gnocchi_requires_pip_packages:
   - virtualenv
   - virtualenv-tools
   - python-keystoneclient # Keystoneclient needed for OSA keystone lib
-  - gnocchiclient # gnocchiclient needed for gnocchi lib
   - httplib2 # so we can use the uri module
 
 #: Common pip packages

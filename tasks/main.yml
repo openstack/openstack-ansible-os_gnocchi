@@ -79,10 +79,3 @@
     - not gnocchi_identity_only | bool
   tags:
     - gnocchi-config
-
-- include: gnocchi_policy_setup.yml
-  when:
-    - inventory_hostname == groups['gnocchi_all'][0]
-    - not gnocchi_identity_only | bool
-  tags:
-    - gnocchi-config
