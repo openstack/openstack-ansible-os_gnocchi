@@ -38,7 +38,7 @@ gnocchi_git_install_branch: master
 gnocchi_developer_mode: false
 gnocchi_developer_constraints:
   - "git+{{ gnocchi_git_repo }}@{{ gnocchi_git_install_branch }}#egg=gnocchi"
-gnocchi_git_config_lookup_location: https://git.openstack.org/cgit/openstack/gnocchi/plain/gnocchi/rest/
+gnocchi_git_config_lookup_location: https://git.openstack.org/cgit/openstack/gnocchi/plain/
 
 #: Use of deprecated config options will cause a fatal application error
 gnocchi_fatal_deprecations: false
