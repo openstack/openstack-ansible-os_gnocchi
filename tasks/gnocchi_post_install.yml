@@ -28,7 +28,7 @@
 
 - name: Retrieve and config_template upstream files
   config_template:
-    content: "{{ lookup('pipe', 'curl ' ~ gnocchi_git_config_lookup_location ~ item.name + '?h=' ~ gnocchi_git_install_branch) | string }}"
+    content: "{{ lookup('pipe', 'curl ' ~ gnocchi_git_config_lookup_location ~ item.path | default('gnocchi/rest/') ~ item.name + '?h=' ~ gnocchi_git_install_branch) | string }}"
     dest: "{{ item.dest }}"
     config_overrides: "{{ item.config_overrides }}"
     config_type: "{{ item.config_type }}"
