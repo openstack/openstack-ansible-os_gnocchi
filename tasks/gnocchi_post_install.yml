@@ -28,7 +28,7 @@
 
 - name: Retrieve and config_template upstream files
   config_template:
-    content: "{{ lookup('pipe', 'curl ' ~ gnocchi_git_config_lookup_location ~ item.path | default('gnocchi/rest/') ~ item.name + '?h=' ~ gnocchi_git_install_branch) | string }}"
+    content: "{{ lookup('pipe', item.content) | string }}"
     dest: "{{ item.dest }}"
     config_overrides: "{{ item.config_overrides }}"
     config_type: "{{ item.config_type }}"
@@ -37,10 +37,16 @@
       dest: "/etc/gnocchi/api-paste.ini"
       config_overrides: "{{ gnocchi_api_paste_ini_overrides }}"
       config_type: "ini"
+      content: |
+        cat {{ gnocchi_api_paste_default_file_path }} 2>/dev/null || \
+        curl -s {{ gnocchi_git_config_lookup_location }}gnocchi/rest/api-paste.ini?h={{ gnocchi_git_install_branch }}
     - name: "policy.json"
       dest: "/etc/gnocchi/policy.json"
       config_overrides: "{{ gnocchi_policy_overrides }}"
       config_type: "json"
+      content: |
+        cat {{ gnocchi_policy_default_file_path }} 2>/dev/null || \
+        curl -s {{ gnocchi_git_config_lookup_location }}gnocchi/rest/policy.json?h={{ gnocchi_git_install_branch }}
   notify:
     - Restart Apache
     - Restart Gnocchi services
