@@ -139,16 +139,21 @@ gnocchi_ssl_self_signed_subject: "/C=US/ST=Texas/L=San Antonio/O=IT/CN={{ intern
 #gnocchi_user_ssl_key: <path to cert on ansible deployment host>
 #gnocchi_user_ssl_ca_cert: <path to cert on ansible deployment host>
 
+gnocchi_api_init_overrides: {}
+gnocchi_metricd_init_overrides: {}
+
 ## Service Names
 gnocchi_services:
   gnocchi-api:
     group: "gnocchi_api"
     service_name: "gnocchi-api"
     service_enabled: "{{ gnocchi_use_mod_wsgi | ternary(false, true) }}"
+    init_config_overrides: "{{ gnocchi_api_init_overrides }}"
   gnocchi-metricd:
     group: "gnocchi_metricd"
     service_name: "gnocchi-metricd"
     service_enabled: true
+    init_config_overrides: "{{ gnocchi_metricd_init_overrides }}"
 
 #: Gnocchi packages that must be installed before anything else
 gnocchi_requires_pip_packages:
