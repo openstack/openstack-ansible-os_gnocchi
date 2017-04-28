@@ -42,6 +42,8 @@
     group: "root"
   with_dict: "{{ gnocchi_services }}"
   when: inventory_hostname in groups[item.value.group]
+  notify:
+    - Restart gnocchi services
 
 - name: Place the systemd init script
   config_template:
@@ -55,4 +57,4 @@
   with_dict: "{{ gnocchi_services }}"
   when: inventory_hostname in groups[item.value.group]
   notify:
-    - Reload systemd daemon
+    - Restart gnocchi services

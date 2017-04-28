@@ -25,5 +25,5 @@
     state: link
     force: "yes"
   notify:
-    - Restart Apache
-    - Restart Gnocchi services
+    - Restart gnocchi services
+    - Restart web server

@@ -38,8 +38,7 @@
   tags:
     - gnocchi-config
 
-- include: gnocchi_init_common.yml
-  static: no
+- include: "gnocchi_init_{{ ansible_service_mgr }}.yml"
   when: not gnocchi_identity_only | bool
   tags:
     - gnocchi-config
