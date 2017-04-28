@@ -23,8 +23,8 @@
     config_overrides: "{{ gnocchi_conf_overrides }}"
     config_type: "ini"
   notify:
-    - Restart Apache
-    - Restart Gnocchi services
+    - Restart gnocchi services
+    - Restart web server
 
 - name: Retrieve and config_template upstream files
   config_template:
@@ -38,12 +38,12 @@
       config_overrides: "{{ gnocchi_api_paste_ini_overrides }}"
       config_type: "ini"
     - name: "policy.json"
-      dest: "/etc/gnocchi/policy.json"
+      dest: "/etc/gnocchi/policy.json-{{ gnocchi_venv_tag }}"
       config_overrides: "{{ gnocchi_policy_overrides }}"
       config_type: "json"
   notify:
-    - Restart Apache
-    - Restart Gnocchi services
+    - Restart gnocchi services
+    - Restart web server
 
 - name: Drop Gnocchi WSGI Configs
   template:
@@ -54,4 +54,4 @@
     mode: "0755"
   when: gnocchi_use_mod_wsgi | bool
   notify:
-    - Restart Apache
+    - Restart web server
