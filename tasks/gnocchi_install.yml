@@ -44,11 +44,18 @@
   retries: 5
   delay: 2
 
+- name: Retrieve checksum for venv download
+  uri:
+    url: "{{ gnocchi_venv_download_url | replace('tgz', 'checksum') }}"
+    return_content: yes
+  register: gnocchi_venv_checksum
+  when: gnocchi_venv_download | bool
+
 - name: Attempt venv download
   get_url:
     url: "{{ gnocchi_venv_download_url }}"
     dest: "/var/cache/{{ gnocchi_venv_download_url | basename }}"
-    checksum: "sha1:{{ lookup('url', gnocchi_venv_download_url | replace('tgz', 'checksum')) }}"
+    checksum: "sha1:{{ gnocchi_venv_checksum.content | trim }}"
   register: gnocchi_get_venv
   when: gnocchi_venv_download | bool
 
