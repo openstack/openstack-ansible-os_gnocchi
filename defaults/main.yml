@@ -38,7 +38,6 @@ gnocchi_git_install_branch: master
 gnocchi_developer_mode: false
 gnocchi_developer_constraints:
   - "git+{{ gnocchi_git_repo }}@{{ gnocchi_git_install_branch }}#egg=gnocchi"
-gnocchi_git_config_lookup_location: https://git.openstack.org/cgit/openstack/gnocchi/plain/
 
 #: Use of deprecated config options will cause a fatal application error
 gnocchi_fatal_deprecations: false
@@ -186,8 +185,15 @@ gnocchi_role_project_group: gnocchi_all
 gnocchi_api_paste_default_file_path: "/etc/openstack_deploy/gnocchi/api-paste.ini"
 gnocchi_policy_default_file_path: "/etc/openstack_deploy/gnocchi/policy.json"
 
+# If the above-mentioned files do not exist, then these
+# paths will be used to find the files from the git config
+# lookup location.
+gnocchi_git_config_lookup_location: https://git.openstack.org/cgit/openstack/gnocchi/plain
+gnocchi_api_paste_git_file_path: "gnocchi/rest//api-paste.ini?h={{ gnocchi_git_install_branch }}"
+gnocchi_policy_git_file_path: "gnocchi/rest/policy.json?h={{ gnocchi_git_install_branch }}"
+
 #: Tunable var-based overrides
 # The contents of these are templated over the default files.
-gnocchi_conf_overrides: {}
 gnocchi_api_paste_ini_overrides: {}
+gnocchi_conf_overrides: {}
 gnocchi_policy_overrides: {}
