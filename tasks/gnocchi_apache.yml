@@ -22,7 +22,7 @@
     group: "root"
   with_items: "{{ gnocchi_apache_config }}"
   notify:
-    - Restart Apache
+    - Restart web server
 
 - name: Disable default apache site
   file:
@@ -30,7 +30,7 @@
     state: "absent"
   with_items: "{{ gnocchi_apache_default_sites }}"
   notify:
-    - Restart Apache
+    - Restart web server
 
 - name: Enabled gnocchi vhost
   file:
@@ -41,14 +41,14 @@
     - gnocchi_apache_site_available is defined
     - gnocchi_apache_site_enabled is defined
   notify:
-    - Restart Apache
+    - Restart web server
 
 - name: Ensure Apache ServerName
   lineinfile:
     dest: "{{ gnocchi_apache_conf }}"
     line: "ServerName {{ inventory_hostname }}"
   notify:
-    - Restart Apache
+    - Restart web server
 
 - name: Ensure Apache ServerTokens
   lineinfile:
@@ -56,7 +56,7 @@
     regexp: '^ServerTokens'
     line: "ServerTokens {{ gnocchi_apache_servertokens }}"
   notify:
-    - Restart Apache
+    - Restart web server
 
 - name: Ensure Apache ServerSignature
   lineinfile:
@@ -64,7 +64,7 @@
     regexp: '^ServerSignature'
     line: "ServerSignature {{ gnocchi_apache_serversignature }}"
   notify:
-    - Restart Apache
+    - Restart web server
 
 - name: remove Listen from Apache config
   lineinfile:
@@ -73,7 +73,7 @@
     backrefs: yes
     line: '#\1'
   notify:
-    - Restart Apache
+    - Restart web server
 
 - name: Enable/disable mod_ssl for apache2
   apache2_module:
@@ -82,11 +82,4 @@
   when:
     - ansible_pkg_mgr == 'apt'
   notify:
-    - Restart Apache
-
-- name: Load service
-  service:
-    name: "{{ gnocchi_system_service_name }}"
-    enabled: "yes"
-    state: "started"
-
+    - Restart web server

@@ -81,8 +81,8 @@
     copy: "no"
   when: gnocchi_get_venv | changed
   notify:
-    - Restart Gnocchi services
-    - Restart Apache
+    - Restart gnocchi services
+    - Restart web server
 
 - name: Install pip packages
   pip:
@@ -100,8 +100,8 @@
   delay: 2
   when: gnocchi_get_venv | failed or gnocchi_get_venv | skipped
   notify:
-    - Restart Gnocchi services
-    - Restart Apache
+    - Restart gnocchi services
+    - Restart web server
 
 - name: CentOS remove python from path first
   file:
