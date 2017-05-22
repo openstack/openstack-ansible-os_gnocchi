@@ -115,3 +115,10 @@
   command: >
     virtualenv-tools --update-path=auto --reinitialize {{ gnocchi_bin | dirname }}
   when: gnocchi_get_venv | changed
+
+- name: Record the venv tag deployed
+  ini_file:
+    dest: "/etc/ansible/facts.d/openstack_ansible.fact"
+    section: gnocchi
+    option: venv_tag
+    value: "{{ gnocchi_venv_tag }}"
