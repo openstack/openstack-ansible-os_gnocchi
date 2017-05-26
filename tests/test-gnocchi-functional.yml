@@ -25,6 +25,9 @@
     - name: Install openstackclient
       pip:
         name: "python-openstackclient"
+        extra_args: >-
+          {{ gnocchi_developer_mode | ternary(pip_install_developer_constraints | default('--constraint /opt/developer-pip-constraints.txt'), '') }}
+          {{ pip_install_options | default('') }}
 
     - name: Check the gnocchi-api
       uri:
