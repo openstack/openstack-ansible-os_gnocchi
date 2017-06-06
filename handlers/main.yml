@@ -47,6 +47,9 @@
   copy:
     src: "/etc/gnocchi/policy.json-{{ gnocchi_venv_tag }}"
     dest: "/etc/gnocchi/policy.json"
+    owner: "root"
+    group: "{{ gnocchi_system_group_name }}"
+    mode: "0640"
     remote_src: yes
 
 - name: Start services
