@@ -164,11 +164,11 @@ gnocchi_requires_pip_packages:
 
 #: Common pip packages
 gnocchi_pip_packages:
+  - cryptography
+  - gnocchiclient
   - "gnocchi[mysql,file,swift,ceph]"
   - keystonemiddleware
-  - gnocchiclient
   - python-memcached
-  - pycrypto
 
 # This variable is used by the repo_build process to determine
 # which host group to check for members of before building the
