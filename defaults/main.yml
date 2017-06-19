@@ -33,7 +33,7 @@ gnocchi_auth_mode: "{{ (gnocchi_keystone_auth | bool) | ternary('keystone', 'bas
 # These variables are used in 'developer mode' in order to allow the role
 # to build an environment directly from a git source without the presence
 # of an OpenStack-Ansible repo_server.
-gnocchi_git_repo: https://git.openstack.org/openstack/gnocchi
+gnocchi_git_repo: https://github.com/gnocchixyz/gnocchi
 gnocchi_git_install_branch: master
 gnocchi_developer_mode: false
 gnocchi_developer_constraints:
@@ -188,9 +188,9 @@ gnocchi_policy_default_file_path: "/etc/openstack_deploy/gnocchi/policy.json"
 # If the above-mentioned files do not exist, then these
 # paths will be used to find the files from the git config
 # lookup location.
-gnocchi_git_config_lookup_location: https://git.openstack.org/cgit/openstack/gnocchi/plain
-gnocchi_api_paste_git_file_path: "gnocchi/rest//api-paste.ini?h={{ gnocchi_git_install_branch }}"
-gnocchi_policy_git_file_path: "gnocchi/rest/policy.json?h={{ gnocchi_git_install_branch }}"
+gnocchi_git_config_lookup_location: https://raw.githubusercontent.com/gnocchixyz/gnocchi/{{ gnocchi_git_install_branch }}/
+gnocchi_api_paste_git_file_path: "gnocchi/rest/api-paste.ini"
+gnocchi_policy_git_file_path: "gnocchi/rest/policy.json"
 
 #: Tunable var-based overrides
 # The contents of these are templated over the default files.
