@@ -28,3 +28,15 @@
     SSLOptions +StdEnvVars +ExportCertData
 {% endif %}
 </VirtualHost>
+
+<Directory "/var/www/cgi-bin">
+        AllowOverride None
+        Options +ExecCGI -Includes
+        <IfModule !mod_access_compat.c>
+                Require all granted
+        </IfModule>
+        <IfModule mod_access_compat.c>
+                Order allow,deny
+                Allow from all
+        </IfModule>
+</Directory>
