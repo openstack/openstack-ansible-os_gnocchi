@@ -18,5 +18,6 @@ activate_this = os.path.expanduser("{{ gnocchi_bin }}/activate_this.py")
 execfile(activate_this, dict(__file__=activate_this))
 
 from gnocchi.rest import app
+from gnocchi import service
 
-application = app.build_wsgi_app()
+application = app.load_app(service.prepare_service())
