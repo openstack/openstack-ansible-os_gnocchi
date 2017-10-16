@@ -77,7 +77,7 @@ gnocchi_storage_driver: file
 gnocchi_coordination_url: "mysql://{{ gnocchi_galera_user }}:{{ gnocchi_container_mysql_password }}@{{ gnocchi_galera_address }}/{{ gnocchi_galera_database }}?charset=utf8&timeout=5"
 
 #: Default Ceph parameters
-gnocchi_ceph_pool: "gnocchi"
+gnocchi_ceph_pool: "metrics"
 gnocchi_ceph_username: "gnocchi"
 
 #: System info
