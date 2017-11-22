@@ -170,7 +170,7 @@ gnocchi_pip_packages:
   - python-memcached
   - pycrypto
   - pandas==0.20.3
-  - numpy==1.12.0
+  - numpy
 
 # This variable is used by the repo_build process to determine
 # which host group to check for members of before building the
