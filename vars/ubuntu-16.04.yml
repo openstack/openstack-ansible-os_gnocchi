@@ -17,11 +17,12 @@
 gnocchi_distro_packages:
   - apache2
   - apache2-utils
-  - libapache2-mod-wsgi
-  - git
   - build-essential
-  - python-dev
+  - git
+  - libapache2-mod-wsgi
   - libpq-dev
+  - librados-dev
+  - python-dev
 
 gnocchi_system_service_name: apache2
 

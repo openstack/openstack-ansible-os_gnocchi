@@ -16,12 +16,13 @@
 #: Necessary packages
 gnocchi_distro_packages:
   - '@Development Tools'
+  - git
   - httpd
   - httpd-tools
+  - librados2-devel
   - mod_wsgi
-  - git
-  - python-devel
   - postgresql-devel
+  - python-devel
   - which
 
 gnocchi_system_service_name: httpd
