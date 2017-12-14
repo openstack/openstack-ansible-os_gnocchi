@@ -43,6 +43,7 @@
       shell: >
         . /root/openrc && openstack token issue --format yaml | awk '/^id\:/ {print $2}'
       register: get_keystone_token
+      changed_when: false
 
     - name: set token
       set_fact:

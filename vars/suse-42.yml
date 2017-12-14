@@ -16,21 +16,22 @@
 
 # Necessary packages (also includes packages from devel_basis patterns)
 gnocchi_distro_packages:
+  - apache2
+  - apache2-mod_wsgi
+  - apache2-utils
   - autoconf
   - automake
   - binutils
   - cpp
   - gcc
+  - git-core
   - glibc-devel
+  - librados2-devel
   - libtool
   - m4
   - make
-  - apache2
-  - apache2-utils
-  - apache2-mod_wsgi
-  - git-core
-  - python-devel
   - postgresql-devel
+  - python-devel
   - which
 
 gnocchi_system_service_name: apache2
