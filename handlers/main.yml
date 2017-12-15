@@ -28,7 +28,7 @@
     daemon_reload: "{{ (ansible_service_mgr == 'systemd') | ternary('yes', omit) }}"
   with_dict: "{{ gnocchi_services }}"
   when:
-    - inventory_hostname in groups[item.value.group]
+    - "item.value.group in group_names"
     - item.value.service_enabled | bool
   register: _stop
   until: _stop | success
@@ -60,7 +60,7 @@
     daemon_reload: "{{ (ansible_service_mgr == 'systemd') | ternary('yes', omit) }}"
   with_dict: "{{ gnocchi_services }}"
   when:
-    - inventory_hostname in groups[item.value.group]
+    - "item.value.group in group_names"
     - item.value.service_enabled | bool
   register: _start
   until: _start | success
