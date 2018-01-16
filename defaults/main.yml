@@ -160,7 +160,6 @@ gnocchi_services:
 #: Gnocchi packages that must be installed before anything else
 gnocchi_requires_pip_packages:
   - virtualenv
-  - virtualenv-tools
   - python-keystoneclient # Keystoneclient needed for OSA keystone lib
   - httplib2 # so we can use the uri module
 
