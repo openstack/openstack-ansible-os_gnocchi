@@ -167,7 +167,7 @@ gnocchi_requires_pip_packages:
 gnocchi_pip_packages:
   - cryptography
   - gnocchiclient
-  - "gnocchi[mysql,file,swift,ceph]"
+  - "gnocchi[mysql,{{ gnocchi_storage_driver | default('file') }}]"
   - keystonemiddleware
   - python-memcached
 
