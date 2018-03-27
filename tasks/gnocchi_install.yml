@@ -13,17 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Install distro packages
-  package:
-    name: "{{ gnocchi_distro_packages }}"
-    state: "{{ gnocchi_package_state }}"
-    update_cache: "{{ (ansible_pkg_mgr in ['apt', 'zypper']) | ternary('yes', omit) }}"
-    cache_valid_time: "{{ (ansible_pkg_mgr == 'apt') | ternary(cache_timeout, omit) }}"
-  register: install_packages
-  until: install_packages is success
-  retries: 5
-  delay: 2
-
+# TODO(odyssey4me):
+# This can be simplified once all the roles are using
+# python_venv_build. We can then switch to using a
+# set of constraints in pip.conf inside the venv,
+# perhaps prepared by giving a giving a list of
+# constraints to the role.
 - name: Create developer mode constraint file
   copy:
     dest: "/opt/developer-pip-constraints.txt"
@@ -33,118 +28,22 @@
       {% endfor %}
   when: gnocchi_developer_mode | bool
 
-- name: Retrieve checksum for venv download
-  uri:
-    url: "{{ gnocchi_venv_download_url | replace('tgz', 'checksum') }}"
-    return_content: yes
-  register: gnocchi_venv_checksum
-  when: gnocchi_venv_download | bool
-
-- name: Attempt venv download
-  get_url:
-    url: "{{ gnocchi_venv_download_url }}"
-    dest: "/var/cache/{{ gnocchi_venv_download_url | basename }}"
-    checksum: "sha1:{{ gnocchi_venv_checksum.content | trim }}"
-  register: gnocchi_get_venv
-  when: gnocchi_venv_download | bool
-
-- name: Remove existing venv
-  file:
-    path: "{{ gnocchi_bin | dirname }}"
-    state: absent
-  when: gnocchi_get_venv  is changed
-
-- name: Create gnocchi venv dir
-  file:
-    path: "{{ gnocchi_bin | dirname }}"
-    state: directory
-    mode: "0755"
-  register: gnocchi_venv_dir
-  when: gnocchi_get_venv  is changed
-
-- name: Unarchive pre-built venv
-  unarchive:
-    src: "/var/cache/{{ gnocchi_venv_download_url | basename }}"
-    dest: "{{ gnocchi_bin | dirname }}"
-    copy: "no"
-  when: gnocchi_get_venv  is changed
-  notify:
-    - Restart gnocchi services
-    - Restart web server
-
-- name: Create the python venv and install packages into it
-  when: gnocchi_get_venv | failed or gnocchi_get_venv | skipped
-  block:
-    - name: Create the virtualenv (if it does not exist)
-      command: "virtualenv --never-download --no-site-packages {{ gnocchi_bin | dirname }}"
-      args:
-        creates: "{{ gnocchi_bin }}/activate"
-
-    - name: Upgrade pip/setuptools/wheel to the versions we want
-      pip:
-        name:
-          - pip
-          - setuptools
-          - wheel
-        state: "{{ gnocchi_pip_package_state }}"
-        virtualenv: "{{ gnocchi_bin | dirname }}"
-        virtualenv_site_packages: "no"
-        extra_args: >-
-          {{ gnocchi_developer_mode | ternary(pip_install_developer_constraints | default('--constraint /opt/developer-pip-constraints.txt'), '') }}
-          {{ pip_install_options | default('') }}
-      register: install_packages
-      until: install_packages is success
-      retries: 5
-      delay: 2
-
-    - name: Install pip packages
-      pip:
-        name: "{{ gnocchi_pip_packages }}"
-        state: "{{ gnocchi_pip_package_state }}"
-        virtualenv: "{{ gnocchi_bin | dirname }}"
-        virtualenv_site_packages: "no"
-        extra_args: >-
-          {{ gnocchi_developer_mode | ternary(pip_install_developer_constraints | default('--constraint /opt/developer-pip-constraints.txt'), '') }}
-          {{ pip_install_options | default('') }}
-      register: install_packages
-      until: install_packages is success
-      retries: 5
-      delay: 2
-      notify:
-        - Restart gnocchi services
-        - Restart web server
-
-- name: Remove python from path first (CentOS, openSUSE)
-  file:
-    path:  "{{ gnocchi_bin | dirname }}/bin/python2.7"
-    state: "absent"
+- name: Ensure remote wheel building is disabled in developer mode
+  set_fact:
+    venv_build_host: "{{ ansible_hostname }}"
   when:
-    - ansible_pkg_mgr in ['yum', 'dnf', 'zypper']
-    - gnocchi_get_venv  is changed
+    - gnocchi_developer_mode | bool
 
-# NOTE(odyssey4me):
-# We reinitialize the venv to ensure that the right
-# version of python is in the venv, but we do not
-# want virtualenv to also replace pip, setuptools
-# and wheel so we tell it not to.
-# We do not use --always-copy for CentOS/SuSE due
-# to https://github.com/pypa/virtualenv/issues/565
-- name: Update virtualenv path
-  shell: |
-    find {{ gnocchi_bin }} -name \*.pyc -delete
-    sed -si '1s/^.*python.*$/#!{{ gnocchi_bin | replace ('/','\/') }}\/python/' {{ gnocchi_bin }}/*
-    virtualenv {{ gnocchi_bin | dirname }} \
-        {{ (ansible_pkg_mgr == 'apt') | ternary('--always-copy', '') }} \
-        --no-pip \
-        --no-setuptools \
-        --no-wheel
-  when: gnocchi_get_venv  is changed
-  tags:
-    - skip_ansible_lint
-
-- name: Record the venv tag deployed
-  ini_file:
-    dest: "/etc/ansible/facts.d/openstack_ansible.fact"
-    section: gnocchi
-    option: venv_tag
-    value: "{{ gnocchi_venv_tag }}"
+- name: Install the python venv
+  include_role:
+    name: "python_venv_build"
+    private: yes
+  vars:
+    venv_install_destination_path: "{{ gnocchi_bin | dirname }}"
+    venv_install_distro_package_list: "{{ gnocchi_distro_packages }}"
+    venv_pip_install_args: "{{ gnocchi_pip_install_args }}"
+    venv_pip_packages: "{{ gnocchi_pip_packages }}"
+    venv_facts_when_changed:
+      - section: "gnocchi"
+        option: "venv_tag"
+        value: "{{ gnocchi_venv_tag }}"
