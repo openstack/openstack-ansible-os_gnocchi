@@ -30,6 +30,7 @@
   until: add_project|success
   retries: 5
   delay: 10
+  no_log: True
 
 # Create an admin user
 - name: Ensure Gnocchi user
@@ -47,6 +48,7 @@
   until: add_user|success
   retries: 5
   delay: 10
+  no_log: True
 
 # Add a role to the user
 - name: Ensure Gnocchi user maps to admin role
@@ -64,3 +66,4 @@
   until: add_admin_role|success
   retries: 5
   delay: 10
+  no_log: True

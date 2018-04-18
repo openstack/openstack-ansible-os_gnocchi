@@ -29,6 +29,7 @@
   until: add_service|success
   retries: 5
   delay: 2
+  no_log: True
 
 # Create an endpoint
 - name: Ensure Gnocchi endpoint
@@ -53,3 +54,4 @@
   until: add_endpoint|success
   retries: 5
   delay: 10
+  no_log: True
