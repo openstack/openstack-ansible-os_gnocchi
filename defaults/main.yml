@@ -67,6 +67,8 @@ gnocchi_venv_download: "{{ not gnocchi_developer_mode | bool and not gnocchi_ide
 gnocchi_venv_download_url: http://127.0.0.1/venvs/untagged/ubuntu/gnocchi.tgz
 
 #: Index Database info
+gnocchi_db_setup_host: "{{ ('galera_all' in groups) | ternary(groups['galera_all'][0], 'localhost') }}"
+gnocchi_galera_address: "{{ galera_address | default('127.0.0.1') }}"
 gnocchi_galera_database: gnocchi
 gnocchi_galera_user: gnocchi
 gnocchi_galera_address: "{{ galera_address }}"

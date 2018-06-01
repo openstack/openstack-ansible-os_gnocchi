@@ -3,3 +3,7 @@
   user: root
   roles:
     - { role: "os_gnocchi", tags: [ "os-gnocchi" ] }
+    galera_root_user: root
+  vars_prompt:
+    - name: "galera_root_password"
+      prompt: "What is galera_root_password?"
