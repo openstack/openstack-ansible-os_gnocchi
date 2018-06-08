@@ -170,6 +170,7 @@ gnocchi_pip_packages:
   - cryptography
   - gnocchiclient
   - "gnocchi[keystone,mysql,{{ gnocchi_storage_driver | default('file') }}]"
+  - osprofiler
   - python-memcached
 
 # This variable is used by the repo_build process to determine
