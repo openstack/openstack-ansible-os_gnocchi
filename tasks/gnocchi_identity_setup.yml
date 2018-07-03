@@ -16,54 +16,56 @@
 # Create the project if needed, assumed to be in default domain.
 # In many cases this will be present but under some circumstances the project
 # may be unique to Gnocchi, esp. when Swift is used for storage.
-- name: Ensure Gnocchi project
-  keystone:
-    command: ensure_project
-    project_name: "{{ gnocchi_service_project_name }}"
-    endpoint: "{{ keystone_service_adminurl }}"
-    login_user: "{{ keystone_admin_user_name }}"
-    login_password: "{{ keystone_auth_admin_password }}"
-    login_project_name: "{{ keystone_admin_tenant_name }}"
-    description: "{{ gnocchi_service_project_description }}"
-    insecure: "{{ keystone_service_adminuri_insecure }}"
-  register: add_project
-  until: add_project|success
-  retries: 5
-  delay: 10
-  no_log: True
+# We set the python interpreter to the ansible runtime venv if
+# the delegation is to localhost so that we get access to the
+# appropriate python libraries in that venv. If the delegation
+# is to another host, we assume that it is accessible by the
+# system python instead.
+- name: Setup the service
+  delegate_to: "{{ gnocchi_service_setup_host }}"
+  vars:
+    ansible_python_interpreter: >-
+      {{ (gnocchi_service_setup_host == 'localhost') | ternary(ansible_playbook_python, ansible_python['executable']) }}
+  block:
+    - name: Add service project
+      os_project:
+        cloud: default
+        state: present
+        name: "{{ gnocchi_service_project_name }}"
+        domain_id: "{{ gnocchi_service_project_domain_id }}"
+        endpoint_type: admin
+        verify: "{{ not keystone_service_adminuri_insecure }}"
+      register: add_service
+      until: add_service is success
+      retries: 5
+      delay: 10
 
-# Create an admin user
-- name: Ensure Gnocchi user
-  keystone:
-    command: "ensure_user"
-    endpoint: "{{ keystone_service_adminurl }}"
-    login_user: "{{ keystone_admin_user_name }}"
-    login_password: "{{ keystone_auth_admin_password }}"
-    login_project_name: "{{ keystone_admin_tenant_name }}"
-    user_name: "{{ gnocchi_service_user_name }}"
-    tenant_name: "{{ gnocchi_service_project_name }}"
-    password: "{{ gnocchi_service_password }}"
-    insecure: "{{ keystone_service_adminuri_insecure }}"
-  register: add_user
-  until: add_user|success
-  retries: 5
-  delay: 10
-  no_log: True
+    - name: Add service user
+      os_user:
+        cloud: default
+        state: present
+        name: "{{ gnocchi_service_user_name }}"
+        password: "{{ gnocchi_service_password }}"
+        domain: default
+        default_project: "{{ gnocchi_service_project_name }}"
+        endpoint_type: admin
+        verify: "{{ not keystone_service_adminuri_insecure }}"
+      register: add_service
+      until: add_service is success
+      retries: 5
+      delay: 10
+      no_log: True
 
-# Add a role to the user
-- name: Ensure Gnocchi user maps to admin role
-  keystone:
-    command: "ensure_user_role"
-    endpoint: "{{ keystone_service_adminurl }}"
-    login_user: "{{ keystone_admin_user_name }}"
-    login_password: "{{ keystone_auth_admin_password }}"
-    login_project_name: "{{ keystone_admin_tenant_name }}"
-    user_name: "{{ gnocchi_service_user_name }}"
-    tenant_name: "{{ gnocchi_service_project_name }}"
-    role_name: "{{ gnocchi_role_name }}"
-    insecure: "{{ keystone_service_adminuri_insecure }}"
-  register: add_admin_role
-  until: add_admin_role|success
-  retries: 5
-  delay: 10
-  no_log: True
+    - name: Add service user to admin role
+      os_user_role:
+        cloud: default
+        state: present
+        user: "{{ gnocchi_service_user_name }}"
+        role: "{{ gnocchi_role_name }}"
+        project: "{{ gnocchi_service_project_name }}"
+        endpoint_type: admin
+        verify: "{{ not keystone_service_adminuri_insecure }}"
+      register: add_service
+      until: add_service is success
+      retries: 5
+      delay: 10

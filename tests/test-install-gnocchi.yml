@@ -17,11 +17,11 @@
   hosts: gnocchi_all
   user: root
   gather_facts: true
+  vars_files:
+    - common/test-vars.yml
   pre_tasks:
     - include: common/create-grant-db.yml
       db_password: "{{ gnocchi_container_mysql_password }}"
       db_name: "gnocchi"
   roles:
     - role: "os_gnocchi"
-  vars_files:
-    - common/test-vars.yml
