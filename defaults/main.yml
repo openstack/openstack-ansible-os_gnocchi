@@ -71,7 +71,6 @@ gnocchi_db_setup_host: "{{ ('galera_all' in groups) | ternary(groups['galera_all
 gnocchi_galera_address: "{{ galera_address | default('127.0.0.1') }}"
 gnocchi_galera_database: gnocchi
 gnocchi_galera_user: gnocchi
-gnocchi_galera_address: "{{ galera_address }}"
 gnocchi_db_sync_options: ""
 gnocchi_galera_use_ssl: "{{ galera_use_ssl | default(False) }}"
 gnocchi_galera_ssl_ca_cert: "{{ galera_ssl_ca_cert | default('/etc/ssl/certs/galera-ca.pem') }}"
