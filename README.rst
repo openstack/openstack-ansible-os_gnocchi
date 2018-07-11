@@ -25,5 +25,8 @@ Documentation for the project can be found at:
 Release notes for the project can be found at:
   https://docs.openstack.org/releasenotes/openstack-ansible-os_gnocchi/
 
+The project source code repository is located at:
+  https://git.openstack.org/cgit/openstack/openstack-ansible-os_gnocchi/
+
 The project home is at:
-  http://launchpad.net/openstack-ansible
+  https://launchpad.net/openstack-ansible
