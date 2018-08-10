@@ -170,6 +170,8 @@ gnocchi_pip_packages:
   - "gnocchi[mysql,{{ gnocchi_storage_driver | default('file') }}]"
   - keystonemiddleware
   - python-memcached
+  - kazoo
+  - redis
 
 # This variable is used by the repo_build process to determine
 # which host group to check for members of before building the
