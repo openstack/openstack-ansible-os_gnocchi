@@ -20,7 +20,7 @@
   vars_files:
     - common/test-vars.yml
   pre_tasks:
-    - include: common/create-grant-db.yml
+    - include_tasks: common/create-grant-db.yml
       db_password: "{{ gnocchi_container_mysql_password }}"
       db_name: "gnocchi"
   roles:
