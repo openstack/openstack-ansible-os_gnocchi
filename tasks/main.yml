@@ -24,39 +24,37 @@
   tags:
     - always
 
-- include: gnocchi_pre_install.yml
+- include_tasks: gnocchi_pre_install.yml
   tags:
     - gnocchi-install
 
-- include: gnocchi_install.yml
+- include_tasks: gnocchi_install.yml
   tags:
     - gnocchi-install
 
-- include: gnocchi_post_install.yml
-  static: no
+- include_tasks: gnocchi_post_install.yml
   when: not gnocchi_identity_only | bool
   tags:
     - gnocchi-config
 
-- include: "gnocchi_init_{{ ansible_service_mgr }}.yml"
+- include_tasks: "gnocchi_init_{{ ansible_service_mgr }}.yml"
   when: not gnocchi_identity_only | bool
   tags:
     - gnocchi-config
 
-- include: gnocchi_service_setup.yml
-  static: no
+- include_tasks: gnocchi_service_setup.yml
   when:
     - inventory_hostname == groups['gnocchi_all'][0]
     - not gnocchi_identity_only | bool
   tags:
     - gnocchi-config
 
-- include: gnocchi_identity_setup.yml
+- include_tasks: gnocchi_identity_setup.yml
   when: inventory_hostname == groups['gnocchi_all'][0]
   tags:
     - gnocchi-config
 
-- include: gnocchi_ceph_python_libs.yml
+- include_tasks: gnocchi_ceph_python_libs.yml
   when:
     - gnocchi_storage_driver == 'ceph'
   tags:
@@ -64,15 +62,14 @@
 
 # N.B. Must occur after identity setup, as this may perform calls to Swift.
 #      Similarly, when using Ceph, must occur after Ceph setup.
-- include: gnocchi_db_setup.yml
+- include_tasks: gnocchi_db_setup.yml
   when:
     - inventory_hostname == groups['gnocchi_all'][0]
     - not gnocchi_identity_only | bool
   tags:
     - gnocchi-config
 
-- include: gnocchi_apache.yml
-  static: no
+- include_tasks: gnocchi_apache.yml
   when:
     - gnocchi_use_mod_wsgi | bool
     - not gnocchi_identity_only | bool
