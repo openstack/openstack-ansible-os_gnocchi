@@ -39,7 +39,7 @@ gnocchi_auth_mode: "{{ (gnocchi_keystone_auth | bool) | ternary('keystone', 'bas
 # to build an environment directly from a git source without the presence
 # of an OpenStack-Ansible repo_server.
 gnocchi_git_repo: https://github.com/gnocchixyz/gnocchi
-gnocchi_git_install_branch: master
+gnocchi_git_install_branch: 'stable/4.3'
 gnocchi_developer_mode: false
 gnocchi_developer_constraints:
   - "git+{{ gnocchi_git_repo }}@{{ gnocchi_git_install_branch }}#egg=gnocchi"
