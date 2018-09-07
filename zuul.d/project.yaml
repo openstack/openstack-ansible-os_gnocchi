@@ -18,6 +18,3 @@
       - check-requirements
       - publish-openstack-sphinx-docs
       - release-notes-jobs
-    check:
-      jobs:
-        - openstack-ansible-gnocchi-ssl-nv
