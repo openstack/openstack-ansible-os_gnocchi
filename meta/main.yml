@@ -38,6 +38,3 @@ dependencies:
   - role: apt_package_pinning
     when:
       - ansible_pkg_mgr == 'apt'
-  - galera_client
-# Extra dependency not installable this way
-#  git clone https://git.openstack.org/openstack/openstack-ansible-plugins {homedir}/.ansible/plugins
