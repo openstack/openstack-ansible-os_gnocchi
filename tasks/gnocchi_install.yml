@@ -72,23 +72,47 @@
     - Restart gnocchi services
     - Restart web server
 
-- name: Install pip packages
-  pip:
-    name: "{{ gnocchi_pip_packages }}"
-    state: "{{ gnocchi_pip_package_state }}"
-    virtualenv: "{{ gnocchi_bin | dirname }}"
-    virtualenv_site_packages: "no"
-    extra_args: >-
-      {{ gnocchi_developer_mode | ternary(pip_install_developer_constraints | default('--constraint /opt/developer-pip-constraints.txt'), '') }}
-      {{ pip_install_options | default('') }}
-  register: install_packages
-  until: install_packages is success
-  retries: 5
-  delay: 2
+- name: Create the python venv and install packages into it
   when: gnocchi_get_venv | failed or gnocchi_get_venv | skipped
-  notify:
-    - Restart gnocchi services
-    - Restart web server
+  block:
+    - name: Create the virtualenv (if it does not exist)
+      command: "virtualenv --never-download --no-site-packages {{ gnocchi_bin | dirname }}"
+      args:
+        creates: "{{ gnocchi_bin }}/activate"
+
+    - name: Upgrade pip/setuptools/wheel to the versions we want
+      pip:
+        name:
+          - pip
+          - setuptools
+          - wheel
+        state: "{{ gnocchi_pip_package_state }}"
+        virtualenv: "{{ gnocchi_bin | dirname }}"
+        virtualenv_site_packages: "no"
+        extra_args: >-
+          {{ gnocchi_developer_mode | ternary(pip_install_developer_constraints | default('--constraint /opt/developer-pip-constraints.txt'), '') }}
+          {{ pip_install_options | default('') }}
+      register: install_packages
+      until: install_packages is success
+      retries: 5
+      delay: 2
+
+    - name: Install pip packages
+      pip:
+        name: "{{ gnocchi_pip_packages }}"
+        state: "{{ gnocchi_pip_package_state }}"
+        virtualenv: "{{ gnocchi_bin | dirname }}"
+        virtualenv_site_packages: "no"
+        extra_args: >-
+          {{ gnocchi_developer_mode | ternary(pip_install_developer_constraints | default('--constraint /opt/developer-pip-constraints.txt'), '') }}
+          {{ pip_install_options | default('') }}
+      register: install_packages
+      until: install_packages is success
+      retries: 5
+      delay: 2
+      notify:
+        - Restart gnocchi services
+        - Restart web server
 
 - name: Remove python from path first (CentOS, openSUSE)
   file:
