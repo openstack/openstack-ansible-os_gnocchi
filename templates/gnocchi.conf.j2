@@ -5,6 +5,7 @@
 use_stderr = False
 debug = {{ debug }}
 fatal_deprecations = {{ gnocchi_fatal_deprecations }}
+coordination_url = {{ gnocchi_coordination_url }}
 
 [api]
 auth_mode = {{ gnocchi_auth_mode }}
@@ -42,7 +43,6 @@ memcache_secret_key = {{ memcached_encryption_key }}
 
 [storage]
 driver = {{ gnocchi_storage_driver }}
-coordination_url = {{ gnocchi_coordination_url }}
 {% if gnocchi_storage_driver == 'file' %}
 ############
 ## File Storage
