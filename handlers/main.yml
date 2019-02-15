@@ -18,7 +18,7 @@
     name: "{{ item.value.service_name }}"
     enabled: yes
     state: "stopped"
-    daemon_reload: "{{ (ansible_service_mgr == 'systemd') | ternary('yes', omit) }}"
+    daemon_reload: yes
   with_dict: "{{ gnocchi_services }}"
   when:
     - "item.value.group in group_names"
@@ -56,7 +56,7 @@
     name: "{{ item.value.service_name }}"
     enabled: yes
     state: "started"
-    daemon_reload: "{{ (ansible_service_mgr == 'systemd') | ternary('yes', omit) }}"
+    daemon_reload: yes
   with_dict: "{{ gnocchi_services }}"
   when:
     - "item.value.group in group_names"
@@ -74,7 +74,7 @@
     name: "{{ gnocchi_system_service_name }}"
     enabled: yes
     state: "restarted"
-    daemon_reload: "{{ (ansible_service_mgr == 'systemd') | ternary('yes', omit) }}"
+    daemon_reload: yes
   when: gnocchi_use_mod_wsgi | bool
   register: _restart
   until: _restart is success

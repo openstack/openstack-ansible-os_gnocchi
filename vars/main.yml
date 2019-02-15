@@ -23,3 +23,28 @@ gnocchi_api_paste_default_content: |
 gnocchi_policy_default_content: |
   {{ _git_file_fetch.results | selectattr('item', 'equalto', gnocchi_git_config_lookup_location ~ '/' ~ gnocchi_policy_git_file_path) | map(attribute='content') | first }}
 
+filtered_gnocchi_services: |-
+  {% set services = [] %}
+  {% for name, service in gnocchi_services.items() %}
+  {%   if (service['group'] in group_names) and
+          (('service_enabled' not in service) or
+           ('service_enabled' in service and service['service_enabled'])) %}
+  {%     set _ = service.update(
+           {
+             'service_key': name,
+             'enabled': 'yes',
+             'state': 'started',
+             'config_overrides': service.init_config_overrides
+           }
+         )
+  %}
+  {%     set _ = service.pop('init_config_overrides') -%}
+  {# Note (noonedeadpunk): The following if statement is added for backwards compatability #}
+  {# As up to stein release gnocchi role didn't have 'execstarts' in gnocchi_services keys #}
+  {%     if ('execstarts' not in service) %}
+  {%       set _ = service.update({'execstarts': gnocchi_bin ~ '/' ~ service.service_name}) %}
+  {%     endif %}
+  {%     set _ = services.append(service) %}
+  {%   endif %}
+  {% endfor %}
+  {{ services }}

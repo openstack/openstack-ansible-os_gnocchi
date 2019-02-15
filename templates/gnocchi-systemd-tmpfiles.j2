@@ -1,4 +1,0 @@
-# {{ ansible_managed }}
-
-D /var/lock/{{ item.value.service_name }} 2755 {{ gnocchi_system_user_name }} {{ gnocchi_system_group_name }}
-D /var/run/{{ item.value.service_name }} 2755 {{ gnocchi_system_user_name }} {{ gnocchi_system_group_name }}

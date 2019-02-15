@@ -169,11 +169,13 @@ gnocchi_services:
     service_name: "gnocchi-api"
     service_enabled: "{{ gnocchi_use_mod_wsgi | ternary(false, true) }}"
     init_config_overrides: "{{ gnocchi_api_init_overrides }}"
+    execstarts: "{{ gnocchi_bin }}/gnocchi-api"
   gnocchi-metricd:
     group: "gnocchi_metricd"
     service_name: "gnocchi-metricd"
     service_enabled: true
     init_config_overrides: "{{ gnocchi_metricd_init_overrides }}"
+    execstarts: "{{ gnocchi_bin }}/gnocchi-metricd"
 
 #: Common pip packages
 gnocchi_pip_packages:
