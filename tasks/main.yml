@@ -25,21 +25,33 @@
   tags:
     - always
 
-- include_tasks: gnocchi_pre_install.yml
+- import_tasks: gnocchi_pre_install.yml
   tags:
     - gnocchi-install
 
-- include_tasks: gnocchi_install.yml
+- name: Install the python venv
+  import_role:
+    name: "python_venv_build"
+  vars:
+    venv_build_constraints: "{{ gnocchi_git_constraints }}"
+    venv_install_destination_path: "{{ gnocchi_bin | dirname }}"
+    venv_install_distro_package_list: "{{ gnocchi_distro_packages }}"
+    venv_pip_install_args: "{{ gnocchi_pip_install_args }}"
+    venv_pip_packages: "{{ gnocchi_pip_packages }}"
+    venv_facts_when_changed:
+      - section: "gnocchi"
+        option: "venv_tag"
+        value: "{{ gnocchi_venv_tag }}"
   tags:
     - gnocchi-install
 
-- include_tasks: gnocchi_post_install.yml
+- import_tasks: gnocchi_post_install.yml
   when: not gnocchi_identity_only | bool
   tags:
     - gnocchi-config
 
 - name: Run the systemd service role
-  include_role:
+  import_role:
     name: systemd_service
   vars:
     systemd_user_name: "{{ gnocchi_system_user_name }}"
@@ -57,19 +69,19 @@
     - gnocchi-config
     - systemd-service
 
-- include_tasks: gnocchi_service_setup.yml
+- import_tasks: gnocchi_service_setup.yml
   when:
     - inventory_hostname == groups['gnocchi_all'][0]
     - not gnocchi_identity_only | bool
   tags:
     - gnocchi-config
 
-- include_tasks: gnocchi_identity_setup.yml
+- import_tasks: gnocchi_identity_setup.yml
   when: inventory_hostname == groups['gnocchi_all'][0]
   tags:
     - gnocchi-config
 
-- include_tasks: gnocchi_ceph_python_libs.yml
+- import_tasks: gnocchi_ceph_python_libs.yml
   when:
     - gnocchi_storage_driver == 'ceph'
   tags:
@@ -77,14 +89,14 @@
 
 # N.B. Must occur after identity setup, as this may perform calls to Swift.
 #      Similarly, when using Ceph, must occur after Ceph setup.
-- include_tasks: gnocchi_db_setup.yml
+- import_tasks: gnocchi_db_setup.yml
   when:
     - inventory_hostname == groups['gnocchi_all'][0]
     - not gnocchi_identity_only | bool
   tags:
     - gnocchi-config
 
-- include_tasks: gnocchi_apache.yml
+- import_tasks: gnocchi_apache.yml
   when:
     - gnocchi_use_mod_wsgi | bool
     - not gnocchi_identity_only | bool

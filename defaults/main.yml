@@ -42,9 +42,12 @@ gnocchi_auth_mode: "{{ (gnocchi_keystone_auth | bool) | ternary('keystone', 'bas
 # of an OpenStack-Ansible repo_server.
 gnocchi_git_repo: https://github.com/gnocchixyz/gnocchi
 gnocchi_git_install_branch: master
-gnocchi_developer_mode: false
-gnocchi_developer_constraints:
+gnocchi_upper_constraints_url: "{{ requirements_git_url | default('https://git.openstack.org/cgit/openstack/requirements/plain/upper-constraints.txt?h=' ~ requirements_git_install_branch | default('master')) }}"
+gnocchi_git_constraints:
   - "git+{{ gnocchi_git_repo }}@{{ gnocchi_git_install_branch }}#egg=gnocchi"
+  - "--constraint {{ gnocchi_upper_constraints_url }}"
+
+gnocchi_pip_install_args: "{{ pip_install_options | default('') }}"
 
 #: Use of deprecated config options will cause a fatal application error
 gnocchi_fatal_deprecations: false
@@ -56,16 +59,6 @@ gnocchi_secure_proxy_ssl_header: HTTP_X_FORWARDED_PROTO
 #: Set this to false to disable API service through Apache + mod_wsgi
 gnocchi_use_mod_wsgi: true
 
-# TODO(odyssey4me):
-# This can be simplified once all the roles are using
-# python_venv_build. We can then switch to using a
-# set of constraints in pip.conf inside the venv,
-# perhaps prepared by giving a giving a list of
-# constraints to the role.
-gnocchi_pip_install_args: >-
-  {{ gnocchi_developer_mode | ternary(pip_install_developer_constraints | default('--constraint /opt/developer-pip-constraints.txt'), '') }}
-  {{ pip_install_options | default('') }}
-
 #: Name of the virtual env to deploy into
 gnocchi_venv_tag: "{{ venv_tag | default('untagged') }}"
 gnocchi_bin: "/openstack/venvs/gnocchi-{{ gnocchi_venv_tag }}/bin"
@@ -76,12 +69,6 @@ gnocchi_venv_pkgs: "/openstack/venvs/gnocchi-{{ gnocchi_venv_tag }}/lib/python2.
 #  Example:
 #  gnocchi_etc_dir: "/usr/local/etc/gnocchi"
 gnocchi_etc_dir: "{{ gnocchi_bin | dirname }}/etc/gnocchi"
-
-# venv_download, even when true, will use the fallback method of building the
-# venv from scratch if the venv download fails.
-gnocchi_venv_download: "{{ not gnocchi_developer_mode | bool and not gnocchi_identity_only | bool }}"
-#: Location to retrieve the pre-built virtuelenv for gnocchi (optional)
-gnocchi_venv_download_url: http://127.0.0.1/venvs/untagged/ubuntu/gnocchi.tgz
 
 #: Index Database info
 gnocchi_db_setup_host: "{{ ('galera_all' in groups) | ternary(groups['galera_all'][0], 'localhost') }}"
