@@ -25,6 +25,20 @@
   tags:
     - always
 
+- import_tasks: db_setup.yml
+  when:
+    - inventory_hostname == groups['gnocchi_all'][0]
+  vars:
+    _oslodb_setup_host: "{{ gnocchi_db_setup_host }}"
+    _oslodb_databases:
+      - name: "{{ gnocchi_galera_database }}"
+        users:
+          - username: "{{ gnocchi_galera_user }}"
+            password: "{{ gnocchi_container_mysql_password }}"
+  tags:
+    - common-db
+    - gnocchi-config
+
 - import_tasks: gnocchi_pre_install.yml
   tags:
     - gnocchi-install
@@ -89,7 +103,7 @@
 
 # N.B. Must occur after identity setup, as this may perform calls to Swift.
 #      Similarly, when using Ceph, must occur after Ceph setup.
-- import_tasks: gnocchi_db_setup.yml
+- import_tasks: gnocchi_db_sync.yml
   when:
     - inventory_hostname == groups['gnocchi_all'][0]
     - not gnocchi_identity_only | bool
