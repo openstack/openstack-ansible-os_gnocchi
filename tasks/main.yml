@@ -83,7 +83,26 @@
     - gnocchi-config
     - systemd-service
 
-- import_tasks: gnocchi_service_setup.yml
+- import_tasks: service_setup.yml
+  vars:
+    _service_adminuri_insecure: "{{ keystone_service_adminuri_insecure }}"
+    _service_setup_host: "{{ gnocchi_service_setup_host }}"
+    _service_setup_host_python_interpreter: "{{ gnocchi_service_setup_host_python_interpreter }}"
+    _service_region: "{{ gnocchi_service_region }}"
+    _service_endpoints:
+      - service: "{{ gnocchi_service_name }}"
+        interface: "public"
+        url: "{{ gnocchi_service_publicurl }}"
+      - service: "{{ gnocchi_service_name }}"
+        interface: "internal"
+        url: "{{ gnocchi_service_internalurl }}"
+      - service: "{{ gnocchi_service_name }}"
+        interface: "admin"
+        url: "{{ gnocchi_service_adminurl }}"
+    _service_catalog:
+      - name: "{{ gnocchi_service_name }}"
+        type: "{{ gnocchi_service_type }}"
+        description: "{{ gnocchi_service_description }}"
   when:
     - inventory_hostname == groups['gnocchi_all'][0]
     - not gnocchi_identity_only | bool
