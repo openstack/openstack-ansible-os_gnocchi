@@ -32,6 +32,7 @@ gnocchi_distro_packages:
   - make
   - postgresql-devel
   - python-devel
+  - systemd-devel
   - which
 
 gnocchi_system_service_name: apache2

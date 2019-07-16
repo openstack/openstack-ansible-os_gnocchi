@@ -24,6 +24,7 @@ gnocchi_distro_packages:
   - libapache2-mod-wsgi
   - libpq-dev
   - librados-dev
+  - libsystemd-dev
   - python-dev
 
 gnocchi_system_service_name: apache2

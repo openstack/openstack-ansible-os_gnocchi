@@ -23,6 +23,7 @@ gnocchi_distro_packages:
   - mod_wsgi
   - postgresql-devel
   - python-devel
+  - systemd-devel
   - which
 
 gnocchi_system_service_name: httpd
