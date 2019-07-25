@@ -17,28 +17,17 @@ cache_timeout: 600
 
 #: Necessary packages
 gnocchi_distro_packages:
-  - apache2
-  - apache2-utils
   - build-essential
   - git
-  - libapache2-mod-wsgi
   - libpq-dev
   - librados-dev
   - libsystemd-dev
   - python-dev
 
+# NOTE(noonedeadpunk): These variables are left for migration from apache to uwsgi
+# which was introduced during train release. They can be dropped afterwards.
 gnocchi_system_service_name: apache2
-
 gnocchi_apache_config:
-  - { src: "gnocchi-ports.conf.j2", dest: "/etc/apache2/ports.conf" }
-  - { src: "gnocchi-httpd.conf.j2", dest: "/etc/apache2/sites-available/gnocchi-httpd.conf" }
-
-gnocchi_apache_default_sites:
-  - "/etc/apache2/sites-enabled/000-default.conf"
-
-gnocchi_apache_site_available: "/etc/apache2/sites-available/gnocchi-httpd.conf"
-gnocchi_apache_site_enabled: "/etc/apache2/sites-enabled/gnocchi-httpd.conf"
-
-gnocchi_apache_conf: "/etc/apache2/apache2.conf"
-gnocchi_apache_security_conf: "/etc/apache2/conf-available/security.conf"
-
+  - "/etc/apache2/sites-enabled/gnocchi-httpd.conf"
+  - "/etc/apache2/sites-available/gnocchi-httpd.conf"
+gnocchi_apache_ports: "/etc/apache2/ports.conf"

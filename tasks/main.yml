@@ -109,10 +109,3 @@
     - not gnocchi_identity_only | bool
   tags:
     - gnocchi-config
-
-- import_tasks: gnocchi_apache.yml
-  when:
-    - gnocchi_use_mod_wsgi | bool
-    - not gnocchi_identity_only | bool
-  tags:
-    - gnocchi-config

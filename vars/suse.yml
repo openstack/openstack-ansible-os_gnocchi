@@ -16,9 +16,6 @@
 
 # Necessary packages (also includes packages from devel_basis patterns)
 gnocchi_distro_packages:
-  - apache2
-  - apache2-mod_wsgi
-  - apache2-utils
   - autoconf
   - automake
   - binutils
@@ -35,24 +32,9 @@ gnocchi_distro_packages:
   - systemd-devel
   - which
 
+# NOTE(noonedeadpunk): These variables are left for migration from apache to uwsgi
+# which was introduced during train release. They can be dropped afterwards.
 gnocchi_system_service_name: apache2
-
 gnocchi_apache_config:
-  - { src: "gnocchi-ports.conf.j2", dest: "/etc/apache2/conf.d/ports.conf" }
-  - { src: "gnocchi-httpd.conf.j2", dest: "/etc/apache2/conf.d/gnocchi-httpd.conf" }
-
-gnocchi_apache_default_sites:
-  - "/etc/apache2/conf.d/gitweb.conf"
-
-gnocchi_apache_conf: "/etc/apache2/httpd.conf"
-gnocchi_apache_security_conf: "{{ gnocchi_apache_conf }}"
-
-gnocchi_apache_modules:
-  - name: "authz_host"
-    state: "present"
-  - name: "access_compat"
-    state: "present"
-  - name: "version"
-    state: "present"
-  - name: "ssl"
-    state: "{{ (gnocchi_ssl | bool) | ternary('present', 'absent') }}"
+  - "/etc/apache2/conf.d/gnocchi-httpd.conf"
+gnocchi_apache_ports: "/etc/apache2/conf.d/ports.conf"

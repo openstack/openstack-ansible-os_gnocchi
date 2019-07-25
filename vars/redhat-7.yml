@@ -17,26 +17,15 @@
 gnocchi_distro_packages:
   - '@Development Tools'
   - git
-  - httpd
-  - httpd-tools
   - librados2-devel
-  - mod_wsgi
   - postgresql-devel
   - python-devel
   - systemd-devel
   - which
 
+# NOTE(noonedeadpunk): These variables are left for migration from apache to uwsgi
+# which was introduced during train release. They can be dropped afterwards.
 gnocchi_system_service_name: httpd
-
 gnocchi_apache_config:
-  - { src: "gnocchi-ports.conf.j2", dest: "/etc/httpd/conf.d/ports.conf" }
-  - { src: "gnocchi-httpd.conf.j2", dest: "/etc/httpd/conf.d/gnocchi-httpd.conf" }
-
-gnocchi_apache_default_sites:
-  - "/etc/httpd/conf.d/userdir.conf"
-  - "/etc/httpd/conf.d/welcome.conf"
-  - "/etc/httpd/conf.d/ssl.conf"
-
-gnocchi_apache_conf: "/etc/httpd/conf/httpd.conf"
-gnocchi_apache_security_conf: "{{ gnocchi_apache_conf }}"
-
+  - "/etc/httpd/conf.d/gnocchi-httpd.conf"
+gnocchi_apache_ports: "/etc/httpd/conf.d/ports.conf"

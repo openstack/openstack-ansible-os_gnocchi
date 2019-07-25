@@ -49,13 +49,38 @@
     - Restart gnocchi services
     - Restart web server
 
-- name: Drop Gnocchi WSGI Configs
-  template:
-    src: gnocchi-wsgi.py.j2
-    dest: /var/www/cgi-bin/gnocchi/gnocchi-api
-    owner: "{{ gnocchi_system_user_name }}"
-    group: "{{ gnocchi_system_group_name }}"
-    mode: "0755"
-  when: gnocchi_use_mod_wsgi | bool
+- name: Configurng uWSGI
+  block:
+    - name: Ensure uWSGI directory exists
+      file:
+        path: "/etc/uwsgi/"
+        state: directory
+        mode: "0711"
+    - name: Apply uWSGI configuration
+      config_template:
+        src: "gnocchi-uwsgi.ini.j2"
+        dest: "/etc/uwsgi/gnocchi-api.ini"
+        mode: "0644"
+        config_overrides: "{{ gnocchi_uwsgi_conf_overrides }}"
+        config_type: ini
+      notify:
+        - Restart gnocchi services
+  when: "'gnocchi_api' in group_names"
+
+# NOTE(noonedeadpunk): This task is created due to migration from apache to uwsgi
+# which was introduced during train release. It can be dropped afterwards.
+- name: Drop Apache related configs
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items: "{{ gnocchi_apache_config }}"
   notify:
-    - Restart web server
+   - Restart web server
+
+- name: Stop Apache listening on Gnocchi port
+  lineinfile:
+    path: "{{ gnocchi_apache_ports }}"
+    state: absent
+    line: "Listen {{ gnocchi_service_port }}"
+  notify:
+   - Restart web server
