@@ -28,7 +28,8 @@ filtered_gnocchi_services: |-
   {% for name, service in gnocchi_services.items() %}
   {%   if (service['group'] in group_names) and
           (('service_enabled' not in service) or
-           ('service_enabled' in service and service['service_enabled'])) %}
+           ('service_enabled' in service and service['service_enabled']))
+           and not ('wsgi_app' in service and service['wsgi_app']) %}
   {%     set _ = service.update(
            {
              'service_key': name,
@@ -45,6 +46,27 @@ filtered_gnocchi_services: |-
   {%       set _ = service.update({'execstarts': gnocchi_bin ~ '/' ~ service.service_name}) %}
   {%     endif %}
   {%     set _ = services.append(service) %}
+  {%   endif %}
+  {% endfor %}
+  {{ services }}
+
+uwsgi_gnocchi_services: |-
+  {% set services = {} %}
+  {% for name, service in gnocchi_services.items() %}
+  {%   if (service['group'] in group_names) and
+         (('service_enabled' not in service) or
+         ('service_enabled' in service and service['service_enabled']))
+         and ('wsgi_app' in service and service['wsgi_app']) %}
+  {%     set _ = service.update(
+           {
+             'wsgi_venv': gnocchi_bin | dirname,
+             'uwsgi_uid': gnocchi_system_user_name,
+             'uwsgi_guid': gnocchi_system_group_name,
+             'uwsgi_processes': gnocchi_wsgi_processes,
+             'uwsgi_threads': gnocchi_wsgi_threads,
+           }
+         ) %}
+  {%     set _ = services.update({name: service}) %}
   {%   endif %}
   {% endfor %}
   {{ services }}

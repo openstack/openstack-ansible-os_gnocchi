@@ -15,14 +15,14 @@
 
 - name: Stop services
   service:
-    name: "{{ item.value.service_name }}"
+    name: "{{ item.service_name }}"
     enabled: yes
     state: "stopped"
     daemon_reload: yes
-  with_dict: "{{ gnocchi_services }}"
+  with_items: "{{ filtered_gnocchi_services }}"
   when:
-    - "item.value.group in group_names"
-    - item.value.service_enabled | bool
+    - "item.group in group_names"
+    - item.service_enabled | bool
   register: _stop
   until: _stop is success
   retries: 5
@@ -53,14 +53,14 @@
 
 - name: Start services
   service:
-    name: "{{ item.value.service_name }}"
+    name: "{{ item.service_name }}"
     enabled: yes
     state: "started"
     daemon_reload: yes
-  with_dict: "{{ gnocchi_services }}"
+  with_items: "{{ filtered_gnocchi_services }}"
   when:
-    - "item.value.group in group_names"
-    - item.value.service_enabled | bool
+    - "item.group in group_names"
+    - item.service_enabled | bool
   register: _start
   until: _start is success
   retries: 5

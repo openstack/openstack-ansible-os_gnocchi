@@ -134,8 +134,11 @@ gnocchi_services:
     service_name: "gnocchi-api"
     service_enabled: true
     init_config_overrides: "{{ gnocchi_api_init_overrides }}"
-    execstarts: "{{ gnocchi_bin }}/uwsgi --autoload --ini /etc/uwsgi/gnocchi-api.ini"
-    execreloads: "{{ gnocchi_bin }}/uwsgi --reload /var/run/gnocchi-api/gnocchi-api.pid"
+    wsgi_app: True
+    wsgi_path: "{{ gnocchi_bin }}/gnocchi-api"
+    uwsgi_bind_address: "{{ gnocchi_service_address }}"
+    uwsgi_port: "{{ gnocchi_service_port }}"
+    uwsgi_overrides: "{{ gnocchi_uwsgi_conf_overrides }}"
   gnocchi-metricd:
     group: "gnocchi_metricd"
     service_name: "gnocchi-metricd"
@@ -153,7 +156,6 @@ gnocchi_pip_packages:
   - kazoo
   - redis
   - systemd-python
-  - uwsgi
 
 # This variable is used by the repo_build process to determine
 # which host group to check for members of before building the

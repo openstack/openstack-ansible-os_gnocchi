@@ -47,25 +47,8 @@
       content: "{{ gnocchi_policy_user_content | default(gnocchi_policy_default_content, true) }}"
   notify:
     - Restart gnocchi services
+    - Restart uwsgi services
     - Restart web server
-
-- name: Configurng uWSGI
-  block:
-    - name: Ensure uWSGI directory exists
-      file:
-        path: "/etc/uwsgi/"
-        state: directory
-        mode: "0711"
-    - name: Apply uWSGI configuration
-      config_template:
-        src: "gnocchi-uwsgi.ini.j2"
-        dest: "/etc/uwsgi/gnocchi-api.ini"
-        mode: "0644"
-        config_overrides: "{{ gnocchi_uwsgi_conf_overrides }}"
-        config_type: ini
-      notify:
-        - Restart gnocchi services
-  when: "'gnocchi_api' in group_names"
 
 # NOTE(noonedeadpunk): This task is created due to migration from apache to uwsgi
 # which was introduced during train release. It can be dropped afterwards.
