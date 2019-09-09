@@ -150,7 +150,7 @@ gnocchi_services:
 gnocchi_pip_packages:
   - cryptography
   - gnocchiclient
-  - "gnocchi[keystone,mysql,{{ gnocchi_storage_driver | default('file') }}]"
+  - "gnocchi[keystone,mysql,{{ gnocchi_storage_driver == 'ceph' | ternary('ceph_alternative', gnocchi_storage_driver) }}]"
   - osprofiler
   - python-memcached
   - kazoo
