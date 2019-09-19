@@ -104,7 +104,7 @@ gnocchi_role_name: admin
 gnocchi_service_project_name: "{{ (gnocchi_storage_driver == 'swift') | ternary('gnocchi_swift', 'service') }}"
 gnocchi_service_project_domain_id: default
 gnocchi_service_user_domain_id: default
-gnocchi_service_address: 0.0.0.0
+gnocchi_service_address: "{{ openstack_service_bind_address | default('0.0.0.0') }}"
 gnocchi_service_port: 8041
 gnocchi_service_proto: http
 gnocchi_service_registry_proto: "{{ gnocchi_service_proto }}"
