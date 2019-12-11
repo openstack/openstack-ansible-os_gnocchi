@@ -44,7 +44,7 @@ gnocchi_auth_mode: "{{ (gnocchi_keystone_auth | bool) | ternary('keystone', 'bas
 # of an OpenStack-Ansible repo_server.
 gnocchi_git_repo: https://github.com/gnocchixyz/gnocchi
 gnocchi_git_install_branch: master
-gnocchi_upper_constraints_url: "{{ requirements_git_url | default('https://git.openstack.org/cgit/openstack/requirements/plain/upper-constraints.txt?h=' ~ requirements_git_install_branch | default('master')) }}"
+gnocchi_upper_constraints_url: "{{ requirements_git_url | default('https://releases.openstack.org/constraints/upper/' ~ requirements_git_install_branch | default('master')) }}"
 gnocchi_git_constraints:
   - "git+{{ gnocchi_git_repo }}@{{ gnocchi_git_install_branch }}#egg=gnocchi"
   - "--constraint {{ gnocchi_upper_constraints_url }}"
