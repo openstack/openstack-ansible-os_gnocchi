@@ -154,10 +154,14 @@ gnocchi_pip_packages:
   - gnocchiclient
   - "gnocchi[keystone,mysql,{{ gnocchi_storage_driver == 'ceph' | ternary('ceph_alternative', gnocchi_storage_driver) }}]"
   - osprofiler
+  - pymemcache
   - python-memcached
   - kazoo
   - redis
   - systemd-python
+
+# Memcached override
+gnocchi_memcached_servers: "{{ memcached_servers }}"
 
 # This variable is used by the repo_build process to determine
 # which host group to check for members of before building the
