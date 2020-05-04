@@ -14,14 +14,19 @@
 # limitations under the License.
 
 - name: Register rados module path
-  command: python -c 'import rados; print rados.__file__'
+  command: "{{ gnocchi_venv_python_executable }} -c 'import rados; print(rados.__file__)'"
   changed_when: false
   register: rados_module_path
+
+- name: Register gnocchi lib path
+  command: "{{ gnocchi_bin }}/python -c 'import gnocchi; print(gnocchi.__file__)'"
+  changed_when: false
+  register: gnocchi_module_path
 
 - name: Link rados module into the venv
   file:
     src: "{{ rados_module_path.stdout }}"
-    dest: "{{ gnocchi_bin | dirname }}/lib/python2.7/site-packages/{{ rados_module_path.stdout | basename }}"
+    dest: "{{ gnocchi_module_path.stdout | dirname | dirname }}/{{ rados_module_path.stdout | basename }}"
     state: link
     force: "yes"
   notify:
