@@ -163,12 +163,6 @@ gnocchi_pip_packages:
 # Memcached override
 gnocchi_memcached_servers: "{{ memcached_servers }}"
 
-# This variable is used by the repo_build process to determine
-# which host group to check for members of before building the
-# pip packages required by this role. The value is picked up
-# by the py_pkgs lookup.
-gnocchi_role_project_group: gnocchi_all
-
 #: Tunable file-based overrides
 # The contents of these files, if they exist, are read from the
 # specified path on the deployment host, interpreted by the
