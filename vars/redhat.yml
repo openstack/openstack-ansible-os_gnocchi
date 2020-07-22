@@ -19,7 +19,7 @@ gnocchi_distro_packages:
   - git
   - librados2-devel
   - postgresql-devel
-  - python-devel
+  - "{{ ansible_distribution_major_version is version('8', '<') | ternary('python-devel', 'python36-devel') }}"
   - systemd-devel
   - which
 
