@@ -131,6 +131,9 @@
   tags:
     - gnocchi-install
 
+- name: Flush handlers
+  meta: flush_handlers
+
 # N.B. Must occur after identity setup, as this may perform calls to Swift.
 #      Similarly, when using Ceph, must occur after Ceph setup.
 - import_tasks: gnocchi_db_sync.yml
