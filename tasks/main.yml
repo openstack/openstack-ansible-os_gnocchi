@@ -27,7 +27,7 @@
 
 - import_tasks: db_setup.yml
   when:
-    - inventory_hostname == groups['gnocchi_all'][0]
+    - inventory_hostname == (groups['gnocchi_all'] | intersect(ansible_play_hosts))[0]
   vars:
     _oslodb_setup_host: "{{ gnocchi_db_setup_host }}"
     _oslodb_databases:
@@ -115,19 +115,20 @@
         type: "{{ gnocchi_service_type }}"
         description: "{{ gnocchi_service_description }}"
   when:
-    - inventory_hostname == groups['gnocchi_all'][0]
+    - inventory_hostname == (groups['gnocchi_all'] | intersect(ansible_play_hosts))[0]
     - not gnocchi_identity_only | bool
   tags:
     - gnocchi-config
 
 - import_tasks: gnocchi_identity_setup.yml
-  when: inventory_hostname == groups['gnocchi_all'][0]
+  when: inventory_hostname == (groups['gnocchi_all'] | intersect(ansible_play_hosts))[0]
   tags:
     - gnocchi-config
 
 - import_tasks: gnocchi_ceph_python_libs.yml
   when:
     - gnocchi_storage_driver == 'ceph'
+    - not gnocchi_identity_only | bool
   tags:
     - gnocchi-install
 
@@ -138,7 +139,7 @@
 #      Similarly, when using Ceph, must occur after Ceph setup.
 - import_tasks: gnocchi_db_sync.yml
   when:
-    - inventory_hostname == groups['gnocchi_all'][0]
+    - inventory_hostname == (groups['gnocchi_all'] | intersect(ansible_play_hosts))[0]
     - not gnocchi_identity_only | bool
   tags:
     - gnocchi-config
