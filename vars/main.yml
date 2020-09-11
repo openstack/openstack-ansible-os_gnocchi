@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+_gnocchi_is_first_play_host: "{{ (gnocchi_services['gnocchi-api']['group'] in group_names and inventory_hostname == (groups[gnocchi_services['gnocchi-api']['group']] | intersect(ansible_play_hosts)) | first) | bool }}"
+
 # These vars find a file on the deployment node, if it exists - otherwise the result is empty.
 gnocchi_api_paste_user_content: "{{ lookup('pipe', 'cat ' ~ gnocchi_api_paste_default_file_path ~ ' 2>/dev/null || true') }}"
 gnocchi_policy_user_content: "{{ lookup('pipe', 'cat ' ~ gnocchi_policy_default_file_path ~ ' 2>/dev/null || true') }}"
