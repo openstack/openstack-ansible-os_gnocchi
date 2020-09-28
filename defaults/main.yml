@@ -70,6 +70,8 @@ gnocchi_venv_pkgs: "/openstack/venvs/gnocchi-{{ gnocchi_venv_tag }}/lib/python2.
 gnocchi_etc_dir: "{{ gnocchi_bin | dirname }}/etc/gnocchi"
 
 #: Index Database info
+gnocchi_db_setup_host: "{{ openstack_db_setup_host | default('localhost') }}"
+gnocchi_db_setup_python_interpreter: "{{ openstack_db_setup_python_interpreter | default((gnocchi_db_setup_host == 'localhost') | ternary(ansible_playbook_python, ansible_python['executable'])) }}"
 gnocchi_db_setup_host: "{{ ('galera_all' in groups) | ternary(groups['galera_all'][0], 'localhost') }}"
 gnocchi_galera_address: "{{ galera_address | default('127.0.0.1') }}"
 gnocchi_galera_database: gnocchi
@@ -77,6 +79,7 @@ gnocchi_galera_user: gnocchi
 gnocchi_db_sync_options: ""
 gnocchi_galera_use_ssl: "{{ galera_use_ssl | default(False) }}"
 gnocchi_galera_ssl_ca_cert: "{{ galera_ssl_ca_cert | default('/etc/ssl/certs/galera-ca.pem') }}"
+gnocchi_galera_port: 3306
 
 #: Storage info
 gnocchi_storage_driver: file
@@ -86,7 +89,7 @@ gnocchi_coordination_url: "mysql://{{ gnocchi_galera_user }}:{{ gnocchi_containe
 gnocchi_ceph_pool: "metrics"
 gnocchi_ceph_username: "gnocchi"
 
-#: System info
+#a System info
 gnocchi_system_user_name: gnocchi
 gnocchi_system_group_name: gnocchi
 gnocchi_system_shell: /bin/false

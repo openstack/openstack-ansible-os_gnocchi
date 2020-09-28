@@ -30,6 +30,9 @@
     - _gnocchi_is_first_play_host
   vars:
     _oslodb_setup_host: "{{ gnocchi_db_setup_host }}"
+    _oslodb_ansible_python_interpreter: "{{ gnocchi_db_setup_python_interpreter }}"
+    _oslodb_setup_endpoint: "{{ gnocchi_galera_address }}"
+    _oslodb_setup_port: "{{ gnocchi_galera_port }}"
     _oslodb_databases:
       - name: "{{ gnocchi_galera_database }}"
         users:
