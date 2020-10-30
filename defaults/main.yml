@@ -126,7 +126,7 @@ gnocchi_service_adminurl: "{{ gnocchi_service_adminuri }}"
 ## uWSGI setup
 gnocchi_wsgi_threads: 1
 gnocchi_wsgi_processes_max: 16
-gnocchi_wsgi_processes: "{{ [[ansible_processor_vcpus|default(1), 1] | max * 2, gnocchi_wsgi_processes_max] | min }}"
+gnocchi_wsgi_processes: "{{ [[(ansible_processor_vcpus//ansible_processor_threads_per_core)|default(1), 1] | max * 2, gnocchi_wsgi_processes_max] | min }}"
 
 gnocchi_uwsgi_conf_overrides: {}
 gnocchi_api_init_overrides: {}
