@@ -72,7 +72,6 @@ gnocchi_etc_dir: "{{ gnocchi_bin | dirname }}/etc/gnocchi"
 #: Index Database info
 gnocchi_db_setup_host: "{{ openstack_db_setup_host | default('localhost') }}"
 gnocchi_db_setup_python_interpreter: "{{ openstack_db_setup_python_interpreter | default((gnocchi_db_setup_host == 'localhost') | ternary(ansible_playbook_python, ansible_python['executable'])) }}"
-gnocchi_db_setup_host: "{{ ('galera_all' in groups) | ternary(groups['galera_all'][0], 'localhost') }}"
 gnocchi_galera_address: "{{ galera_address | default('127.0.0.1') }}"
 gnocchi_galera_database: gnocchi
 gnocchi_galera_user: gnocchi
