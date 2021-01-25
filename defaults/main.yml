@@ -43,7 +43,6 @@ gnocchi_git_repo: https://github.com/gnocchixyz/gnocchi
 gnocchi_git_install_branch: master
 gnocchi_upper_constraints_url: "{{ requirements_git_url | default('https://releases.openstack.org/constraints/upper/' ~ requirements_git_install_branch | default('master')) }}"
 gnocchi_git_constraints:
-  - "git+{{ gnocchi_git_repo }}@{{ gnocchi_git_install_branch }}#egg=gnocchi"
   - "--constraint {{ gnocchi_upper_constraints_url }}"
 
 gnocchi_pip_install_args: "{{ pip_install_options | default('') }}"
@@ -152,13 +151,18 @@ gnocchi_services:
 #: Common pip packages
 gnocchi_pip_packages:
   - cryptography
+  - "git+{{ gnocchi_git_repo }}@{{ gnocchi_git_install_branch }}#egg=gnocchi"
   - gnocchiclient
   - "gnocchi[keystone,mysql,{{ gnocchi_storage_driver == 'ceph' | ternary('ceph_alternative', gnocchi_storage_driver) }}]"
+  - keystonemiddleware
+  - oslo.db
   - osprofiler
   - pymemcache
+  - PyMySQL
   - python-memcached
   - kazoo
   - redis
+  - SQLAlchemy-Utils
   - systemd-python
 
 # Memcached override
