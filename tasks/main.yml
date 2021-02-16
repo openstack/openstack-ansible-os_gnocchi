@@ -104,6 +104,13 @@
     _service_setup_host_python_interpreter: "{{ gnocchi_service_setup_host_python_interpreter }}"
     _service_region: "{{ gnocchi_service_region }}"
     _service_in_ldap: "{{ gnocchi_service_in_ldap }}"
+    _service_project_name: "{{ gnocchi_service_project_name }}"
+    _project_name: "{{ gnocchi_service_project_name }}"
+    _project_domain: "{{ gnocchi_service_project_domain_id }}"
+    _service_users:
+      - name: "{{ gnocchi_service_user_name }}"
+        password: "{{ gnocchi_service_password }}"
+        role: "{{ gnocchi_role_name }}"
     _service_endpoints:
       - service: "{{ gnocchi_service_name }}"
         interface: "public"
@@ -121,11 +128,6 @@
   when:
     - _gnocchi_is_first_play_host
     - not gnocchi_identity_only | bool
-  tags:
-    - gnocchi-config
-
-- import_tasks: gnocchi_identity_setup.yml
-  when: _gnocchi_is_first_play_host
   tags:
     - gnocchi-config
 
