@@ -18,6 +18,5 @@
       - check-requirements
       - openstack-ansible-linters
       - openstack-ansible-deploy-aio_metal-jobs
-      - openstack-ansible-deploy-aio_distro_metal-jobs
       - publish-openstack-docs-pti
       - build-release-notes-jobs-python3
