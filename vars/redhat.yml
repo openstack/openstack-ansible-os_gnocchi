@@ -14,7 +14,7 @@
 # limitations under the License.
 
 #: Necessary packages
-gnocchi_distro_packages:
+gnocchi_devel_distro_packages:
   - '@Development Tools'
   - git
   - librados2-devel
@@ -22,6 +22,9 @@ gnocchi_distro_packages:
   - "{{ ansible_distribution_major_version is version('8', '<') | ternary('python-devel', 'python36-devel') }}"
   - systemd-devel
   - which
+
+gnocchi_distro_packages:
+  - libxml2
 
 # NOTE(noonedeadpunk): These variables are left for migration from apache to uwsgi
 # which was introduced during train release. They can be dropped afterwards.
