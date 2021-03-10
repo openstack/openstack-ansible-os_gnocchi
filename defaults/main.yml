@@ -24,7 +24,7 @@ gnocchi_service_setup_host: "{{ openstack_service_setup_host | default('localhos
 gnocchi_service_setup_host_python_interpreter: "{{ openstack_service_setup_host_python_interpreter | default((gnocchi_service_setup_host == 'localhost') | ternary(ansible_playbook_python, ansible_python['executable'])) }}"
 
 #venv python version
-gnocchi_venv_python_executable: "{{ openstack_venv_python_executable | default('python2') }}"
+gnocchi_venv_python_executable: "{{ openstack_venv_python_executable | default('python3') }}"
 
 #: Enable for debug logging level
 debug: false
