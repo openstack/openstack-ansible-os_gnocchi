@@ -21,7 +21,7 @@ gnocchi_identity_only: False
 # for the service setup. The host must already have
 # clouds.yaml properly configured.
 gnocchi_service_setup_host: "{{ openstack_service_setup_host | default('localhost') }}"
-gnocchi_service_setup_host_python_interpreter: "{{ openstack_service_setup_host_python_interpreter | default((gnocchi_service_setup_host == 'localhost') | ternary(ansible_playbook_python, ansible_python['executable'])) }}"
+gnocchi_service_setup_host_python_interpreter: "{{ openstack_service_setup_host_python_interpreter | default((gnocchi_service_setup_host == 'localhost') | ternary(ansible_playbook_python, ansible_facts['python']['executable'])) }}"
 
 #venv python version
 gnocchi_venv_python_executable: "{{ openstack_venv_python_executable | default('python3') }}"
@@ -67,7 +67,7 @@ gnocchi_etc_dir: "{{ gnocchi_bin | dirname }}/etc/gnocchi"
 
 #: Index Database info
 gnocchi_db_setup_host: "{{ openstack_db_setup_host | default('localhost') }}"
-gnocchi_db_setup_python_interpreter: "{{ openstack_db_setup_python_interpreter | default((gnocchi_db_setup_host == 'localhost') | ternary(ansible_playbook_python, ansible_python['executable'])) }}"
+gnocchi_db_setup_python_interpreter: "{{ openstack_db_setup_python_interpreter | default((gnocchi_db_setup_host == 'localhost') | ternary(ansible_playbook_python, ansible_facts['python']['executable'])) }}"
 gnocchi_galera_address: "{{ galera_address | default('127.0.0.1') }}"
 gnocchi_galera_database: gnocchi
 gnocchi_galera_user: gnocchi
@@ -123,7 +123,7 @@ gnocchi_service_in_ldap: "{{ service_ldap_backend_enabled | default(False) }}"
 ## uWSGI setup
 gnocchi_wsgi_threads: 1
 gnocchi_wsgi_processes_max: 16
-gnocchi_wsgi_processes: "{{ [[(ansible_processor_vcpus//ansible_processor_threads_per_core)|default(1), 1] | max * 2, gnocchi_wsgi_processes_max] | min }}"
+gnocchi_wsgi_processes: "{{ [[(ansible_facts['processor_vcpus']//ansible_facts['processor_threads_per_core'])|default(1), 1] | max * 2, gnocchi_wsgi_processes_max] | min }}"
 
 gnocchi_uwsgi_conf_overrides: {}
 gnocchi_api_init_overrides: {}
