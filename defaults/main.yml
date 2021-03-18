@@ -148,21 +148,20 @@ gnocchi_services:
     init_config_overrides: "{{ gnocchi_metricd_init_overrides }}"
     execstarts: "{{ gnocchi_bin }}/gnocchi-metricd"
 
+gnocchi_pip_package_extras:
+  - "{{ (gnocchi_auth_mode == 'keystone') | ternary('keystone', '') }}"
+  - mysql
+  - "{{ gnocchi_storage_driver_pip_extra }}"
+
 #: Common pip packages
 gnocchi_pip_packages:
   - cryptography
-  - "git+{{ gnocchi_git_repo }}@{{ gnocchi_git_install_branch }}#egg=gnocchi"
+  - "git+{{ gnocchi_git_repo }}@{{ gnocchi_git_install_branch }}#egg=gnocchi[{{ gnocchi_pip_package_extras | reject('equalto', '') | join(',') }}]"
   - gnocchiclient
-  - "gnocchi[keystone,mysql,{{ gnocchi_storage_driver == 'ceph' | ternary('ceph_alternative', gnocchi_storage_driver) }}]"
-  - keystonemiddleware
-  - oslo.db
   - osprofiler
   - pymemcache
-  - PyMySQL
   - python-memcached
   - kazoo
-  - redis
-  - SQLAlchemy-Utils
   - systemd-python
 
 # Memcached override
