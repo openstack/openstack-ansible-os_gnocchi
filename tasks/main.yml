@@ -132,12 +132,21 @@
   tags:
     - gnocchi-config
 
-- import_tasks: gnocchi_ceph_python_libs.yml
+- name: Include ceph_client role
+  include_role:
+    name: "ceph_client"
+    apply:
+      tags:
+        - ceph
+        - gnocchi-install
+  vars:
+    openstack_service_system_user: "{{ gnocchi_system_user_name }}"
+    openstack_service_venv_bin: "{{ gnocchi_bin }}"
   when:
     - gnocchi_storage_driver == 'ceph'
     - not gnocchi_identity_only | bool
   tags:
-    - gnocchi-install
+    - always
 
 - name: Flush handlers
   meta: flush_handlers
