@@ -101,7 +101,7 @@ gnocchi_keystone_auth_type: password
 gnocchi_service_region: "{{ service_region | default('RegionOne') }}"
 gnocchi_service_user_name: gnocchi
 gnocchi_role_name: admin
-gnocchi_service_project_name: "{{ (gnocchi_storage_driver == 'swift') | ternary('gnocchi_swift', 'service') }}"
+gnocchi_service_project_name: service
 gnocchi_service_project_domain_id: default
 gnocchi_service_user_domain_id: default
 gnocchi_service_address: "{{ openstack_service_bind_address | default('0.0.0.0') }}"
