@@ -18,7 +18,7 @@ secure_proxy_ssl_header = {{ gnocchi_secure_proxy_ssl_header }}
 {% endif %}
 
 [indexer]
-url = mysql+pymysql://{{ gnocchi_galera_user }}:{{ gnocchi_container_mysql_password }}@{{ gnocchi_galera_address }}/{{ gnocchi_galera_database }}?charset=utf8{% if gnocchi_galera_use_ssl | bool %}&ssl_ca={{ gnocchi_galera_ssl_ca_cert }}{% endif %}
+url = mysql+pymysql://{{ gnocchi_galera_user }}:{{ gnocchi_container_mysql_password }}@{{ gnocchi_galera_address }}/{{ gnocchi_galera_database }}?charset=utf8{% if gnocchi_galera_use_ssl | bool %}&ssl_verify_cert=true{% if gnocchi_galera_ssl_ca_cert | length > 0 %}&ssl_ca={{ gnocchi_galera_ssl_ca_cert }}{% endif %}{% endif %}
 
 {% if gnocchi_auth_mode == "keystone" %}
 [keystone_authtoken]
