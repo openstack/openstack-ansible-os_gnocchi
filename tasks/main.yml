@@ -155,7 +155,7 @@
 #      Similarly, when using Ceph, must occur after Ceph setup.
 - import_tasks: gnocchi_db_sync.yml
   when:
-    - _gnocchi_is_first_play_host
+    - (gnocchi_storage_driver == 'file') | ternary(True, _gnocchi_is_first_play_host)
     - not gnocchi_identity_only | bool
   tags:
     - gnocchi-config
