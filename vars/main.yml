@@ -35,6 +35,12 @@ gnocchi_storage_driver_pip_extra: |-
   {% endif %}
   {{ extra_package | default('') }}
 
+gnocchi_incoming_driver_pip_extra: |-
+  {% if gnocchi_storage_driver != gnocchi_incoming_driver and gnocchi_incoming_driver not in ['ceph', 'file'] %}
+  {%   set extra_package = gnocchi_storage_driver %}
+  {% endif %}
+  {{ extra_package | default('') }}
+
 filtered_gnocchi_services: |-
   {% set services = [] %}
   {% for name, service in gnocchi_services.items() %}
