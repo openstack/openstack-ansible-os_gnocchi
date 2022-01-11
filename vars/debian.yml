@@ -22,7 +22,6 @@ gnocchi_devel_distro_packages:
   - libpq-dev
   - librados-dev
   - libsystemd-dev
-  - python3-dev
 
 gnocchi_distro_packages:
   - libxml2

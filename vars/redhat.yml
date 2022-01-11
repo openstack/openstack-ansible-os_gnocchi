@@ -19,7 +19,6 @@ gnocchi_devel_distro_packages:
   - git
   - librados2-devel
   - postgresql-devel
-  - python36-devel
   - systemd-devel
   - which
 
