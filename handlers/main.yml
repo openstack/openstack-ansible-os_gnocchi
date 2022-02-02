@@ -68,13 +68,3 @@
   listen:
     - "Restart gnocchi services"
     - "venv changed"
-
-# NOTE(noonedeadpunk): This task is created due to migration from apache to uwsgi
-# which was introduced during train release. It can be dropped afterwards.
-- name: Restart web server
-  service:
-    name: "{{ gnocchi_system_service_name }}"
-    enabled: yes
-    state: "restarted"
-    daemon_reload: yes
-  failed_when: false
