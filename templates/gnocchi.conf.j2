@@ -48,7 +48,7 @@ driver = {{ gnocchi_storage_driver }}
 ############
 ## File Storage
 ############
-file_basepath = /var/lib/gnocchi
+file_basepath = {{ gnocchi_storage_file_basepath }}
 file_basepath_tmp = ${file_basepath}/tmp
 {% endif %}
 {% if gnocchi_storage_driver == 'swift' %}
@@ -64,7 +64,7 @@ swift_region_name: "{{ gnocchi_service_region }}"
 swift_project_domain_id: "{{ gnocchi_service_project_domain_id }}"
 swift_user_domain_id: "{{ gnocchi_service_user_domain_id }}"
 swift_project_name: "{{ gnocchi_service_project_name }}"
-swift_container_prefix: gnocchi
+swift_container_prefix: "{{ gnocchi_storage_swift_container_prefix }}"
 {% endif %}
 {% if gnocchi_storage_driver == 'ceph' %}
 ############
@@ -75,6 +75,43 @@ ceph_pool = {{ gnocchi_ceph_pool }}
 
 # Ceph username (ie: admin without "client." prefix).
 ceph_username = {{ gnocchi_ceph_username }}
+{% endif %}
+
+{% if gnocchi_storage_driver != gnocchi_incoming_driver %}
+[incoming]
+driver = {{ gnocchi_incoming_driver }}
+{%   if gnocchi_incoming_driver == 'file' %}
+################
+## File Incoming
+################
+file_basepath = {{ gnocchi_incoming_file_basepath }}
+file_basepath_tmp = ${file_basepath}/tmp
+{%   endif %}
+{%   if gnocchi_incoming_driver == 'swift' %}
+#################
+## Swift Incoming
+#################
+swift_auth_version: 3
+swift_authurl: "{{ keystone_service_internalurl }}"
+swift_endpoint_type: internalURL
+swift_user: "{{ gnocchi_service_user_name }}"
+swift_key: "{{ gnocchi_service_password }}"
+swift_region_name: "{{ gnocchi_service_region }}"
+swift_project_domain_id: "{{ gnocchi_service_project_domain_id }}"
+swift_user_domain_id: "{{ gnocchi_service_user_domain_id }}"
+swift_project_name: "{{ gnocchi_service_project_name }}"
+swift_container_prefix: "{{ gnocchi_incoming_swift_container_prefix }}
+{%   endif %}
+{%   if gnocchi_incoming_driver == 'ceph' %}
+################
+## Ceph Incoming
+################
+# Ceph pool name to use. (string value)
+ceph_pool = {{ gnocchi_ceph_incoming_pool }}
+
+# Ceph username (ie: admin without "client." prefix).
+ceph_username = {{ gnocchi_ceph_incoming_username }}
+{%   endif %}
 {% endif %}
 
 [metricd]

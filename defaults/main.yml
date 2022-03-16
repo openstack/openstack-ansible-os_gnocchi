@@ -78,11 +78,23 @@ gnocchi_galera_port: "{{ galera_port | default('3306') }}"
 
 #: Storage info
 gnocchi_storage_driver: file
+gnocchi_storage_file_basepath: "{{ gnocchi_system_user_home }}"
+gnocchi_storage_swift_container_prefix: "gnocchi"
+
 gnocchi_coordination_url: "mysql://{{ gnocchi_galera_user }}:{{ gnocchi_container_mysql_password }}@{{ gnocchi_galera_address }}/{{ gnocchi_galera_database }}?charset=utf8&timeout=5{% if gnocchi_galera_use_ssl | bool %}&ssl_ca={{ gnocchi_galera_ssl_ca_cert }}{% endif %}"
+
+# Incoming configuration
+# Incoming configuration is not applied if driver is the same as storage one
+gnocchi_incoming_driver: "{{ gnocchi_storage_driver }}"
+gnocchi_incoming_file_basepath: "{{ gnocchi_storage_file_basepath }}"
+gnocchi_incoming_swift_container_prefix: "{{ gnocchi_storage_swift_container_prefix }}"
 
 #: Default Ceph parameters
 gnocchi_ceph_pool: "metrics"
 gnocchi_ceph_username: "gnocchi"
+# If gnocchi_storage_driver == gnocchi_incoming_driver this would have no effect
+gnocchi_ceph_incoming_pool: "{{ gnocchi_ceph_pool }}"
+gnocchi_ceph_incoming_username: "{{ gnocchi_ceph_username }}"
 
 #a System info
 gnocchi_system_user_name: gnocchi
@@ -152,11 +164,12 @@ gnocchi_pip_package_extras:
   - "{{ (gnocchi_auth_mode == 'keystone') | ternary('keystone', '') }}"
   - mysql
   - "{{ gnocchi_storage_driver_pip_extra }}"
+  - "{{ gnocchi_incoming_driver_pip_extra }}"
 
 #: Common pip packages
 gnocchi_pip_packages:
   - cryptography
-  - "git+{{ gnocchi_git_repo }}@{{ gnocchi_git_install_branch }}#egg=gnocchi[{{ gnocchi_pip_package_extras | reject('equalto', '') | join(',') }}]"
+  - "git+{{ gnocchi_git_repo }}@{{ gnocchi_git_install_branch }}#egg=gnocchi[{{ gnocchi_pip_package_extras | unique | reject('equalto', '') | join(',') }}]"
   - gnocchiclient
   - osprofiler
   - pymemcache
