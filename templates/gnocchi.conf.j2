@@ -76,6 +76,9 @@ ceph_pool = {{ gnocchi_ceph_pool }}
 # Ceph username (ie: admin without "client." prefix).
 ceph_username = {{ gnocchi_ceph_username }}
 {% endif %}
+{% if gnocchi_storage_driver == 'redis' %}
+redis_url = {{ gnocchi_storage_redis_url }}
+{% endif %}
 
 {% if gnocchi_storage_driver != gnocchi_incoming_driver %}
 [incoming]
@@ -112,6 +115,9 @@ ceph_pool = {{ gnocchi_ceph_incoming_pool }}
 # Ceph username (ie: admin without "client." prefix).
 ceph_username = {{ gnocchi_ceph_incoming_username }}
 {%   endif %}
+{%    if gnocchi_incoming_driver == 'redis' %}
+redis_url = {{ gnocchi_incoming_redis_url }}
+{%    endif %}
 {% endif %}
 
 [metricd]

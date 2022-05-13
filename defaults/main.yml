@@ -80,6 +80,7 @@ gnocchi_galera_port: "{{ galera_port | default('3306') }}"
 gnocchi_storage_driver: file
 gnocchi_storage_file_basepath: "{{ gnocchi_system_user_home }}"
 gnocchi_storage_swift_container_prefix: "gnocchi"
+gnocchi_storage_redis_url: "redis://localhost:6379/"
 
 gnocchi_coordination_url: "mysql://{{ gnocchi_galera_user }}:{{ gnocchi_container_mysql_password }}@{{ gnocchi_galera_address }}/{{ gnocchi_galera_database }}?charset=utf8&timeout=5{% if gnocchi_galera_use_ssl | bool %}&ssl_ca={{ gnocchi_galera_ssl_ca_cert }}{% endif %}"
 
@@ -88,6 +89,7 @@ gnocchi_coordination_url: "mysql://{{ gnocchi_galera_user }}:{{ gnocchi_containe
 gnocchi_incoming_driver: "{{ gnocchi_storage_driver }}"
 gnocchi_incoming_file_basepath: "{{ gnocchi_storage_file_basepath }}"
 gnocchi_incoming_swift_container_prefix: "{{ gnocchi_storage_swift_container_prefix }}"
+gnocchi_incoming_redis_url: "{{ gnocchi_storage_redis_url }}"
 
 #: Default Ceph parameters
 gnocchi_ceph_pool: "metrics"
