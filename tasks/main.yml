@@ -124,7 +124,7 @@
     _service_users:
       - name: "{{ gnocchi_service_user_name }}"
         password: "{{ gnocchi_service_password }}"
-        role: "{{ gnocchi_role_name }}"
+        role: "{{ gnocchi_service_role_names }}"
     _service_endpoints:
       - service: "{{ gnocchi_service_name }}"
         interface: "public"

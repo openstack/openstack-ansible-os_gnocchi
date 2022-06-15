@@ -33,6 +33,10 @@ project_name = {{ gnocchi_service_project_name }}
 username = {{ gnocchi_service_user_name }}
 password = {{ gnocchi_service_password }}
 
+service_token_roles_required = {{ gnocchi_service_token_roles_required | bool }}
+service_token_roles = {{ gnocchi_service_token_roles | join(',') }}
+service_type = {{ gnocchi_service_type }}
+
 memcached_servers = {{ gnocchi_memcached_servers }}
 token_cache_time = 300
 

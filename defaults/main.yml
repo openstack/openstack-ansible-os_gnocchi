@@ -114,7 +114,12 @@ gnocchi_keystone_auth_plugin: "{{ gnocchi_keystone_auth_type }}"
 gnocchi_keystone_auth_type: password
 gnocchi_service_region: "{{ service_region | default('RegionOne') }}"
 gnocchi_service_user_name: gnocchi
-gnocchi_role_name: admin
+gnocchi_service_role_names:
+  - admin
+  - service
+gnocchi_service_token_roles:
+  - service
+gnocchi_service_token_roles_required: "{{ openstack_service_token_roles_required | default(True) }}"
 gnocchi_service_project_name: service
 gnocchi_service_project_domain_id: default
 gnocchi_service_user_domain_id: default
