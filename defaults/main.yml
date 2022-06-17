@@ -139,6 +139,9 @@ gnocchi_wsgi_threads: 1
 gnocchi_wsgi_processes_max: 16
 gnocchi_wsgi_processes: "{{ [[(ansible_facts['processor_vcpus']//ansible_facts['processor_threads_per_core'])|default(1), 1] | max * 2, gnocchi_wsgi_processes_max] | min }}"
 
+gnocchi_metricd_workers_max: 16
+gnocchi_metricd_workers: "{{ [[(ansible_facts['processor_vcpus']//ansible_facts['processor_threads_per_core'])|default(1), 1] | max * 2, gnocchi_metricd_workers_max] | min }}"
+
 gnocchi_uwsgi_conf_overrides: {}
 gnocchi_api_init_overrides: {}
 gnocchi_metricd_init_overrides: {}
