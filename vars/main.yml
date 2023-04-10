@@ -51,8 +51,8 @@ filtered_gnocchi_services: |-
   {%     set _ = service.update(
            {
              'service_key': name,
-             'enabled': 'yes',
-             'state': 'started',
+             'enabled': service['enabled'] | default(True),
+             'state': service['state'] | default('started'),
              'config_overrides': service.init_config_overrides
            }
          )

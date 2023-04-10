@@ -30,6 +30,7 @@
   listen:
     - "Restart gnocchi services"
     - "venv changed"
+    - "systemd service changed"
 
 # Note (odyssey4me):
 # The policy.json file is currently read continually by the services
@@ -68,3 +69,4 @@
   listen:
     - "Restart gnocchi services"
     - "venv changed"
+    - "systemd service changed"
