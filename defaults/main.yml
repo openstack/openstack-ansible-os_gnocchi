@@ -143,6 +143,9 @@ gnocchi_service_in_ldap: "{{ service_ldap_backend_enabled | default(False) }}"
 gnocchi_wsgi_threads: 1
 gnocchi_wsgi_processes_max: 16
 gnocchi_wsgi_processes: "{{ [[(ansible_facts['processor_vcpus']//ansible_facts['processor_threads_per_core'])|default(1), 1] | max * 2, gnocchi_wsgi_processes_max] | min }}"
+gnocchi_uwsgi_tls:
+  crt: "{{ gnocchi_ssl_cert }}"
+  key: "{{ gnocchi_ssl_key }}"
 
 gnocchi_metricd_workers_max: 16
 gnocchi_metricd_workers: "{{ [[(ansible_facts['processor_vcpus']//ansible_facts['processor_threads_per_core'])|default(1), 1] | max * 2, gnocchi_metricd_workers_max] | min }}"
@@ -163,6 +166,7 @@ gnocchi_services:
     uwsgi_bind_address: "{{ gnocchi_service_address }}"
     uwsgi_port: "{{ gnocchi_service_port }}"
     uwsgi_overrides: "{{ gnocchi_uwsgi_conf_overrides }}"
+    uwsgi_tls: "{{ gnocchi_backend_ssl | ternary(gnocchi_uwsgi_tls, {}) }}"
   gnocchi-metricd:
     group: "gnocchi_metricd"
     service_name: "gnocchi-metricd"
@@ -211,3 +215,51 @@ gnocchi_policy_git_file_path: "gnocchi/rest/policy.json"
 gnocchi_api_paste_ini_overrides: {}
 gnocchi_conf_overrides: {}
 gnocchi_policy_overrides: {}
+
+###
+### Backend TLS
+###
+
+# Define if communication between haproxy and service backends should be
+# encrypted with TLS.
+gnocchi_backend_ssl: "{{ openstack_service_backend_ssl | default(False) }}"
+
+# Storage location for SSL certificate authority
+gnocchi_pki_dir: "{{ openstack_pki_dir | default('/etc/openstack_deploy/pki') }}"
+
+# Delegated host for operating the certificate authority
+gnocchi_pki_setup_host: "{{ openstack_pki_setup_host | default('localhost') }}"
+
+# gnocchi server certificate
+gnocchi_pki_keys_path: "{{ gnocchi_pki_dir ~ '/certs/private/' }}"
+gnocchi_pki_certs_path: "{{ gnocchi_pki_dir ~ '/certs/certs/' }}"
+gnocchi_pki_intermediate_cert_name: "{{ openstack_pki_service_intermediate_cert_name | default('ExampleCorpIntermediate') }}"
+gnocchi_pki_regen_cert: ''
+gnocchi_pki_san: "{{ openstack_pki_san | default('DNS:' ~ ansible_facts['hostname'] ~ ',IP:' ~ management_address) }}"
+gnocchi_pki_certificates:
+  - name: "gnocchi_{{ ansible_facts['hostname'] }}"
+    provider: ownca
+    cn: "{{ ansible_facts['hostname'] }}"
+    san: "{{ gnocchi_pki_san }}"
+    signed_by: "{{ gnocchi_pki_intermediate_cert_name }}"
+
+# gnocchi destination files for SSL certificates
+gnocchi_ssl_cert: /etc/gnocchi/gnocchi.pem
+gnocchi_ssl_key: /etc/gnocchi/gnocchi.key
+
+# Installation details for SSL certificates
+gnocchi_pki_install_certificates:
+  - src: "{{ gnocchi_user_ssl_cert | default(gnocchi_pki_certs_path ~ 'gnocchi_' ~ ansible_facts['hostname'] ~ '-chain.crt') }}"
+    dest: "{{ gnocchi_ssl_cert }}"
+    owner: "{{ gnocchi_system_user_name }}"
+    group: "{{ gnocchi_system_user_name }}"
+    mode: "0644"
+  - src: "{{ gnocchi_user_ssl_key | default(gnocchi_pki_keys_path ~ 'gnocchi_' ~ ansible_facts['hostname'] ~ '.key.pem') }}"
+    dest: "{{ gnocchi_ssl_key }}"
+    owner: "{{ gnocchi_system_user_name }}"
+    group: "{{ gnocchi_system_user_name }}"
+    mode: "0600"
+
+# Define user-provided SSL certificates
+#gnocchi_user_ssl_cert: <path to cert on ansible deployment host>
+#gnocchi_user_ssl_key: <path to cert on ansible deployment host>

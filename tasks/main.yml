@@ -53,6 +53,26 @@
   tags:
     - gnocchi-install
 
+- name: Create and install SSL certificates
+  include_role:
+    name: pki
+    tasks_from: main_certs.yml
+    apply:
+      tags:
+        - gnocchi-config
+        - pki
+  vars:
+    pki_setup_host: "{{ gnocchi_pki_setup_host }}"
+    pki_dir: "{{ gnocchi_pki_dir }}"
+    pki_create_certificates: "{{ gnocchi_user_ssl_cert is not defined and gnocchi_user_ssl_key is not defined }}"
+    pki_regen_cert: "{{ gnocchi_pki_regen_cert }}"
+    pki_certificates: "{{ gnocchi_pki_certificates }}"
+    pki_install_certificates: "{{ gnocchi_pki_install_certificates }}"
+  when:
+    - gnocchi_backend_ssl
+  tags:
+    - always
+
 - name: Install the python venv
   import_role:
     name: "python_venv_build"

@@ -31,6 +31,7 @@
     - "Restart gnocchi services"
     - "venv changed"
     - "systemd service changed"
+    - "cert installed"
 
 # Note (odyssey4me):
 # The policy.json file is currently read continually by the services
@@ -70,3 +71,4 @@
     - "Restart gnocchi services"
     - "venv changed"
     - "systemd service changed"
+    - "cert installed"
