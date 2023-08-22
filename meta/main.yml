@@ -16,23 +16,24 @@
 galaxy_info:
   author: Steve Lewis
   description: An Ansible Galaxy Role for Deploying OpenStack Gnocchi
-  company:
   license: Apache
-  min_ansible_version: 2.2
+  role_name: os_gnocchi
+  namespace: openstack
+  min_ansible_version: "2.10"
   platforms:
-  - name: Debian
-    versions:
-    - buster
-  - name: Ubuntu
-    versions:
-      - bionic
-      - focal
-  - name: EL
-    versions:
-    - 8
-  categories:
-  - cloud
-  - openstack
+    - name: Debian
+      versions:
+        - bullseye
+    - name: Ubuntu
+      versions:
+        - focal
+        - jammy
+    - name: EL
+      versions:
+        - "9"
+  galaxy_tags:
+    - cloud
+    - openstack
 dependencies:
   - role: apt_package_pinning
     when:

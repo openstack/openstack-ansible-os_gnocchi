@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#: Special role execution lifecycles
+# Special role execution lifecycles
 # Only create Gnocchi's identity entities in Keystone
 gnocchi_identity_only: False
 
@@ -21,12 +21,16 @@ gnocchi_identity_only: False
 # for the service setup. The host must already have
 # clouds.yaml properly configured.
 gnocchi_service_setup_host: "{{ openstack_service_setup_host | default('localhost') }}"
-gnocchi_service_setup_host_python_interpreter: "{{ openstack_service_setup_host_python_interpreter | default((gnocchi_service_setup_host == 'localhost') | ternary(ansible_playbook_python, ansible_facts['python']['executable'])) }}"
+gnocchi_service_setup_host_python_interpreter: >-
+  {{
+    openstack_service_setup_host_python_interpreter | default(
+      (gnocchi_service_setup_host == 'localhost') | ternary(ansible_playbook_python, ansible_facts['python']['executable']))
+  }}
 
-#venv python version
+# venv python version
 gnocchi_venv_python_executable: "{{ openstack_venv_python_executable | default('python3') }}"
 
-#: Enable for debug logging level
+# Enable for debug logging level
 debug: false
 
 # Set the package install state for distribution packages
@@ -41,33 +45,38 @@ gnocchi_auth_mode: "keystone"
 # of an OpenStack-Ansible repo_server.
 gnocchi_git_repo: https://github.com/gnocchixyz/gnocchi
 gnocchi_git_install_branch: master
-gnocchi_upper_constraints_url: "{{ requirements_git_url | default('https://releases.openstack.org/constraints/upper/' ~ requirements_git_install_branch | default('master')) }}"
+gnocchi_upper_constraints_url: >-
+  {{ requirements_git_url | default('https://releases.openstack.org/constraints/upper/' ~ requirements_git_install_branch | default('master')) }}
 gnocchi_git_constraints:
   - "--constraint {{ gnocchi_upper_constraints_url }}"
 
 gnocchi_pip_install_args: "{{ pip_install_options | default('') }}"
 
-#: Use of deprecated config options will cause a fatal application error
+# Use of deprecated config options will cause a fatal application error
 gnocchi_fatal_deprecations: false
 
-#: External SSL forwarding proto, assumes TLS termination at load balancer
+# External SSL forwarding proto, assumes TLS termination at load balancer
 gnocchi_ssl_external: "{{ openstack_external_ssl | default(True) }}"
 gnocchi_secure_proxy_ssl_header: HTTP_X_FORWARDED_PROTO
 
-#: Name of the virtual env to deploy into
+# Name of the virtual env to deploy into
 gnocchi_venv_tag: "{{ venv_tag | default('untagged') }}"
 gnocchi_bin: "/openstack/venvs/gnocchi-{{ gnocchi_venv_tag }}/bin"
 gnocchi_venv_pkgs: "/openstack/venvs/gnocchi-{{ gnocchi_venv_tag }}/lib/python2.7/site-packages"
 
-#: Set the etc dir path where gnocchi is installed.
+# Set the etc dir path where gnocchi is installed.
 #  This is used for role access to the db migrations.
 #  Example:
 #  gnocchi_etc_dir: "/usr/local/etc/gnocchi"
 gnocchi_etc_dir: "{{ gnocchi_bin | dirname }}/etc/gnocchi"
 
-#: Index Database info
+# Index Database info
 gnocchi_db_setup_host: "{{ openstack_db_setup_host | default('localhost') }}"
-gnocchi_db_setup_python_interpreter: "{{ openstack_db_setup_python_interpreter | default((gnocchi_db_setup_host == 'localhost') | ternary(ansible_playbook_python, ansible_facts['python']['executable'])) }}"
+gnocchi_db_setup_python_interpreter: >-
+  {{
+    openstack_db_setup_python_interpreter | default(
+      (gnocchi_db_setup_host == 'localhost') | ternary(ansible_playbook_python, ansible_facts['python']['executable']))
+  }}
 gnocchi_galera_address: "{{ galera_address | default('127.0.0.1') }}"
 gnocchi_galera_database: gnocchi
 gnocchi_galera_user: gnocchi
@@ -76,13 +85,16 @@ gnocchi_galera_use_ssl: "{{ galera_use_ssl | default(False) }}"
 gnocchi_galera_ssl_ca_cert: "{{ galera_ssl_ca_cert | default('') }}"
 gnocchi_galera_port: "{{ galera_port | default('3306') }}"
 
-#: Storage info
+# Storage info
 gnocchi_storage_driver: file
 gnocchi_storage_file_basepath: "{{ gnocchi_system_user_home }}"
 gnocchi_storage_swift_container_prefix: "gnocchi"
 gnocchi_storage_redis_url: "redis://localhost:6379/"
 
-gnocchi_coordination_url: "mysql://{{ gnocchi_galera_user }}:{{ gnocchi_container_mysql_password }}@{{ gnocchi_galera_address }}/{{ gnocchi_galera_database }}?charset=utf8&timeout=5{% if gnocchi_galera_use_ssl | bool %}&ssl_ca={{ gnocchi_galera_ssl_ca_cert }}{% endif %}"
+gnocchi_coordination_url: >-
+  mysql://{{ gnocchi_galera_user }}:{{ gnocchi_container_mysql_password }}@{{ gnocchi_galera_address }}/{{
+    gnocchi_galera_database }}?charset=utf8&timeout=5{%
+      if gnocchi_galera_use_ssl | bool %}&ssl_ca={{ gnocchi_galera_ssl_ca_cert }}{% endif %}
 
 # Incoming configuration
 # Incoming configuration is not applied if driver is the same as storage one
@@ -91,21 +103,21 @@ gnocchi_incoming_file_basepath: "{{ gnocchi_storage_file_basepath }}"
 gnocchi_incoming_swift_container_prefix: "{{ gnocchi_storage_swift_container_prefix }}"
 gnocchi_incoming_redis_url: "{{ gnocchi_storage_redis_url }}"
 
-#: Default Ceph parameters
+# Default Ceph parameters
 gnocchi_ceph_pool: "metrics"
 gnocchi_ceph_username: "gnocchi"
 # If gnocchi_storage_driver == gnocchi_incoming_driver this would have no effect
 gnocchi_ceph_incoming_pool: "{{ gnocchi_ceph_pool }}"
 gnocchi_ceph_incoming_username: "{{ gnocchi_ceph_username }}"
 
-#a System info
+# System info
 gnocchi_system_user_name: gnocchi
 gnocchi_system_group_name: gnocchi
 gnocchi_system_shell: /bin/false
 gnocchi_system_comment: gnocchi system user
 gnocchi_system_user_home: "/var/lib/{{ gnocchi_system_user_name }}"
 
-#: Service Type and Data
+# Service Type and Data
 gnocchi_service_name: gnocchi
 gnocchi_service_type: metric
 gnocchi_service_description: "OpenStack Metric Service"
@@ -142,13 +154,15 @@ gnocchi_service_in_ldap: "{{ service_ldap_backend_enabled | default(False) }}"
 ## uWSGI setup
 gnocchi_wsgi_threads: 1
 gnocchi_wsgi_processes_max: 16
-gnocchi_wsgi_processes: "{{ [[(ansible_facts['processor_vcpus']//ansible_facts['processor_threads_per_core'])|default(1), 1] | max * 2, gnocchi_wsgi_processes_max] | min }}"
+gnocchi_wsgi_processes: >-
+  {{ [[(ansible_facts['processor_vcpus'] // ansible_facts['processor_threads_per_core']) | default(1), 1] | max * 2, gnocchi_wsgi_processes_max] | min }}
 gnocchi_uwsgi_tls:
   crt: "{{ gnocchi_ssl_cert }}"
   key: "{{ gnocchi_ssl_key }}"
 
 gnocchi_metricd_workers_max: 16
-gnocchi_metricd_workers: "{{ [[(ansible_facts['processor_vcpus']//ansible_facts['processor_threads_per_core'])|default(1), 1] | max * 2, gnocchi_metricd_workers_max] | min }}"
+gnocchi_metricd_workers: >-
+  {{ [[(ansible_facts['processor_vcpus'] // ansible_facts['processor_threads_per_core']) | default(1), 1] | max * 2, gnocchi_metricd_workers_max] | min }}
 
 gnocchi_uwsgi_conf_overrides: {}
 gnocchi_api_init_overrides: {}
@@ -180,7 +194,7 @@ gnocchi_pip_package_extras:
   - "{{ gnocchi_storage_driver_pip_extra }}"
   - "{{ gnocchi_incoming_driver_pip_extra }}"
 
-#: Common pip packages
+# Common pip packages
 gnocchi_pip_packages:
   - cryptography
   - "git+{{ gnocchi_git_repo }}@{{ gnocchi_git_install_branch }}#egg=gnocchi[{{ gnocchi_pip_package_extras | unique | reject('equalto', '') | join(',') }}]"
@@ -194,7 +208,7 @@ gnocchi_pip_packages:
 # Memcached override
 gnocchi_memcached_servers: "{{ memcached_servers }}"
 
-#: Tunable file-based overrides
+# Tunable file-based overrides
 # The contents of these files, if they exist, are read from the
 # specified path on the deployment host, interpreted by the
 # template engine and copied to the target host. If they do
@@ -210,7 +224,7 @@ gnocchi_git_config_lookup_location: https://raw.githubusercontent.com/gnocchixyz
 gnocchi_api_paste_git_file_path: "gnocchi/rest/api-paste.ini"
 gnocchi_policy_git_file_path: "gnocchi/rest/policy.json"
 
-#: Tunable var-based overrides
+# Tunable var-based overrides
 # The contents of these are templated over the default files.
 gnocchi_api_paste_ini_overrides: {}
 gnocchi_conf_overrides: {}
@@ -261,5 +275,5 @@ gnocchi_pki_install_certificates:
     mode: "0600"
 
 # Define user-provided SSL certificates
-#gnocchi_user_ssl_cert: <path to cert on ansible deployment host>
-#gnocchi_user_ssl_key: <path to cert on ansible deployment host>
+# gnocchi_user_ssl_cert: <path to cert on ansible deployment host>
+# gnocchi_user_ssl_key: <path to cert on ansible deployment host>

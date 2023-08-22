@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#: Necessary packages
+# Necessary packages
 gnocchi_devel_distro_packages:
   - '@Development Tools'
   - git
