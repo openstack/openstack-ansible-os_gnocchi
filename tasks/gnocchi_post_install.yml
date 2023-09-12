@@ -41,10 +41,19 @@
       config_overrides: "{{ gnocchi_api_paste_ini_overrides }}"
       config_type: "ini"
       content: "{{ gnocchi_api_paste_user_content | default(gnocchi_api_paste_default_content, true) }}"
-    - dest: "/etc/gnocchi/policy.json-{{ gnocchi_venv_tag }}"
+    - dest: "/etc/gnocchi/policy.yaml-{{ gnocchi_venv_tag }}"
       config_overrides: "{{ gnocchi_policy_overrides }}"
-      config_type: "json"
+      config_type: "yaml"
       content: "{{ gnocchi_policy_user_content | default(gnocchi_policy_default_content, true) }}"
   notify:
     - Restart gnocchi services
     - Restart uwsgi services
+
+- name: Remove legacy policy.yaml file
+  file:
+    path: "/etc/gnocchi/policy.yaml"
+    state: absent
+  when:
+    - gnocchi_policy_overrides | length == 0
+  tags:
+    - gnocchi-policy-override
