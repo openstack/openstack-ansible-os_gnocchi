@@ -215,14 +215,13 @@ gnocchi_memcached_servers: "{{ memcached_servers }}"
 # not exist then the default files will be sourced from the
 # service git repository.
 gnocchi_api_paste_default_file_path: "/etc/openstack_deploy/gnocchi/api-paste.ini"
-gnocchi_policy_default_file_path: "/etc/openstack_deploy/gnocchi/policy.json"
+gnocchi_policy_default_file_path: "/etc/openstack_deploy/gnocchi/policy.yaml"
 
 # If the above-mentioned files do not exist, then these
 # paths will be used to find the files from the git config
 # lookup location.
 gnocchi_git_config_lookup_location: https://raw.githubusercontent.com/gnocchixyz/gnocchi/{{ gnocchi_git_install_branch }}/
 gnocchi_api_paste_git_file_path: "gnocchi/rest/api-paste.ini"
-gnocchi_policy_git_file_path: "gnocchi/rest/policy.json"
 
 # Tunable var-based overrides
 # The contents of these are templated over the default files.

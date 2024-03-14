@@ -19,7 +19,6 @@
     return_content: yes
   with_items:
     - "{{ gnocchi_git_config_lookup_location }}/{{ gnocchi_api_paste_git_file_path }}"
-    - "{{ gnocchi_git_config_lookup_location }}/{{ gnocchi_policy_git_file_path }}"
   register: _git_file_fetch
 
 - name: Copy gnocchi configuration files
@@ -32,6 +31,7 @@
     mode: "{{ item.mode | default('0644') }}"
     config_overrides: "{{ item.config_overrides }}"
     config_type: "{{ item.config_type }}"
+  when: item.condition | default(True)
   with_items:
     - src: "gnocchi.conf.j2"
       dest: "/etc/gnocchi/gnocchi.conf"
@@ -44,7 +44,8 @@
     - dest: "/etc/gnocchi/policy.yaml-{{ gnocchi_venv_tag }}"
       config_overrides: "{{ gnocchi_policy_overrides }}"
       config_type: "yaml"
-      content: "{{ gnocchi_policy_user_content | default(gnocchi_policy_default_content, true) }}"
+      content: "{{ gnocchi_policy_user_content }}"
+      condition: "{{ gnocchi_policy_user_content | length > 0 }}"
   notify:
     - Restart gnocchi services
     - Restart uwsgi services
