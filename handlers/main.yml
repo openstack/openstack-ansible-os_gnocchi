@@ -34,7 +34,7 @@
     - "cert installed"
 
 # Note (odyssey4me):
-# The policy.json file is currently read continually by the services
+# The policy.yaml file is currently read continually by the services
 # and is not only read on service start. We therefore cannot template
 # directly to the file read by the service because the new policies
 # may not be valid until the service restarts. This is particularly
@@ -49,6 +49,7 @@
     group: "{{ gnocchi_system_group_name }}"
     mode: "0640"
     remote_src: yes
+  when: gnocchi_policy_user_content | length > 0
   listen:
     - "Restart gnocchi services"
     - "venv changed"
