@@ -94,7 +94,8 @@ gnocchi_storage_redis_url: "redis://localhost:6379/"
 gnocchi_coordination_url: >-
   mysql://{{ gnocchi_galera_user }}:{{ gnocchi_container_mysql_password }}@{{ gnocchi_galera_address }}/{{
     gnocchi_galera_database }}?charset=utf8&timeout=5{%
-      if gnocchi_galera_use_ssl | bool %}&ssl_ca={{ gnocchi_galera_ssl_ca_cert }}{% endif %}
+      if gnocchi_galera_use_ssl | bool %}&ssl_check_hostname=true{%
+        if gnocchi_galera_ssl_ca_cert | length > 0 %}&ssl_ca={{ gnocchi_galera_ssl_ca_cert }}{% endif %}{% endif %}
 
 # Incoming configuration
 # Incoming configuration is not applied if driver is the same as storage one
