@@ -98,6 +98,7 @@
   when: not gnocchi_identity_only | bool
   tags:
     - gnocchi-config
+    - post-install
 
 - name: Run the systemd service role
   import_role:
