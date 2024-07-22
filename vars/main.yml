@@ -16,7 +16,7 @@
 _gnocchi_is_first_play_host: >-
   {{
     (gnocchi_services['gnocchi-api']['group'] in group_names and
-      inventory_hostname == (groups[gnocchi_services['gnocchi-api']['group']] | intersect(ansible_play_hosts)) | first) | bool
+      inventory_hostname == (groups[gnocchi_services['gnocchi-api']['group']] | select('in', ansible_play_hosts)) | first) | bool
   }}
 
 # These vars find a file on the deployment node, if it exists - otherwise the result is empty.
