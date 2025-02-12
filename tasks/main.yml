@@ -14,7 +14,7 @@
 # limitations under the License.
 
 - name: Gather variables for each operating system
-  include_vars: "{{ lookup('first_found', params) }}"
+  ansible.builtin.include_vars: "{{ lookup('first_found', params) }}"
   vars:
     params:
       files:
@@ -29,7 +29,7 @@
     - always
 
 - name: Including osa.db_setup role
-  include_role:
+  ansible.builtin.include_role:
     name: openstack.osa.db_setup
     apply:
       tags:
@@ -51,12 +51,12 @@
     - always
 
 - name: Importing gnocchi_pre_install tasks
-  import_tasks: gnocchi_pre_install.yml
+  ansible.builtin.import_tasks: gnocchi_pre_install.yml
   tags:
     - gnocchi-install
 
 - name: Create and install SSL certificates
-  include_role:
+  ansible.builtin.include_role:
     name: pki
     tasks_from: main_certs.yml
     apply:
@@ -76,7 +76,7 @@
     - always
 
 - name: Install the python venv
-  import_role:
+  ansible.builtin.import_role:
     name: "python_venv_build"
   vars:
     venv_build_distro_package_list: "{{ gnocchi_devel_distro_packages }}"
@@ -94,14 +94,14 @@
     - gnocchi-install
 
 - name: Importing gnocchi_post_install tasks
-  import_tasks: gnocchi_post_install.yml
+  ansible.builtin.import_tasks: gnocchi_post_install.yml
   when: not gnocchi_identity_only | bool
   tags:
     - gnocchi-config
     - post-install
 
 - name: Run the systemd service role
-  import_role:
+  ansible.builtin.import_role:
     name: systemd_service
   vars:
     systemd_user_name: "{{ gnocchi_system_user_name }}"
@@ -120,7 +120,7 @@
     - systemd-service
 
 - name: Import uwsgi role
-  import_role:
+  ansible.builtin.import_role:
     name: uwsgi
   vars:
     uwsgi_services: "{{ uwsgi_gnocchi_services }}"
@@ -130,7 +130,7 @@
     - uwsgi
 
 - name: Including osa.service_setup role
-  include_role:
+  ansible.builtin.include_role:
     name: openstack.osa.service_setup
     apply:
       tags:
@@ -170,7 +170,7 @@
     - always
 
 - name: Include ceph_client role
-  include_role:
+  ansible.builtin.include_role:
     name: "ceph_client"
     apply:
       tags:
@@ -186,12 +186,12 @@
     - always
 
 - name: Flush handlers
-  meta: flush_handlers
+  ansible.builtin.meta: flush_handlers
 
 # N.B. Must occur after identity setup, as this may perform calls to Swift.
 #      Similarly, when using Ceph, must occur after Ceph setup.
 - name: Importing gnocchi_db_sync tasks
-  import_tasks: gnocchi_db_sync.yml
+  ansible.builtin.import_tasks: gnocchi_db_sync.yml
   when:
     - (gnocchi_storage_driver == 'file') | ternary(True, _gnocchi_is_first_play_host)
     - not gnocchi_identity_only | bool
