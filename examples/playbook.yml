@@ -1,3 +1,4 @@
+---
 - name: Installation and setup of Gnocchi
   hosts: gnocchi_all
   user: root

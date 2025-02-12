@@ -15,7 +15,7 @@
 
 # Necessary packages
 gnocchi_devel_distro_packages:
-  - '@Development Tools'
+  - "@Development Tools"
   - git
   - librados2-devel
   - postgresql-devel
