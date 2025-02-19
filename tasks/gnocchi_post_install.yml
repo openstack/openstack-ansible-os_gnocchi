@@ -16,7 +16,7 @@
 - name: Retrieve default configuration files
   uri:
     url: "{{ item }}"
-    return_content: yes
+    return_content: true
   with_items:
     - "{{ gnocchi_git_config_lookup_location }}/{{ gnocchi_api_paste_git_file_path }}"
   register: _git_file_fetch

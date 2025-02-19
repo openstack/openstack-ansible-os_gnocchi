@@ -15,7 +15,7 @@
 
 # Special role execution lifecycles
 # Only create Gnocchi's identity entities in Keystone
-gnocchi_identity_only: False
+gnocchi_identity_only: false
 
 # Set the host which will execute the shade modules
 # for the service setup. The host must already have
@@ -176,7 +176,7 @@ gnocchi_services:
     service_name: "gnocchi-api"
     service_enabled: true
     init_config_overrides: "{{ gnocchi_api_init_overrides }}"
-    wsgi_app: True
+    wsgi_app: true
     wsgi_path: "{{ gnocchi_bin }}/gnocchi-api"
     uwsgi_bind_address: "{{ gnocchi_service_address }}"
     uwsgi_port: "{{ gnocchi_service_port }}"
@@ -248,7 +248,7 @@ gnocchi_pki_setup_host: "{{ openstack_pki_setup_host | default('localhost') }}"
 gnocchi_pki_keys_path: "{{ gnocchi_pki_dir ~ '/certs/private/' }}"
 gnocchi_pki_certs_path: "{{ gnocchi_pki_dir ~ '/certs/certs/' }}"
 gnocchi_pki_intermediate_cert_name: "{{ openstack_pki_service_intermediate_cert_name | default('ExampleCorpIntermediate') }}"
-gnocchi_pki_regen_cert: ''
+gnocchi_pki_regen_cert: ""
 gnocchi_pki_san: "{{ openstack_pki_san | default('DNS:' ~ ansible_facts['hostname'] ~ ',IP:' ~ management_address) }}"
 gnocchi_pki_certificates:
   - name: "gnocchi_{{ ansible_facts['hostname'] }}"
