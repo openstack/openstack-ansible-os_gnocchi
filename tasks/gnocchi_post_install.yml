@@ -14,7 +14,7 @@
 # limitations under the License.
 
 - name: Retrieve default configuration files
-  uri:
+  ansible.builtin.uri:
     url: "{{ item }}"
     return_content: true
   with_items:
@@ -51,7 +51,7 @@
     - Restart uwsgi services
 
 - name: Remove legacy policy.yaml file
-  file:
+  ansible.builtin.file:
     path: "/etc/gnocchi/policy.yaml"
     state: absent
   when:

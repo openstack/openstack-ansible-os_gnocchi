@@ -14,13 +14,13 @@
 # limitations under the License.
 
 - name: Create the system group
-  group:
+  ansible.builtin.group:
     name: "{{ gnocchi_system_group_name }}"
     state: "present"
     system: "yes"
 
 - name: Create the gnocchi system user
-  user:
+  ansible.builtin.user:
     name: "{{ gnocchi_system_user_name }}"
     group: "{{ gnocchi_system_group_name }}"
     comment: "{{ gnocchi_system_comment }}"
@@ -30,7 +30,7 @@
     home: "{{ gnocchi_system_user_home }}"
 
 - name: Create gnocchi dirs
-  file:
+  ansible.builtin.file:
     path: "{{ item.path }}"
     state: directory
     owner: "{{ item.owner | default(gnocchi_system_user_name) }}"

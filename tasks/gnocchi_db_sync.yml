@@ -14,7 +14,7 @@
 # limitations under the License.
 
 - name: Perform a Gnocchi DB sync
-  command: "{{ gnocchi_bin }}/gnocchi-upgrade {{ gnocchi_db_sync_options }}"
+  ansible.builtin.command: "{{ gnocchi_bin }}/gnocchi-upgrade {{ gnocchi_db_sync_options }}"
   become: true
   become_user: "{{ gnocchi_system_user_name }}"
   changed_when: false

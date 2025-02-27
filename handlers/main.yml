@@ -14,7 +14,7 @@
 # limitations under the License.
 
 - name: Stop services
-  service:
+  ansible.builtin.service:
     name: "{{ item.service_name }}"
     enabled: true
     state: "stopped"
@@ -42,7 +42,7 @@
 # file in place after the service has been stopped.
 #
 - name: Copy new policy file into place
-  copy:
+  ansible.builtin.copy:
     src: "/etc/gnocchi/policy.yaml-{{ gnocchi_venv_tag }}"
     dest: "/etc/gnocchi/policy.yaml"
     owner: "root"
@@ -55,7 +55,7 @@
     - "venv changed"
 
 - name: Start services
-  service:
+  ansible.builtin.service:
     name: "{{ item.service_name }}"
     enabled: true
     state: "started"
