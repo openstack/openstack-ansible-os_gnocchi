@@ -21,7 +21,7 @@ _gnocchi_is_first_play_host: >-
 
 # These vars find a file on the deployment node, if it exists - otherwise the result is empty.
 gnocchi_api_paste_user_content: "{{ lookup('pipe', 'cat ' ~ gnocchi_api_paste_default_file_path ~ ' 2>/dev/null || true') }}"
-gnocchi_policy_user_content: "{{ lookup('pipe', 'cat ' ~ gnocchi_policy_default_file_path ~ ' 2>/dev/null || true') }}"
+gnocchi_policy_user_content: "{{ lookup('pipe', 'cat ' ~ gnocchi_policy_default_file_path ~ ' 2>/dev/null || echo ---') }}"
 
 # These vars find the appropriate result content from the with_items loop
 gnocchi_api_paste_default_content: |
