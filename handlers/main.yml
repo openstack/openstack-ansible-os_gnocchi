@@ -49,7 +49,6 @@
     group: "{{ gnocchi_system_group_name }}"
     mode: "0640"
     remote_src: true
-  when: gnocchi_policy_user_content | length > 0
   listen:
     - "Restart gnocchi services"
     - "venv changed"

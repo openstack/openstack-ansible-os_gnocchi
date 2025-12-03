@@ -45,16 +45,6 @@
       config_overrides: "{{ gnocchi_policy_overrides }}"
       config_type: "yaml"
       content: "{{ gnocchi_policy_user_content }}"
-      condition: "{{ gnocchi_policy_user_content | length > 0 }}"
   notify:
     - Restart gnocchi services
     - Restart uwsgi services
-
-- name: Remove legacy policy.yaml file
-  ansible.builtin.file:
-    path: "/etc/gnocchi/policy.yaml"
-    state: absent
-  when:
-    - gnocchi_policy_overrides | length == 0
-  tags:
-    - gnocchi-policy-override
