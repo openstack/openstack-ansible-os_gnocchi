@@ -198,7 +198,7 @@ gnocchi_pip_package_extras:
 # Common pip packages
 gnocchi_pip_packages:
   - cryptography
-  - "git+{{ gnocchi_git_repo }}@{{ gnocchi_git_install_branch }}#egg=gnocchi[{{ gnocchi_pip_package_extras | unique | reject('equalto', '') | join(',') }}]"
+  - "gnocchi[{{ gnocchi_pip_package_extras | unique | reject('equalto', '') | join(',') }}] @ git+{{ gnocchi_git_repo }}@{{ gnocchi_git_install_branch }}"
   - gnocchiclient
   - osprofiler
   - pymemcache
