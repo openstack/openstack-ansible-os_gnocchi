@@ -189,6 +189,9 @@ gnocchi_services:
     init_config_overrides: "{{ gnocchi_metricd_init_overrides }}"
     execstarts: "{{ gnocchi_bin }}/gnocchi-metricd"
 
+gnocchi_build_requirements_extra:
+  - setuptools_scm
+
 gnocchi_pip_package_extras:
   - "{{ (gnocchi_auth_mode == 'keystone') | ternary('keystone', '') }}"
   - mysql
@@ -198,7 +201,7 @@ gnocchi_pip_package_extras:
 # Common pip packages
 gnocchi_pip_packages:
   - cryptography
-  - "git+{{ gnocchi_git_repo }}@{{ gnocchi_git_install_branch }}#egg=gnocchi[{{ gnocchi_pip_package_extras | unique | reject('equalto', '') | join(',') }}]"
+  - "gnocchi[{{ gnocchi_pip_package_extras | unique | reject('equalto', '') | join(',') }}]@git+{{ gnocchi_git_repo }}@{{ gnocchi_git_install_branch }}"
   - gnocchiclient
   - osprofiler
   - pymemcache

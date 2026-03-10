@@ -79,13 +79,14 @@
   ansible.builtin.import_role:
     name: "python_venv_build"
   vars:
-    venv_build_distro_package_list: "{{ gnocchi_devel_distro_packages }}"
-    venv_python_executable: "{{ gnocchi_venv_python_executable }}"
     venv_build_constraints: "{{ gnocchi_git_constraints }}"
+    venv_build_distro_package_list: "{{ gnocchi_devel_distro_packages }}"
+    venv_build_requirements_extra: "{{ gnocchi_build_requirements_extra }}"
     venv_install_destination_path: "{{ gnocchi_bin | dirname }}"
     venv_install_distro_package_list: "{{ gnocchi_distro_packages }}"
     venv_pip_install_args: "{{ gnocchi_pip_install_args }}"
     venv_pip_packages: "{{ gnocchi_pip_packages }}"
+    venv_python_executable: "{{ gnocchi_venv_python_executable }}"
     venv_facts_when_changed:
       - section: "gnocchi"
         option: "venv_tag"
