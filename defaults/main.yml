@@ -252,12 +252,14 @@ gnocchi_pki_keys_path: "{{ gnocchi_pki_dir ~ '/certs/private/' }}"
 gnocchi_pki_certs_path: "{{ gnocchi_pki_dir ~ '/certs/certs/' }}"
 gnocchi_pki_intermediate_cert_name: "{{ openstack_pki_service_intermediate_cert_name | default('ExampleCorpIntermediate') }}"
 gnocchi_pki_regen_cert: ""
-gnocchi_pki_san: "{{ openstack_pki_san | default('DNS:' ~ ansible_facts['hostname'] ~ ',IP:' ~ management_address) }}"
+gnocchi_pki_san: "{{ openstack_pki_san | default({'dns': [ansible_facts['hostname']], 'ip': [management_address]}) }}"
+gnocchi_pki_backend: "{{ openstack_pki_backend | default('standalone') }}"
 gnocchi_pki_certificates:
   - name: "gnocchi_{{ ansible_facts['hostname'] }}"
-    provider: ownca
     cn: "{{ ansible_facts['hostname'] }}"
     san: "{{ gnocchi_pki_san }}"
+    # standalone backend only
+    provider: ownca
     signed_by: "{{ gnocchi_pki_intermediate_cert_name }}"
 
 # gnocchi destination files for SSL certificates
@@ -266,17 +268,21 @@ gnocchi_ssl_key: /etc/gnocchi/gnocchi.key
 
 # Installation details for SSL certificates
 gnocchi_pki_install_certificates:
-  - src: "{{ gnocchi_user_ssl_cert | default(gnocchi_pki_certs_path ~ 'gnocchi_' ~ ansible_facts['hostname'] ~ '-chain.crt') }}"
+  - name: "gnocchi_{{ ansible_facts['hostname'] }}"
+    type: "certificate_chain"
     dest: "{{ gnocchi_ssl_cert }}"
     owner: "{{ gnocchi_system_user_name }}"
     group: "{{ gnocchi_system_user_name }}"
-    mode: "0644"
-  - src: "{{ gnocchi_user_ssl_key | default(gnocchi_pki_keys_path ~ 'gnocchi_' ~ ansible_facts['hostname'] ~ '.key.pem') }}"
+    # standalone backend only
+    src: "{{ gnocchi_user_ssl_cert | default(gnocchi_pki_certs_path ~ 'gnocchi_' ~ ansible_facts['hostname'] ~ '-chain.crt') }}"
+  - name: "gnocchi_{{ ansible_facts['hostname'] }}"
+    type: "private_key"
     dest: "{{ gnocchi_ssl_key }}"
     owner: "{{ gnocchi_system_user_name }}"
     group: "{{ gnocchi_system_user_name }}"
-    mode: "0600"
+    # standalone backend only
+    src: "{{ gnocchi_user_ssl_key | default(gnocchi_pki_keys_path ~ 'gnocchi_' ~ ansible_facts['hostname'] ~ '.key.pem') }}"
 
 # Define user-provided SSL certificates
-# gnocchi_user_ssl_cert: <path to cert on ansible deployment host>
-# gnocchi_user_ssl_key: <path to cert on ansible deployment host>
+gnocchi_user_ssl_cert: ""
+gnocchi_user_ssl_key: ""

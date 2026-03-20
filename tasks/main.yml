@@ -64,9 +64,10 @@
         - gnocchi-config
         - pki
   vars:
+    pki_backend: "{{ gnocchi_pki_backend }}"
     pki_setup_host: "{{ gnocchi_pki_setup_host }}"
     pki_dir: "{{ gnocchi_pki_dir }}"
-    pki_create_certificates: "{{ gnocchi_user_ssl_cert is not defined and gnocchi_user_ssl_key is not defined }}"
+    pki_create_certificates: "{{ gnocchi_user_ssl_cert | length == 0 and gnocchi_user_ssl_key | length == 0 }}"
     pki_regen_cert: "{{ gnocchi_pki_regen_cert }}"
     pki_certificates: "{{ gnocchi_pki_certificates }}"
     pki_install_certificates: "{{ gnocchi_pki_install_certificates }}"
