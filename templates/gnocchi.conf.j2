@@ -10,7 +10,7 @@ coordination_url = {{ gnocchi_coordination_url }}
 
 [api]
 auth_mode = {{ gnocchi_auth_mode }}
-api_paste = /etc/gnocchi/api-paste.ini
+paste_config = /etc/gnocchi/api-paste.ini
 
 {% if gnocchi_ssl_external | bool %}
 [oslo_middleware]
