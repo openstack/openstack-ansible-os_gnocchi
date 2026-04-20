@@ -57,7 +57,6 @@ gnocchi_fatal_deprecations: false
 
 # External SSL forwarding proto, assumes TLS termination at load balancer
 gnocchi_ssl_external: "{{ openstack_external_ssl | default(True) }}"
-gnocchi_secure_proxy_ssl_header: HTTP_X_FORWARDED_PROTO
 
 # Name of the virtual env to deploy into
 gnocchi_venv_tag: "{{ venv_tag | default('untagged') }}"
