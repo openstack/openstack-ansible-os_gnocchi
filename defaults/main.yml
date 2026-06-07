@@ -177,7 +177,7 @@ gnocchi_services:
     service_enabled: true
     init_config_overrides: "{{ gnocchi_api_init_overrides }}"
     wsgi_app: true
-    wsgi_path: "{{ gnocchi_bin }}/gnocchi-api"
+    wsgi: "gnocchi.rest.wsgi:application"
     uwsgi_bind_address: "{{ gnocchi_service_address }}"
     uwsgi_port: "{{ gnocchi_service_port }}"
     uwsgi_overrides: "{{ gnocchi_uwsgi_conf_overrides }}"
