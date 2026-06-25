@@ -82,7 +82,7 @@ uwsgi_gnocchi_services: |-
          and ('wsgi_app' in service and service['wsgi_app']) %}
   {%     set _ = service.update(
            {
-             'wsgi_venv': gnocchi_bin | dirname,
+             'wsgi_venv': (gnocchi_install_method == 'source') | ternary(gnocchi_bin | dirname, false),
              'uwsgi_uid': gnocchi_system_user_name,
              'uwsgi_guid': gnocchi_system_group_name,
              'uwsgi_processes': gnocchi_wsgi_processes,

@@ -1,5 +1,5 @@
 ---
-# Copyright 2016, Rackspace US, Inc.
+# Copyright 2026, Cleura AB
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,16 +13,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Necessary packages
-gnocchi_devel_distro_packages:
-  - "@Development Tools"
-  - git
-  - librados2-devel
-  - postgresql-devel
-  - systemd-devel
-  - which
-
-gnocchi_service_distro_packages: []
-
-gnocchi_distro_packages:
-  - libxml2
+_gnocchi_bin: "/openstack/venvs/gnocchi-{{ gnocchi_venv_tag }}/bin"

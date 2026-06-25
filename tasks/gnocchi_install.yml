@@ -1,0 +1,49 @@
+---
+# Copyright 2026, Cleura AB
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- name: Install distro packages
+  ansible.builtin.package:
+    name: "{{ gnocchi_service_distro_packages + gnocchi_distro_packages }}"
+    state: "{{ gnocchi_package_state }}"
+    update_cache: "{{ (ansible_facts['pkg_mgr'] == 'apt') | ternary(true, omit) }}"
+    cache_valid_time: "{{ (ansible_facts['pkg_mgr'] == 'apt') | ternary(cache_timeout, omit) }}"
+  register: install_packages
+  until: install_packages is success
+  retries: 5
+  delay: 2
+  when:
+    - gnocchi_install_method == 'distro'
+  notify:
+    - Restart uwsgi services
+    - Restart gnocchi services
+
+- name: Install the python venv
+  ansible.builtin.include_role:
+    name: "python_venv_build"
+  vars:
+    venv_build_constraints: "{{ gnocchi_git_constraints }}"
+    venv_build_distro_package_list: "{{ gnocchi_devel_distro_packages }}"
+    venv_build_requirements_extra: "{{ gnocchi_build_requirements_extra }}"
+    venv_install_destination_path: "{{ gnocchi_bin | dirname }}"
+    venv_install_distro_package_list: "{{ gnocchi_distro_packages }}"
+    venv_pip_install_args: "{{ gnocchi_pip_install_args }}"
+    venv_pip_packages: "{{ gnocchi_pip_packages }}"
+    venv_python_executable: "{{ gnocchi_venv_python_executable }}"
+    venv_facts_when_changed:
+      - section: "gnocchi"
+        option: "venv_tag"
+        value: "{{ gnocchi_venv_tag }}"
+  when:
+    - gnocchi_install_method == 'source'
