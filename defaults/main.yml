@@ -16,6 +16,7 @@
 # Special role execution lifecycles
 # Only create Gnocchi's identity entities in Keystone
 gnocchi_identity_only: false
+gnocchi_install_method: "{{ service_install_method | default('source') }}"
 
 # Set the host which will execute the shade modules
 # for the service setup. The host must already have
@@ -60,14 +61,7 @@ gnocchi_ssl_external: "{{ openstack_external_ssl | default(True) }}"
 
 # Name of the virtual env to deploy into
 gnocchi_venv_tag: "{{ venv_tag | default('untagged') }}"
-gnocchi_bin: "/openstack/venvs/gnocchi-{{ gnocchi_venv_tag }}/bin"
-gnocchi_venv_pkgs: "/openstack/venvs/gnocchi-{{ gnocchi_venv_tag }}/lib/python2.7/site-packages"
-
-# Set the etc dir path where gnocchi is installed.
-#  This is used for role access to the db migrations.
-#  Example:
-#  gnocchi_etc_dir: "/usr/local/etc/gnocchi"
-gnocchi_etc_dir: "{{ gnocchi_bin | dirname }}/etc/gnocchi"
+gnocchi_bin: "{{ _gnocchi_bin }}"
 
 # Index Database info
 gnocchi_db_setup_host: "{{ openstack_db_setup_host | default('localhost') }}"
