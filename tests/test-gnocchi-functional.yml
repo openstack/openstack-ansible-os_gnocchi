@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Very basic testing using examples from http://gnocchi.xyz/rest.html
+# Very basic testing using examples from https://gnocchi.osci.io/rest.html
 
 - name: Playbook for functional testing of gnocchi
   hosts: localhost
